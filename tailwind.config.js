@@ -8,6 +8,27 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    container:{
+      center:true,
+      padding: {
+        DEFAULT: '16px',
+        xl: '112px',
+      },
+      fontFamily: {
+        'sans': ['Noto Sans', 'Noto Sans TC', 'sans-serif' ],
+        'serif': ['sans-serif']
+      }
+    },
+    screens: {
+      'sm': '428px',
+      // => @media (min-width: 428px) { ... }
+
+      'lg': '1280px',
+      // => @media (min-width: 1280px) { ... }
+
+      'xl': '1440px',
+      // => @media (min-width: 1420px) { ... }
+    },
     extend: {},
   },
   plugins: [],
