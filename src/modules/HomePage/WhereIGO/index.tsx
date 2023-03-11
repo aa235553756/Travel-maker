@@ -4,7 +4,7 @@ import ChageButton from '@/common/ChageButton'
 export default function WhereIGO() {
   return (
     <div className="pt-5 pb-9 lg:pt-[108px] lg:pb-[114px] bg-[#EFEFEF]">
-      <div className="container md:max-w-[calc(652px+32px)] lg:max-w-[calc(1128px+224px)] lg:flex lg:items-end">
+      <div className="container lg:flex lg:items-end">
         <div>
           <h3 className="text-[22px] mb-6 xl:text-4xl">我想去哪裡...</h3>
           <p className="text-[#9F9F9F] mb-10 xl:text-2xl">
