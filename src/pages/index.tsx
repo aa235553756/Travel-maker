@@ -1,5 +1,7 @@
 import Head from 'next/head'
 import HotAttract from '@/modules/HomePage/HotAttract'
+import WhereIGO from '@/modules/HomePage/WhereIGO'
+
 export default function Home() {
   return (
     <>
@@ -11,6 +13,7 @@ export default function Home() {
       </Head>
       <div>
         <HotAttract />
+        <WhereIGO />
       </div>
     </>
   )
