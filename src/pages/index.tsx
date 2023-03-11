@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import HotAttract from '@/modules/HomePage/HotAttract'
 import WhereIGO from '@/modules/HomePage/WhereIGO'
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
+        <HotAttract />
         <WhereIGO />
       </div>
     </>
