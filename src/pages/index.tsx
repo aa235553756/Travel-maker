@@ -1,6 +1,7 @@
 import Head from 'next/head'
-import HotAttract from '@/modules/HomePage/HotAttract'
-import WhereIGO from '@/modules/HomePage/WhereIGO'
+// import HotAttract from '@/modules/HomePage/HotAttract'
+// import WhereIGO from '@/modules/HomePage/WhereIGO'
+import SeeOthers from '@/modules/HomePage/SeeOthers'
 
 export default function Home() {
   return (
@@ -12,8 +13,9 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <HotAttract />
-        <WhereIGO />
+        {/* <WhereIGO /> */}
+        <SeeOthers />
+        {/* <HotAttract /> */}
       </div>
     </>
   )
