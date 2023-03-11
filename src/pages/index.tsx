@@ -1,6 +1,5 @@
 import Head from 'next/head'
-import { Button } from '../styles/styled/button'
-
+import HotAttract from '@/modules/HomePage/HotAttract'
 export default function Home() {
   return (
     <>
@@ -10,10 +9,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>hello,world</h1>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button>我是按鈕</Button>
-      <Button $primary={true}>我是按鈕</Button>
+      <div>
+        <HotAttract />
+      </div>
     </>
   )
 }
