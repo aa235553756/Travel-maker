@@ -8,15 +8,14 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    container: {
-      center: true,
+    container:{
+      center:true,
       padding: {
         DEFAULT: '16px',
-        md: '58px',
-        lg: '76px',
+        xl: '112px',
       },
       fontFamily: {
-        'sans': ['Noto Sans', 'Noto Sans TC', 'sans-serif'],
+        'sans': ['Noto Sans', 'Noto Sans TC', 'sans-serif' ],
         'serif': ['sans-serif']
       }
     },
@@ -24,12 +23,11 @@ module.exports = {
       'sm': '428px',
       // => @media (min-width: 428px) { ... }
 
-      'md': '768px',
-      // => @media (min-width: 768px) { ... }
-
       'lg': '1280px',
       // => @media (min-width: 1280px) { ... }
 
+      'xl': '1440px',
+      // => @media (min-width: 1420px) { ... }
     },
     extend: {},
   },
