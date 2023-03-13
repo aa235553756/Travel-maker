@@ -128,12 +128,14 @@ export default function Banner() {
   const [isToggle, setIsToggle] = useState(false)
   const toggleState = () => {
     setIsToggle(!isToggle)
+    setAreaToggle(false)
   }
 
   // Toggle 選擇區域下拉選單
   const [areaToggle, setAreaToggle] = useState(false)
   const areaToggleState = () => {
     setAreaToggle(!areaToggle)
+    setIsToggle(false)
   }
 
   // 手機版下拉選單
@@ -159,7 +161,7 @@ export default function Banner() {
           </h3>
 
           {/* 行程類別 */}
-          <div className="hidden md:flex space-x-4 mb-4">
+          <form className="hidden md:flex space-x-4 mb-4">
             <button
               className="py-4 border w-[calc((100%-112px)/8)] text-center bg-[#ccc]"
               onClick={() => handleClickType('random')}
@@ -240,7 +242,7 @@ export default function Banner() {
               <MdDirectionsBike className="mb-2 mx-auto text-2xl" />
               <p className="text-sm">冒險活潑</p>
             </button>
-          </div>
+          </form>
           <div className="block md:hidden">
             <BannerCarousel />
           </div>
@@ -488,6 +490,7 @@ export default function Banner() {
               closeModal()
             }}
             ariaHideApp={false}
+            bodyOpenClassName="overflow-hidden"
             className="md:hidden"
           >
             <div>
