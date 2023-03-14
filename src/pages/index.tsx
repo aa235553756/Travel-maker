@@ -5,7 +5,6 @@ import WhereIGO from '@/modules/HomePage/WhereIGO'
 import Explore from '@/modules/HomePage/Explore'
 import Feature from '@/modules/HomePage/Feature'
 import Banner from '@/modules/HomePage/Banner'
-import Header from '@/common/Header'
 
 export default function Home() {
   return (
@@ -17,7 +16,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Header />
         <Banner />
         <WhereIGO />
         <Feature />

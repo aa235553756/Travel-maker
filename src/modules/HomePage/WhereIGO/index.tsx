@@ -1,5 +1,5 @@
 import React from 'react'
-import ChageButton from '@/common/ChageButton'
+import ChageButton from '@/common/components/ChageButton'
 
 export default function WhereIGO() {
   return (
