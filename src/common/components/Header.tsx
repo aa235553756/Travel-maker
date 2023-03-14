@@ -6,6 +6,7 @@ import { IoHomeOutline } from 'react-icons/io5'
 import { FaUserCircle } from 'react-icons/fa'
 import { IoLocationSharp } from 'react-icons/io5'
 import { BsFillFlagFill } from 'react-icons/bs'
+import Link from 'next/link'
 
 export default function Header() {
   const [isHam, setIsHam] = useState(false)
@@ -36,9 +37,11 @@ export default function Header() {
               </div>
               {/* 功能 */}
               <ul className="flex flex-shrink-0  space-x-5">
-                <li className="flex space-x-2 items-center">
-                  <IoLocationSharp className="text-lg" />
-                  <span className="text-xl">規劃行程</span>
+                <li className='flex'>
+                  <Link href="/PlanJourney" className="flex space-x-2 items-center">
+                    <IoLocationSharp className="text-lg" />
+                    <span className="text-xl">規劃行程</span>
+                  </Link>
                 </li>
                 <li className="flex space-x-2 items-center">
                   <BsFillFlagFill className="text-lg" />
