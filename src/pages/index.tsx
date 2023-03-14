@@ -4,7 +4,6 @@ import HotAttract from '@/modules/HomePage/HotAttract'
 import WhereIGO from '@/modules/HomePage/WhereIGO'
 import Explore from '@/modules/HomePage/Explore'
 import Feature from '@/modules/HomePage/Feature'
-import Header from '@/common/Header'
 
 export default function Home() {
   return (
@@ -16,7 +15,6 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div>
-        <Header />
         <WhereIGO />
         <Feature />
         <Explore />
