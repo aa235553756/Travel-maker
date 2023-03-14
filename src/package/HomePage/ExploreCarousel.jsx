@@ -28,7 +28,7 @@ export default function ExploreCarousel() {
         spaceBetween={24}
         pagination={pagination}
         modules={[Pagination]}
-        className="mySwiper"
+        className="mySwiper !z-0"
       >
         {imagesSlides.map((imagesSlide, index) => (
           <SwiperSlide
