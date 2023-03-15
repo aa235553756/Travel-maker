@@ -4,7 +4,7 @@ interface ButtonProps {
   $primary?: boolean
 }
 
-export const Button = tw.div<ButtonProps>`
+export const StyledButton = tw.div<ButtonProps>`
     ${(p) => (p.$primary ? 'bg-indigo-600' : 'bg-indigo-300')}
     flex
     inline-flex
