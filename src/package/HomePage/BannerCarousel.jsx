@@ -1,5 +1,5 @@
-import { Swiper, SwiperSlide } from 'swiper/react'
-import { Pagination } from 'swiper'
+// import { Swiper, SwiperSlide } from 'swiper/react'
+// import { Pagination } from 'swiper'
 import { FaCameraRetro } from 'react-icons/fa'
 import { HiUserGroup } from 'react-icons/hi'
 import {
@@ -9,18 +9,18 @@ import {
   MdLocalBar,
   MdAccountBalance,
   MdDirectionsBike,
-  MdOutlineCancel,
+  // MdOutlineCancel,
 } from 'react-icons/md'
 import 'swiper/css'
 import 'swiper/css/pagination'
 
 export default function ExploreCarousel() {
-  const pagination = {
-    clickable: true,
-    renderBullet: function (index, className) {
-      return `<span class="${className}" style="background-color: black"></span>`
-    },
-  }
+  // const pagination = {
+  //   clickable: true,
+  //   renderBullet: function (index, className) {
+  //     return `<span class="${className}" style="background-color: black"></span>`
+  //   },
+  // }
 
   return (
     <>
