@@ -10,7 +10,7 @@ import 'swiper/css/pagination'
 // import required modules
 import { Grid, Pagination, A11y } from 'swiper'
 import TypeLabel from '@/modules/HomePage/Banner/components/TypeLabel'
-import OpenFormBtn from '@/common/components/openFormBtn'
+import OpenFormBtn from '@/common/components/OpenFormBtn'
 import { useForm } from 'react-hook-form'
 
 export default function App() {
