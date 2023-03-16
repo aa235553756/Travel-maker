@@ -6,7 +6,7 @@ import { area, journeys, transports } from '../../../util/selectData'
 import TypeLabel from './components/TypeLabel'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BannerSelectorMobile } from './components/BannerSelectorMobile'
-import OpenFormBtn from '@/common/components/openFormBtn'
+import OpenFormBtn from '@/common/components/OpenFormBtn'
 
 export default function Banner() {
   // 這邊是ReactHookForm，有分電腦版,手機版
