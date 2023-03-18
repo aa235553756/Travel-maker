@@ -61,7 +61,7 @@ export default function LoginAndSignUp() {
               註冊會員
             </button>
           </div>
-          <div className="flex w-full space-x-6">
+          <div className="flex w-full space-x-0 md:space-x-6">
             <div className="hidden md:block md:w-1/2 min-w-[360px] md:bg-[#ccc]">
               這是圖片
             </div>

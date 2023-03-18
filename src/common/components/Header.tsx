@@ -1,16 +1,31 @@
 import React, { useState } from 'react'
 import { FcMenu } from 'react-icons/fc'
-import { BsSearch } from 'react-icons/bs'
-import { MdOutlineCancel } from 'react-icons/md'
-import { IoHomeOutline } from 'react-icons/io5'
-import { FaUserCircle } from 'react-icons/fa'
-import { IoLocationSharp } from 'react-icons/io5'
-import { BsFillFlagFill } from 'react-icons/bs'
+import {
+  BsSearch,
+  BsFillFlagFill,
+  BsPencil,
+  BsBookmarkHeart,
+} from 'react-icons/bs'
+import { IoHomeOutline, IoLocationSharp } from 'react-icons/io5'
+import { FaUserCircle, FaRegCommentDots } from 'react-icons/fa'
+import { SlSettings } from 'react-icons/sl'
+import { AiOutlineHeart } from 'react-icons/ai'
+import { GrLocation } from 'react-icons/gr'
+import { BiLogOut } from 'react-icons/bi'
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
+import Link from 'next/link'
 
 export default function Header() {
+  // 漢堡條
   const [isHam, setIsHam] = useState(false)
   const hamState = () => {
     setIsHam(!isHam)
+  }
+
+  // 會員中心
+  const [isMember, setIsMember] = useState(false)
+  const memberState = () => {
+    setIsMember(!isMember)
   }
 
   return (
@@ -35,14 +50,28 @@ export default function Header() {
                 </div>
               </div>
               {/* 功能 */}
-              <ul className="flex flex-shrink-0  space-x-5">
+              <ul className="flex flex-shrink-0 space-x-5">
                 <li className="flex space-x-2 items-center">
-                  <IoLocationSharp className="text-lg" />
-                  <span className="text-xl">規劃行程</span>
+                  <Link
+                    href="/PlanJourney"
+                    className="flex space-x-2 items-center"
+                  >
+                    <IoLocationSharp className="text-lg" />
+                    <span className="text-xl">規劃行程</span>
+                  </Link>
                 </li>
                 <li className="flex space-x-2 items-center">
                   <BsFillFlagFill className="text-lg" />
                   <span className="text-xl">熱門話題</span>
+                </li>
+                <li className="flex space-x-2 items-center">
+                  <Link
+                    href="/MemberCenter"
+                    className="flex space-x-2 items-center"
+                  >
+                    <IoLocationSharp className="text-lg" />
+                    <span className="text-xl">會員中心</span>
+                  </Link>
                 </li>
                 <li>
                   <button className="text-lg border p-2">登入註冊</button>
@@ -68,29 +97,120 @@ export default function Header() {
         </div>
         <hr className="pb-6" />
         {isHam ? (
-          <div className="p-5 h-screen">
-            <MdOutlineCancel
-              className="text-lg"
-              onClick={() => {
-                hamState()
-              }}
-            />
-            <ul className="flex flex-col items-center">
+          <div className="p-5 h-screen text-center">
+            <ul className="inline-flex flex-col ">
               <li className="flex space-x-3 py-4 items-center">
-                <IoHomeOutline className="text-lg" />
-                <span>回首頁</span>
+                <Link href="/" className="flex space-x-2 items-center">
+                  <IoHomeOutline className="text-lg" />
+                  <span>回首頁</span>
+                </Link>
               </li>
               <li className="flex space-x-3 py-4 items-center">
+                <Link
+                  href="/LoginAndSignUp"
+                  className="flex space-x-2 items-center"
+                >
+                  <FaUserCircle className="text-lg" />
+                  <span>登入/註冊</span>
+                </Link>
+              </li>
+              <li
+                className="flex space-x-3 py-4 items-center"
+                onClick={() => {
+                  memberState()
+                }}
+              >
                 <FaUserCircle className="text-lg" />
-                <span>登入/註冊</span>
+                <div className="flex items-center space-x-3">
+                  <span>會員中心</span>
+                  {isMember ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}
+                </div>
               </li>
+              {isMember ? (
+                <div>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link
+                      href="/MemberCenter"
+                      className="flex space-x-2 items-center"
+                    >
+                      <SlSettings className="text-lg" />
+                      <span>帳號設定</span>
+                    </Link>
+                  </li>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link
+                      href="/MemberCenter/Journey"
+                      className="flex space-x-2 items-center"
+                    >
+                      <AiOutlineHeart className="text-lg" />
+                      <span>我的收藏行程</span>
+                    </Link>
+                  </li>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link
+                      href="/MemberCenter/Attract"
+                      className="flex space-x-2 items-center"
+                    >
+                      <GrLocation className="text-lg" />
+                      <span>我的收藏景點</span>
+                    </Link>
+                  </li>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link
+                      href="/MemberCenter/Blog"
+                      className="flex space-x-2 items-center"
+                    >
+                      <BsPencil className="text-lg" />
+                      <span>我的遊記</span>
+                    </Link>
+                  </li>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link
+                      href="/MemberCenter/Track"
+                      className="flex space-x-2 items-center"
+                    >
+                      <BsBookmarkHeart className="text-lg" />
+                      <span>我的追蹤</span>
+                    </Link>
+                  </li>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link
+                      href="/MemberCenter/Comment"
+                      className="flex space-x-2 items-center"
+                    >
+                      <FaRegCommentDots className="text-lg" />
+                      <span>我的評論</span>
+                    </Link>
+                  </li>
+                </div>
+              ) : null}
+            </ul>
+            <hr />
+            <ul className="inline-flex flex-col w-[122px]">
               <li className="flex space-x-3 py-4 items-center">
-                <IoLocationSharp className="text-lg" />
-                <span>規劃行程</span>
+                <Link
+                  href="/PlanJourney"
+                  className="flex space-x-2 items-center"
+                >
+                  <IoLocationSharp className="text-lg" />
+                  <span>規劃行程</span>
+                </Link>
               </li>
               <li className="flex space-x-3 py-4 items-center">
                 <BsFillFlagFill className="text-lg" />
                 <span>熱門話題</span>
+              </li>
+            </ul>
+            <hr />
+            <ul className="inline-flex flex-col w-[122px]">
+              <li className="flex space-x-3 py-4 items-center">
+                <Link
+                  href="/LoginAndSignUp"
+                  className="flex space-x-2 items-center"
+                >
+                  <BiLogOut className="text-lg" />
+                  <span>登出</span>
+                </Link>
               </li>
             </ul>
           </div>
