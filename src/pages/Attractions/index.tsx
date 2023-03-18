@@ -1,12 +1,14 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
 
+// 這個檔案會大改，先當作測試 (目前SSG以產品列表撰寫)
+
 // getStaticProps測試
 export async function getStaticProps() {
   const res = await fetch('https://dummyjson.com/products/')
   const data = await res.json()
   return {
-    props: { data }, // will be passed to the page component as props
+    props: { data },
   }
 }
 
@@ -20,6 +22,7 @@ export default function AttractionsList({
 }: {
   data: { products: [productProp] }
 }) {
+  console.log(data)
   const [dataState, setDataState] = useState<{ products: productProp[] }>({
     products: [],
   })
