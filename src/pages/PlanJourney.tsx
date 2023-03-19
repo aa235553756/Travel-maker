@@ -11,7 +11,7 @@ export default function PlanJourney() {
           <VoteDate />
           <InvitePeople />
         </div>
-        <div className='w-full h-[200px] bg-[#ccc] mb-20'>排行程</div>
+        <div className="w-full h-[200px] bg-[#ccc] mb-20">排行程</div>
         <MoreJourney />
       </div>
     </div>

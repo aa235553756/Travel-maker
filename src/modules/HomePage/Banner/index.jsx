@@ -1,21 +1,12 @@
 import BannerTitle from './components/BannerTitle'
 import React, { useEffect, useState } from 'react'
 import { BsChevronDown } from 'react-icons/bs'
-import {
-  MdDirectionsRun,
-  MdBarChart,
-  MdDeck,
-  MdLocalBar,
-  MdAccountBalance,
-  MdDirectionsBike,
-} from 'react-icons/md'
-import { FaCameraRetro } from 'react-icons/fa'
-import { HiUserGroup } from 'react-icons/hi'
 import { useForm } from 'react-hook-form'
 import { area, journeys, transports } from '../../../util/selectData'
 import TypeLabel from './components/TypeLabel'
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { BannerSelectorMobile } from './components/BannerSelectorMobile'
+import OpenFormBtn from '@/common/components/OpenFormBtn'
 
 export default function Banner() {
   // 這邊是ReactHookForm，有分電腦版,手機版
@@ -26,17 +17,6 @@ export default function Banner() {
   const onSubmitMobile = (data) => console.log(data)
 
   const [isHidden, setIsHidden] = useState(true)
-
-  const iconArray = [
-    <MdDirectionsRun key={0} />,
-    <MdBarChart key={1} />,
-    <FaCameraRetro key={2} />,
-    <MdDeck key={3} />,
-    <MdLocalBar key={4} />,
-    <MdAccountBalance key={5} />,
-    <HiUserGroup key={6} />,
-    <MdDirectionsBike key={7} />,
-  ]
 
   // Toggle 選擇行程 & 距離下拉選單 以及 Toggle 選擇區域下拉選單
   const [isToggle, setIsToggle] = useState(false)
@@ -64,17 +44,12 @@ export default function Banner() {
         {/* 行程類別 */}
         <form onSubmit={handleSubmit(onSubmit)} id="TypeForm">
           <div className="hidden md:flex space-x-4 mb-4 overflow-scroll md:overflow-auto">
-            {iconArray.map((item, index) => {
-              return (
-                <TypeLabel
-                  key={index}
-                  index={index}
-                  item={item}
-                  register={register}
-                  watch={watch}
-                />
-              )
-            })}
+
+            <TypeLabel
+              register={register}
+              watch={watch}
+            />
+
           </div>
         </form>
 
@@ -123,16 +98,7 @@ export default function Banner() {
             開始規劃
           </button>
         </div>
-        <button
-          className="bg-[#d7d7d7] w-full px-5 py-4 mb-6 flex items-center justify-between md:hidden"
-          onClick={() => {
-            setIsHidden(!isHidden)
-            document.body.style.overflow = 'hidden'
-          }}
-        >
-          請選擇行程 / 距離 / 區域
-          <BsChevronDown />
-        </button>
+        <OpenFormBtn setIsHidden={setIsHidden} isHidden={isHidden} />
         {/* 手機版開始規劃按鈕 */}
         <button
           form="TypeFormMoblie"
