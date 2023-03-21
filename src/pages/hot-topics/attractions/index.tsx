@@ -1,4 +1,4 @@
-import SearchButton from './../../common/components/searchButton'
+import SearchButton from '@/common/components/searchButton'
 import React, { useState } from 'react'
 import Select from 'react-select'
 import JourneyCard from '@/common/components/JourneyCard'

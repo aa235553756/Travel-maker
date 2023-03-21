@@ -38,7 +38,7 @@ export default function Banner() {
 
   return (
     <div className="container">
-      <div className="pb-[60px] w-full mx-auto lg:w-2/3 md:pb-[100px]">
+      <div className="pt-[80px] pb-[60px] w-full mx-auto lg:w-2/3 md:pb-[100px] md:pt-[58px]">
         <BannerTitle />
 
         {/* 行程類別 */}

@@ -36,7 +36,7 @@ export default function MemberLayout({ children, path }: Props) {
               <ul className="md:py-8 md:inline-flex md:flex-col md:cursor-pointer">
                 <li>
                   <Link
-                    href="/MemberCenter"
+                    href="/member-center"
                     className="md:flex md:space-x-3 md:py-4 md:items-center"
                   >
                     <SlSettings className="md:text-lg" />
@@ -49,7 +49,7 @@ export default function MemberLayout({ children, path }: Props) {
                 </li>
                 <li>
                   <Link
-                    href="/MemberCenter/Journey"
+                    href="/member-center/tour"
                     className="md:flex md:space-x-3 md:py-4 md:items-center"
                   >
                     <AiOutlineHeart className="md:text-lg" />
@@ -64,7 +64,7 @@ export default function MemberLayout({ children, path }: Props) {
                 </li>
                 <li>
                   <Link
-                    href="/MemberCenter/Attract"
+                    href="/member-center/attraction"
                     className="md:flex md:space-x-3 md:py-4 md:items-center"
                   >
                     <GrLocation className="md:text-lg" />
@@ -79,7 +79,7 @@ export default function MemberLayout({ children, path }: Props) {
                 </li>
                 <li>
                   <Link
-                    href="/MemberCenter/Blog"
+                    href="/member-center/blog"
                     className="md:flex md:space-x-3 md:py-4 md:items-center"
                   >
                     <BsPencil className="md:text-lg" />
@@ -94,7 +94,7 @@ export default function MemberLayout({ children, path }: Props) {
                 </li>
                 <li>
                   <Link
-                    href="/MemberCenter/Track"
+                    href="/member-center/follow"
                     className="md:flex md:space-x-3 md:py-4 md:items-center"
                   >
                     <BsBookmarkHeart className="md:text-lg" />
@@ -109,7 +109,7 @@ export default function MemberLayout({ children, path }: Props) {
                 </li>
                 <li>
                   <Link
-                    href="/MemberCenter/Comment"
+                    href="/member-center/comment"
                     className="md:flex md:space-x-3 md:py-4 md:items-center"
                   >
                     <FaRegCommentDots className="md:text-lg" />
