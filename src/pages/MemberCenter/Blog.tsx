@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import BlogCard from '@/common/components/BlogCard'
+import SeeMore from '@/common/components/SeeMoreButton'
 import { MdKeyboardArrowDown } from 'react-icons/md'
+import Link from 'next/link'
 
 export default function Blog() {
   // tab  class 切換
@@ -103,7 +105,9 @@ export default function Blog() {
           <div className="md:bg-[#d7d7d7]">
             <div className="md:flex md:justify-between md:items-center md:px-10 md:py-8">
               <h2 className="md:text-xl md:font-bold">我的遊記</h2>
-              <button className="md:border md:px-5 md:py-2">新增遊記</button>
+              <Link href="../Blog/PostBlog">
+                <button className="md:border md:px-5 md:py-2">新增遊記</button>
+              </Link>
             </div>
             <hr className="md:w-full" />
             <div className="md:px-10 md:py-6">共有6則遊記</div>
@@ -158,29 +162,32 @@ export default function Blog() {
               </button>
             </div>
             <div className="md:flex md:flex-col md:space-y-6 lg:flex-row lg:flex-wrap lg:space-x-6">
-              <BlogCard
-                showCollect={true}
-                blogName="台北中山區巷弄隱藏美食一日遊"
-                poster="魔法公主"
-                time="2022-10-01 18:00"
-              />
-              <BlogCard
-                showCollect={true}
-                blogName="台北中山區巷弄隱藏美食一日遊"
-                poster="魔法公主"
-                time="2022-10-01 18:00"
-              />
-              <BlogCard
-                showCollect={true}
-                blogName="台北中山區巷弄隱藏美食一日遊"
-                poster="魔法公主"
-                time="2022-10-01 18:00"
-              />
+              <Link href="../Blog/ViewBlog">
+                <BlogCard
+                  showCollect={true}
+                  blogName="台北中山區巷弄隱藏美食一日遊"
+                  poster="魔法公主"
+                  time="2022-10-01 18:00"
+                />
+              </Link>
+              <Link href="../Blog/ViewBlog">
+                <BlogCard
+                  showCollect={true}
+                  blogName="台北中山區巷弄隱藏美食一日遊"
+                  poster="魔法公主"
+                  time="2022-10-01 18:00"
+                />
+              </Link>
+              <Link href="../Blog/ViewBlog">
+                <BlogCard
+                  showCollect={true}
+                  blogName="台北中山區巷弄隱藏美食一日遊"
+                  poster="魔法公主"
+                  time="2022-10-01 18:00"
+                />
+              </Link>
             </div>
-            <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-              <p>查看更多</p>
-              <MdKeyboardArrowDown />
-            </div>
+            <SeeMore />
           </div>
         </div>
       </MemberLayout>

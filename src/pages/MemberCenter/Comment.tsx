@@ -1,6 +1,7 @@
 import React from 'react'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import CommentCard from '@/common/components/CommentCard'
+import SeeMore from '@/common/components/SeeMoreButton'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 
 export default function Comment() {
@@ -54,10 +55,7 @@ export default function Comment() {
                 content="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
               />
             </div>
-            <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-              <p>查看更多</p>
-              <MdKeyboardArrowDown />
-            </div>
+            <SeeMore />
           </div>
         </div>
       </MemberLayout>
