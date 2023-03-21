@@ -5,15 +5,21 @@ interface JourneyCardProps {
   title: string
   number: number
   favorites: number
+  extraClassName?: string
 }
 
 const JourneyCard: React.FC<JourneyCardProps> = ({
   title,
   number,
   favorites,
+  extraClassName,
 }) => {
   return (
-    <div className="bg-[#d7d7d7] rounded-lg w-full lg:w-[calc(50%-12px)] lg:even:!mt-0 lg:odd:!ml-0">
+    <div
+      className={`bg-[#d7d7d7] rounded-lg w-full
+      ${extraClassName ?? 'lg:w-[calc(50%-12px)] lg:even:!mt-0 lg:odd:!ml-0'}
+    `}
+    >
       <div className="flex flex-col space-y-2 w-full">
         <div className="w-full h-[240px] bg-[#ccc] rounded-t-lg">這是圖片</div>
         <div className="flex space-x-2">
