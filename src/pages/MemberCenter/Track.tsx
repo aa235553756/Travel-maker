@@ -1,6 +1,7 @@
 import React from 'react'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import TrackCard from '@/common/components/TrackCard'
+import SeeMore from '@/common/components/SeeMoreButton'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 
 export default function Track() {
@@ -40,10 +41,7 @@ export default function Track() {
               <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
               <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
             </div>
-            <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-              <p>查看更多</p>
-              <MdKeyboardArrowDown />
-            </div>
+            <SeeMore />
           </div>
         </div>
       </MemberLayout>

@@ -1,6 +1,7 @@
 import React from 'react'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import AttractCard from '@/common/components/AttractCard'
+import SeeMore from '@/common/components/SeeMoreButton'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 
 export default function Attract() {
@@ -82,10 +83,7 @@ export default function Attract() {
                 type="城市走走"
               />
             </div>
-            <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-              <p>查看更多</p>
-              <MdKeyboardArrowDown />
-            </div>
+            <SeeMore />
           </div>
         </div>
       </MemberLayout>

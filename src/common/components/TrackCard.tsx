@@ -30,7 +30,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
             {/* 追蹤與取消追蹤 */}
             {isTrack ? (
               <button
-                className="bg-[#d7d7d7] px-7 py-2 block mx-auto w-[104px]"
+                className="bg-[#d7d7d7] border border-transparent px-7 py-2 block mx-auto w-[110px]"
                 onClick={() => {
                   trackState()
                 }}
@@ -39,7 +39,7 @@ const TrackCard: React.FC<TrackCardProps> = ({
               </button>
             ) : (
               <button
-                className="border border-black px-7 py-2 block mx-auto w-[104px]"
+                className="border border-black px-7 py-2 block mx-auto w-[110px]"
                 onClick={() => {
                   trackState()
                 }}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import JourneyCard from '@/common/components/JourneyCard'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
+import SeeMore from '@/common/components/SeeMoreButton'
 import { MdKeyboardArrowDown } from 'react-icons/md'
 
 export default function Journey() {
@@ -113,10 +114,7 @@ export default function Journey() {
                   favorites={100}
                 />
               </div>
-              <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-                <p>查看更多</p>
-                <MdKeyboardArrowDown />
-              </div>
+              <SeeMore />
             </div>
           </div>
         </div>
