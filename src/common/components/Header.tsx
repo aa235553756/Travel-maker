@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FcMenu } from 'react-icons/fc'
+import { FaBloggerB } from 'react-icons/fa'
 import {
   BsSearch,
   BsFillFlagFill,
@@ -9,10 +10,14 @@ import {
 import { IoHomeOutline, IoLocationSharp } from 'react-icons/io5'
 import { FaUserCircle, FaRegCommentDots } from 'react-icons/fa'
 import { SlSettings } from 'react-icons/sl'
-import { AiOutlineHeart } from 'react-icons/ai'
+import { AiOutlineHeart, AiOutlineSetting } from 'react-icons/ai'
 import { GrLocation } from 'react-icons/gr'
 import { BiLogOut } from 'react-icons/bi'
-import { MdKeyboardArrowDown, MdKeyboardArrowUp } from 'react-icons/md'
+import {
+  MdKeyboardArrowDown,
+  MdKeyboardArrowUp,
+  MdOutlineCancel,
+} from 'react-icons/md'
 import Link from 'next/link'
 
 export default function Header() {
@@ -20,16 +25,34 @@ export default function Header() {
   const [isHam, setIsHam] = useState(false)
   const hamState = () => {
     setIsHam(!isHam)
+    document.body.style.overflow = 'hidden'
   }
 
+  // 手機版搜尋
+  const [isSearching, setIsSearching] = useState(false)
+  const searchingState = () => {
+    setIsSearching(!isSearching)
+  }
   // 會員中心
   const [isMember, setIsMember] = useState(false)
   const memberState = () => {
     setIsMember(!isMember)
   }
 
+  const [showMember, setShowMember] = useState(false)
+  const showMemberState = () => {
+    setShowMember(!showMember)
+  }
+
+  useEffect(() => {
+    if (!isHam) {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isHam])
+
   return (
     <div>
+      {/* 電腦版 */}
       <div className="hidden md:h-[120px] md:bg-[#d9d9d9] md:flex md:items-center md:justify-between">
         <div className="container">
           <div className="flex items-center justify-between">
@@ -64,14 +87,44 @@ export default function Header() {
                   <BsFillFlagFill className="text-lg" />
                   <span className="text-xl">熱門話題</span>
                 </li>
-                <li className="flex space-x-2 items-center">
+                <li className="flex space-x-2 items-center relative">
                   <Link
-                    href="/MemberCenter"
+                    href=""
                     className="flex space-x-2 items-center"
+                    onClick={() => {
+                      showMemberState()
+                    }}
                   >
                     <IoLocationSharp className="text-lg" />
                     <span className="text-xl">會員中心</span>
                   </Link>
+                  {showMember ? (
+                    <div className="w-[300px] border ml-auto absolute right-0 top-[82px] z-10 rounded-lg shadow-lg bg-white">
+                      <a className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
+                        <div className="flex space-x-6 items-center">
+                          <div className="bg-[#ccc] rounded-full w-[52px] h-[52px]"></div>
+                          <span className="text-xl">會員設定</span>
+                        </div>
+                        <AiOutlineSetting />
+                      </a>
+                      <hr className="mx-[-20px]" />
+                      <a
+                        href="#"
+                        className="block px-5 py-4 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        我的社群
+                      </a>
+                      <hr className="mx-[-20px]" />
+                      <a
+                        href="#"
+                        className="block px-5 py-4 hover:bg-gray-100"
+                        role="menuitem"
+                      >
+                        登出{' '}
+                      </a>
+                    </div>
+                  ) : null}
                 </li>
                 <li>
                   <button className="text-lg border p-2">登入註冊</button>
@@ -82,22 +135,55 @@ export default function Header() {
         </div>
       </div>
 
+      {/* 手機版 */}
       <div className="block md:hidden">
         <div className="container">
-          <div className="flex justify-between items-center h-16">
-            <FcMenu
-              className="text-2xl"
-              onClick={() => {
-                hamState()
-              }}
-            />
-            <h1 className="text-xl">名稱名稱</h1>
-            <BsSearch className="text-2xl" />
-          </div>
+          {isSearching ? (
+            <div className="flex justify-between items-center h-16">
+              <FcMenu
+                className="text-2xl"
+                onClick={() => {
+                  hamState()
+                }}
+              />
+              <div className="relative max-w-full w-[228px] h-10">
+                <input
+                  className="absolute border placeholder-[#ccc] px-5 py-1 w-full h-full"
+                  placeholder="搜尋"
+                />
+                <div className="absolute top-3 right-5">
+                  <BsSearch />
+                </div>
+              </div>
+              <MdOutlineCancel
+                className="text-2xl"
+                onClick={() => {
+                  searchingState()
+                }}
+              />
+            </div>
+          ) : (
+            <div className="flex justify-between items-center h-16">
+              <FcMenu
+                className="text-2xl"
+                onClick={() => {
+                  hamState()
+                }}
+              />
+              <h1 className="text-xl">名稱名稱</h1>
+              <BsSearch
+                className="text-2xl"
+                onClick={() => {
+                  searchingState()
+                }}
+              />
+            </div>
+          )}
         </div>
-        <hr className="pb-6" />
+        <hr />
+
         {isHam ? (
-          <div className="p-5 h-screen text-center">
+          <div className="p-5 h-[calc(100vh-64px)] text-center overflow-auto">
             <ul className="inline-flex flex-col ">
               <li className="flex space-x-3 py-4 items-center">
                 <Link href="/" className="flex space-x-2 items-center">
@@ -180,6 +266,12 @@ export default function Header() {
                     >
                       <FaRegCommentDots className="text-lg" />
                       <span>我的評論</span>
+                    </Link>
+                  </li>
+                  <li className="flex space-x-3 py-4 items-center">
+                    <Link href="" className="flex space-x-2 items-center">
+                      <FaBloggerB className="text-lg" />
+                      <span>我的社群</span>
                     </Link>
                   </li>
                 </div>
