@@ -9,7 +9,7 @@ export default function CommentForm({}) {
         <p className="mb-6">
           您尚未登入，亦可
           <Link
-            href="/LoginAndSignUp"
+            href="/login"
             className="text-blue-400 underline visited:text-blue-600"
           >
             登入

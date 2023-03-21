@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import BlogCard from '../common/components/BlogCard'
+import BlogCard from '@/common/components/BlogCard'
 import SeeMore from '@/common/components/SeeMoreButton'
 import Follows from '@/modules/BlogPage/components/Follows'
 import Fans from '@/modules/BlogPage/components/Fans'

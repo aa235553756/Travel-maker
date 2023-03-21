@@ -3,7 +3,7 @@ import VoteDate from '@/modules/JourneyPage/VoteDate'
 import InvitePeople from '@/modules/JourneyPage/InvitePeople'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 
-export default function PlanJourney() {
+export default function PlanningTour() {
   return (
     <div>
       <div className="container">

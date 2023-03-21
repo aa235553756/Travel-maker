@@ -8,7 +8,7 @@ interface dataProp {
 export default function CustomLink({ data }: { data: dataProp }) {
   return (
     <Link
-      href="/Attractions"
+      href="/attractionions"
       className="text-lg inline-flex items-center mb-5 md:text-xl md:mb-11"
     >
       <IoIosArrowBack className="mr-2" />

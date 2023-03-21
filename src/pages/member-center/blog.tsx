@@ -105,7 +105,7 @@ export default function Blog() {
           <div className="md:bg-[#d7d7d7]">
             <div className="md:flex md:justify-between md:items-center md:px-10 md:py-8">
               <h2 className="md:text-xl md:font-bold">我的遊記</h2>
-              <Link href="../Blog/PostBlog">
+              <Link href="../blog/post-blog">
                 <button className="md:border md:px-5 md:py-2">新增遊記</button>
               </Link>
             </div>
@@ -162,7 +162,7 @@ export default function Blog() {
               </button>
             </div>
             <div className="md:flex md:flex-col md:space-y-6 lg:flex-row lg:flex-wrap lg:space-x-6">
-              <Link href="../Blog/ViewBlog">
+              <Link href="../blog/view-blog/1">
                 <BlogCard
                   showCollect={true}
                   blogName="台北中山區巷弄隱藏美食一日遊"
@@ -170,7 +170,7 @@ export default function Blog() {
                   time="2022-10-01 18:00"
                 />
               </Link>
-              <Link href="../Blog/ViewBlog">
+              <Link href="../blog/view-blog/1">
                 <BlogCard
                   showCollect={true}
                   blogName="台北中山區巷弄隱藏美食一日遊"
@@ -178,7 +178,7 @@ export default function Blog() {
                   time="2022-10-01 18:00"
                 />
               </Link>
-              <Link href="../Blog/ViewBlog">
+              <Link href="../blog/view-blog/1">
                 <BlogCard
                   showCollect={true}
                   blogName="台北中山區巷弄隱藏美食一日遊"

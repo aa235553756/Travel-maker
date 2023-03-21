@@ -52,7 +52,7 @@ export default function AttractionsList({
             <span>name:{item.title}</span>
             <Link
               className="text-blue-600 visited:text-blue-800"
-              href={`/Attractions/${item.id}`}
+              href={`/attractionions/${item.id}`}
             >
               id:{item.id}
             </Link>

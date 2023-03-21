@@ -1,9 +1,9 @@
-import CustomLink from './../../modules/AttrPage/CustomLink'
-import CommentForm from './../../modules/AttrPage/CommentForm'
+import CustomLink from '../../../modules/AttrPage/CustomLink'
+import CommentForm from '../../../modules/AttrPage/CommentForm'
 import React from 'react'
 import AttrImageContainer from '@/common/components/AttrImageContainer'
 import AttrIntro from '@/modules/AttrPage/AttrIntro'
-import OthersComment from './../../modules/AttrPage/OthersComment/index'
+import OthersComment from '../../../modules/AttrPage/OthersComment/index'
 import AttrArounds from '@/modules/AttrPage/AttrArounds'
 import {
   infoAry,
