@@ -1,21 +1,27 @@
 import React from 'react'
 import { tourType, transports, area } from '@/util/selectData'
+import { BsListCheck } from 'react-icons/bs'
 
 export default function SelectSide() {
   return (
     <>
-      {/* h2排行程 */}
-      <form className="mb-12 w-[264px] bg-[#D9D9D9]">
-        <h3 className="py-2 px-4">篩選內容</h3>
-        <div className="py-1 px-4 bg-[#C4C4C4]">選擇行程（必選）</div>
-        <LabelRadio />
-        <div className="py-1 px-4 bg-[#C4C4C4]">選擇類型（複選）</div>
-        <LableType />
-        <div className="py-1 px-4 bg-[#C4C4C4]">選擇交通工具</div>
-        <LableTransport />
-        <div className="py-1 px-4 bg-[#C4C4C4]">選擇地區（複選）</div>
-        <LableArea />
-      </form>
+      <div>
+        <h2 className="flex items-center mb-3 text-xl">
+          <BsListCheck className="mr-2 text-2xl" />
+          排行程
+        </h2>
+        <form className="mb-12 w-[264px] bg-[#D9D9D9]">
+          <h3 className="py-2 px-4">篩選內容</h3>
+          <div className="py-1 px-4 bg-[#C4C4C4]">選擇行程（必選）</div>
+          <LabelRadio />
+          <div className="py-1 px-4 bg-[#C4C4C4]">選擇類型（複選）</div>
+          <LableType />
+          <div className="py-1 px-4 bg-[#C4C4C4]">選擇交通工具</div>
+          <LableTransport />
+          <div className="py-1 px-4 bg-[#C4C4C4]">選擇地區（複選）</div>
+          <LableArea />
+        </form>
+      </div>
     </>
   )
 }
@@ -23,19 +29,19 @@ export default function SelectSide() {
 function LabelRadio({}) {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-4">
-      <label>
+      <label className="w-[85px] flex items-center">
         <input name="tourNumber" type="radio" value={2} className="mr-2" />
         2個景點
       </label>
-      <label className="ml-4 !mt-0">
+      <label className="ml-4 !mt-0 w-[85px]">
         <input name="tourNumber" type="radio" value={4} className="mr-2" />
         4個景點
       </label>
-      <label>
+      <label className="w-[85px]">
         <input name="tourNumber" type="radio" value={6} className="mr-2" />
         6個景點
       </label>
-      <label className="ml-4">
+      <label className="ml-4 w-[85px]">
         <input name="tourNumber" type="radio" value={8} className="mr-2" />
         8個景點
       </label>

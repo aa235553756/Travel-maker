@@ -7,7 +7,7 @@ interface ItemType {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Sortable: FC = (props) => {
+export default function Sortable() {
   const [state, setState] = useState<ItemType[]>([
     { id: 1, name: '1' },
     { id: 2, name: '2' },
@@ -23,12 +23,12 @@ const Sortable: FC = (props) => {
     <ReactSortable
       list={state}
       setList={setState}
-      className="flex flex-wrap gap-5"
+      className="flex flex-wrap gap-x-10 gap-y-6"
     >
       {state.map((item) => (
         <div
           key={item.id}
-          className="w-[calc(25%-15px)] cursor-pointer duration-150"
+          className="w-[calc(25%-30px)] cursor-pointer duration-150"
         >
           <img
             src={`https://picsum.photos/id/1${item.id}/600/600`}
@@ -39,4 +39,3 @@ const Sortable: FC = (props) => {
     </ReactSortable>
   )
 }
-export default Sortable
