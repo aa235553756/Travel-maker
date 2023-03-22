@@ -3,6 +3,7 @@ import VoteDate from '@/modules/JourneyPage/VoteDate'
 import InvitePeople from '@/modules/JourneyPage/InvitePeople'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
+import Sortable from '@/common/components/Sortable'
 
 export default function PlanningTour() {
   return (
@@ -19,7 +20,9 @@ export default function PlanningTour() {
               隨機產生行程
             </button>
           </div>
-          <div>123</div>
+          <div>
+            <Sortable />
+          </div>
         </div>
         <MoreJourney />
       </div>
