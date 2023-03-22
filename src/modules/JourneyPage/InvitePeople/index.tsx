@@ -28,12 +28,10 @@ export default function InvitePeople() {
     {
       username: '工藤新一',
       src: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
-      // borderColor: generateHexCode(),
     },
     {
       username: '安妮亞',
       src: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
-      // borderColor: generateHexCode(),
     },
   ])
   const addMail = () => {
@@ -42,7 +40,6 @@ export default function InvitePeople() {
       {
         username: '彭德',
         src: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
-        // borderColor: generateHexCode(),
       },
     ])
     setValue('')
@@ -91,30 +88,6 @@ export default function InvitePeople() {
           </div>
         </div>
 
-        {/* <div className="h-[180px] overflow-y-auto">
-          {mail.map(({ username, account }, index) => {
-            return (
-              <div className="bg-[#fff] border-b-2 p-4" key={index}>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-5">
-                    <span className="max-w-[64px] w-full inline-block overflow-hidden text-ellipsis">
-                      {username}
-                    </span>
-                    <span className="w-full inline-block overflow-hidden text-ellipsis">
-                      {account}
-                    </span>
-                  </div>
-                  <MdOutlineCancel
-                    onClick={() => {
-                      deleteMail(index)
-                    }}
-                  />
-                </div>
-              </div>
-            )
-          })}
-        </div> */}
-
         <div className="h-[180px] overflow-y-auto">
           <ul className="bg-[#fff] flex flex-wrap p-3">
             <li className="text-center relative w-[64px] mr-2 mb-2">
@@ -155,33 +128,6 @@ export default function InvitePeople() {
                 </li>
               )
             })}
-
-            {/* <li className="text-center relative w-[64px] mr-2 mb-2">
-              <Image
-                width="48"
-                height="48"
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
-                alt="圖片"
-                className="block mx-auto w-12 h-12 rounded-full bg-[#ccc] border-2 border-[#5DC30C] mb-2"
-              ></Image>
-              <p>房客</p>
-              <MdOutlineCancel className="absolute top-0 right-0" onClick={() => {
-                      deleteMail(index)
-                    }} />
-            </li>
-            <li className="text-center relative w-[64px] mr-2 mb-2">
-              <Image
-                width="48"
-                height="48"
-                src="https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80"
-                alt="圖片"
-                className="block mx-auto w-12 h-12 rounded-full bg-[#ccc] border-2 border-[#F0BF0F] mb-2"
-              ></Image>
-              <p>房客</p>
-              <MdOutlineCancel className="absolute top-0 right-0" onClick={() => {
-                      deleteMail(index)
-                    }} />
-            </li> */}
           </ul>
         </div>
       </div>
