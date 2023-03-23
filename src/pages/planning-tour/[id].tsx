@@ -4,8 +4,8 @@ import InvitePeople from '@/modules/JourneyPage/InvitePeople'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
 import Sortable from '@/common/components/Sortable'
-import { BsLink45Deg } from 'react-icons/bs'
-import { MdSave } from 'react-icons/md'
+import { BsLink45Deg, BsList } from 'react-icons/bs'
+import { MdSave, MdOutlineCancel } from 'react-icons/md'
 
 export default function PlanningTour() {
   const [tabPos, setTabPos] = useState('備用景點')
@@ -17,9 +17,10 @@ export default function PlanningTour() {
           <VoteDate />
           <InvitePeople />
         </div>
+        {/* 中間拖拉 & 篩選區塊 */}
         <div className="flex mb-[200px]">
           {/* 篩選器及其按鈕 */}
-          <div className="mr-6">
+          <div className="mr-6 hidden md:block">
             <SelectSide />
             <button className="py-4 w-full bg-[#737373] text-white">
               隨機產生行程
@@ -38,7 +39,7 @@ export default function PlanningTour() {
               行程名稱：美食吃透透
             </h2>
             {/* 拖拉1 */}
-            <div className="mb-6">
+            <div className="mb-6 max-lg:max-w-[396px] max-lg:overflow-x-scroll max-lg:mb-4">
               <Sortable />
             </div>
             <ul className="flex mb-7">
@@ -65,11 +66,17 @@ export default function PlanningTour() {
                 {Array(15)
                   .fill('')
                   .map((item, index) => {
-                    let className = `w-[124px] h-[124px] bg-[#ECECEC] mb-6 mr-10`
+                    let className = `flex relative items-center justify-center w-[124px] h-[124px] bg-[#ECECEC] mb-6 mr-10`
                     if (index === 4 || index === 9 || index === 14) {
                       className += ' !mr-0'
                     }
-                    return <div key={index} className={className}></div>
+                    return (
+                      <div key={index} className={className}>
+                        <MdOutlineCancel className="absolute text-xl top-1 right-1" />
+                        大安森林公園
+                        <BsList className="absolute text-xl bottom-1 left-[50%] -translate-x-[50%]" />
+                      </div>
+                    )
                   })}
               </div>
             ) : (
@@ -78,7 +85,7 @@ export default function PlanningTour() {
               </div>
             )}
             <button className="inline-flex justify-center ml-auto px-10 py-4 items-center bg-[#D9D9D9]">
-              <MdSave className="text-lg" />
+              <MdSave className="text-lg mr-2" />
               儲存
             </button>
           </div>

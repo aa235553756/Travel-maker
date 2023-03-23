@@ -10,7 +10,7 @@ export default function SelectSide() {
           <BsListCheck className="mr-2 text-2xl" />
           排行程
         </h2>
-        <form className="mb-12 w-[264px] bg-[#D9D9D9]">
+        <form className="mb-12 md:w-[218px] lg:w-[264px] bg-[#D9D9D9]">
           <h3 className="py-2 px-4">篩選內容</h3>
           <div className="py-1 px-4 bg-[#C4C4C4]">選擇行程（必選）</div>
           <LabelRadio />
