@@ -62,7 +62,7 @@ export default function PlanningTour() {
             </ul>
             {/* 拖拉2 */}
             {tabPos === '備用景點' ? (
-              <div className="flex flex-wrap mb-12 py-5 px-7 w-full h-full max-h-[312px] overflow-y-scroll bg-[#D9D9D9]">
+              <div className="flex flex-wrap scrollbar-style mb-12 py-5 px-7 w-full h-full max-h-[312px] overflow-y-scroll bg-[#D9D9D9]">
                 {Array(15)
                   .fill('')
                   .map((item, index) => {

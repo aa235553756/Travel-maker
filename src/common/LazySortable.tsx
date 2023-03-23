@@ -23,7 +23,7 @@ export default function Sortable() {
     <ReactSortable
       list={state}
       setList={setState}
-      className="flex overflow-x-scroll max-w-[840px] max-lg:w-[828px] gap-x-10 md:gap-x-9 gap-y-6"
+      className="flex overflow-x-scroll scrollbar-style max-w-[840px] max-lg:w-[828px] gap-x-10 md:gap-x-9 gap-y-6"
     >
       {state.map((item) => (
         <div

@@ -2,30 +2,34 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
 
+  input,
+  textarea {
+    font-size: initial !impportant
+  }
+
   /* total width */
-  *::-webkit-scrollbar {
+  .scrollbar-style::-webkit-scrollbar {
     background-color: #fff;
     width: 4px;
     height: 8px;
   }
 
   /* background of the scrollbar except button or resizer */
-  *::-webkit-scrollbar-track {
+  .scrollbar-style::-webkit-scrollbar-track {
     background-color: red;
   }
 
   /* scrollbar itself */
-  *::-webkit-scrollbar-thumb {
+  .scrollbar-style::-webkit-scrollbar-thumb {
     background-color: blue;
     border-radius: 16px;
     /* border: 4px solid blue; */
   }
 
   /* set button(top and bottom of the scrollbar) */
-  *::-webkit-scrollbar-button {
+  .scrollbar-style::-webkit-scrollbar-button {
     display: none;
   }
 }
