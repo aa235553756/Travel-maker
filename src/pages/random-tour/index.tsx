@@ -1,17 +1,29 @@
-import LazySortable from '@/common/LazySortable'
+import LazySortable from '@/common/components/LazySortable'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
+import { IFormInput } from '@/util/types'
 import React from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
 import { BsLink45Deg, BsHeart, BsPlusLg } from 'react-icons/bs'
 
-export default function randomTourIndex() {
+export default function RandomTourIndex() {
+  const { register, handleSubmit } = useForm<IFormInput>()
+  // 這邊打POST，取得隨機行程
+  const formId = 'random-tour-form'
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
+
   return (
     <div className="container pt-20 pb-[160px]">
       <div className="flex mb-[180px]">
         {/* 篩選器及其按鈕 */}
         <div className="mr-6 hidden md:block">
-          <SelectSide />
-          <button className="py-4 w-full bg-[#737373] text-white">
+          <SelectSide
+            formId={formId}
+            handleSubmit={handleSubmit}
+            onSubmit={onSubmit}
+            register={register}
+          />
+          <button form={formId} className="py-4 w-full bg-[#737373] text-white">
             隨機產生行程
           </button>
         </div>

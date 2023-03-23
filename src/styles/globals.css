@@ -6,11 +6,13 @@
 
   input,
   textarea {
-    font-size: initial !impportant
+    font-size: initial !important
   }
 
   /* total width */
   .scrollbar-style::-webkit-scrollbar {
+    position: relative;
+    bottom: 0;
     background-color: #fff;
     width: 4px;
     height: 8px;

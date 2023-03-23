@@ -23,19 +23,26 @@ export default function Sortable() {
     <ReactSortable
       list={state}
       setList={setState}
-      className="flex flex-wrap max-lg:w-[828px] gap-x-10 md:gap-x-9 gap-y-6"
+      className="flex flex-wrap max-lg:w-[828px] lg:-mb-6 md:-mb-6"
     >
-      {state.map((item) => (
-        <div
-          key={item.id}
-          className="min-w-[180px] w-[calc(25%-30px)] cursor-pointer duration-150"
-        >
-          <img
-            src={`https://picsum.photos/id/1${item.id}/600/600`}
-            alt="slide 1"
-          />
-        </div>
-      ))}
+      {state.map((item, index) => {
+        let className =
+          'max-lg:min-w-[180px] w-[calc(25%-30px)] lg:mr-10 md:mr-9 mb-6 cursor-pointer duration-150'
+        if (index % 4 === 3) {
+          className += ' !mr-0'
+        }
+        if ([4, 5, 6, 7].includes(index)) {
+          className += ' max-lg:!mb-0'
+        }
+        return (
+          <div key={item.id} className={className}>
+            <img
+              src={`https://picsum.photos/id/1${item.id}/600/600`}
+              alt="slide 1"
+            />
+          </div>
+        )
+      })}
     </ReactSortable>
   )
 }

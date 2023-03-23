@@ -6,9 +6,15 @@ import SelectSide from '@/modules/JourneyPage/SelectSide'
 import Sortable from '@/common/components/Sortable'
 import { BsLink45Deg, BsList } from 'react-icons/bs'
 import { MdSave, MdOutlineCancel } from 'react-icons/md'
+import { IFormInput } from '@/util/types'
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 export default function PlanningTour() {
   const [tabPos, setTabPos] = useState('備用景點')
+  const { register, handleSubmit } = useForm<IFormInput>()
+  // 這邊打POST取得隨機行程
+  const formId = 'planning-tour-form'
+  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
 
   return (
     <div>
@@ -21,34 +27,38 @@ export default function PlanningTour() {
         <div className="flex mb-[200px]">
           {/* 篩選器及其按鈕 */}
           <div className="mr-6 hidden md:block">
-            <SelectSide />
-            <button className="py-4 w-full bg-[#737373] text-white">
+            <SelectSide
+              formId={formId}
+              handleSubmit={handleSubmit}
+              register={register}
+              onSubmit={onSubmit}
+            />
+            <button
+              type="submit"
+              form={formId}
+              className="py-4 w-full bg-[#737373] text-white"
+            >
               隨機產生行程
             </button>
           </div>
           {/* 拖拉 */}
           <div className="flex flex-col">
-            {/* 懶人行程連結 */}
-            <h2 className="!hidden inline-flex px-1 -my-1 items-center mb-3 text-xl border rounded-md">
-              <BsLink45Deg className="mr-2 text-2xl" />
-              複製連結
-            </h2>
             {/* 房間行程連結，應該兩邊都一樣 */}
             <h2 className="flex items-center mb-3 text-xl font-bold">
               <BsLink45Deg className="mr-2 text-lg border w-[28px] h-[28px] rounded-md" />
               行程名稱：美食吃透透
             </h2>
-            {/* 拖拉1 */}
-            <div className="mb-6 max-lg:max-w-[396px] max-lg:overflow-x-scroll max-lg:mb-4">
+            {/* 拖拉1 max-lg為1280以下出現x軸 */}
+            <div className="mb-6 h-full lg:h-auto scrollbar-style max-lg:max-w-[396px] max-lg:overflow-x-scroll max-lg:mb-4">
               <Sortable />
             </div>
-            <ul className="flex mb-7">
+            <ul className="flex mb-6">
               {['備用景點', '地圖'].map((item, index) => {
                 return (
                   <li
                     key={index}
-                    className={`duration-150 pb-4 w-[25%] md:w-1/6 text-center border-b-2 cursor-pointer -mb-[2px]
-              ${tabPos === item ? `border-[#1890FF]` : null}`}
+                    className={`duration-150 pb-4 w-[25%] md:w-1/6 text-center border-b-2 cursor-pointer mb-[2px]
+                      ${tabPos === item ? `border-[#1890FF]` : null}`}
                     onClick={() => {
                       setTabPos(item)
                     }}
@@ -58,16 +68,17 @@ export default function PlanningTour() {
                 )
               })}
 
-              <div className="flex-grow border-b"></div>
+              <div className="flex-grow border-b-2 mb-[2px]"></div>
             </ul>
-            {/* 拖拉2 */}
+            {/* 拖拉2，備用景點 & 地圖 */}
             {tabPos === '備用景點' ? (
-              <div className="flex flex-wrap scrollbar-style mb-12 py-5 px-7 w-full h-full max-h-[312px] overflow-y-scroll bg-[#D9D9D9]">
+              <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] scrollbar-style overflow-y-scroll bg-[#D9D9D9]">
                 {Array(15)
                   .fill('')
                   .map((item, index) => {
                     let className = `flex relative items-center justify-center w-[124px] h-[124px] bg-[#ECECEC] mb-6 mr-10`
-                    if (index === 4 || index === 9 || index === 14) {
+                    // 逢4 mr-0
+                    if (index % 5 === 4) {
                       className += ' !mr-0'
                     }
                     return (
