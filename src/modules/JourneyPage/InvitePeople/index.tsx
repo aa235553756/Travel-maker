@@ -2,8 +2,24 @@ import React, { useState } from 'react'
 import { MdAdd, MdOutlineCancel } from 'react-icons/md'
 import { BsPersonFillAdd, BsLink45Deg } from 'react-icons/bs'
 import { RiGlobalLine } from 'react-icons/ri'
+import Image from 'next/image'
 
 export default function InvitePeople() {
+  // 產生色碼
+  const generateHexCode = () => {
+    // 可選的 HEX 色碼字元
+    const hexChars = '0123456789ABCDEF'
+
+    // 生成一個 6 個字符的 HEX 色碼
+    let hexCode = ''
+    for (let i = 0; i < 6; i++) {
+      hexCode += hexChars[Math.floor(Math.random() * 16)]
+    }
+
+    // 返回 HEX 色碼
+    return '#' + hexCode
+  }
+
   // 夥伴帳號 value
   const [value, setValue] = useState('')
 
@@ -11,19 +27,11 @@ export default function InvitePeople() {
   const [mail, setMail] = useState([
     {
       username: '工藤新一',
-      account: 'aswe5231267@gmail.com',
+      src: 'https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
     },
     {
       username: '安妮亞',
-      account: 'aswe5231267@gmail.com',
-    },
-    {
-      username: '苦艾酒',
-      account: 'aswe5231267@gmail.com',
-    },
-    {
-      username: '彭德',
-      account: 'aswe5231267@gmail.com',
+      src: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
     },
   ])
   const addMail = () => {
@@ -31,7 +39,7 @@ export default function InvitePeople() {
       ...mail,
       {
         username: '彭德',
-        account: value,
+        src: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1471&q=80',
       },
     ])
     setValue('')
@@ -81,27 +89,46 @@ export default function InvitePeople() {
         </div>
 
         <div className="h-[180px] overflow-y-auto">
-          {mail.map(({ username, account }, index) => {
-            return (
-              <div className="bg-[#fff] border-b-2 p-4" key={index}>
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center space-x-5">
-                    <span className="max-w-[64px] w-full inline-block overflow-hidden text-ellipsis">
-                      {username}
-                    </span>
-                    <span className="w-full inline-block overflow-hidden text-ellipsis">
-                      {account}
-                    </span>
-                  </div>
+          <ul className="bg-[#fff] flex flex-wrap p-3">
+            <li className="text-center relative w-[64px] mr-2 mb-2">
+              <Image
+                width="48"
+                height="48"
+                src="https://images.unsplash.com/photo-1678649929657-850077f854e3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                alt="圖片"
+                style={{ border: `2px solid ${generateHexCode()}` }}
+                className={`block mx-auto w-12 h-12 rounded-full bg-[#ccc] border-2 mb-2`}
+              ></Image>
+              <p>房主</p>
+            </li>
+
+            {mail.map(({ username, src }, index) => {
+              return (
+                <li
+                  className="text-center relative w-[64px] mr-2 mb-2"
+                  key={index}
+                >
+                  <Image
+                    width="48"
+                    height="48"
+                    src={src}
+                    alt="圖片"
+                    style={{ border: `2px solid ${generateHexCode()}` }}
+                    className={`block mx-auto w-12 h-12 rounded-full bg-[#ccc] border-2 mb-2`}
+                  ></Image>
+                  <p className="w-full inline-block overflow-hidden text-ellipsis">
+                    {username}
+                  </p>
                   <MdOutlineCancel
+                    className="absolute top-0 -right-2"
                     onClick={() => {
                       deleteMail(index)
                     }}
                   />
-                </div>
-              </div>
-            )
-          })}
+                </li>
+              )
+            })}
+          </ul>
         </div>
       </div>
     </div>

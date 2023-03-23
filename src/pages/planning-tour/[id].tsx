@@ -19,7 +19,7 @@ export default function PlanningTour() {
   return (
     <div>
       <div className="container">
-        <div className="block lg:flex lg:space-x-6 lg:mb-20 mt-[80px]">
+        <div className="block mt-4 lg:flex lg:space-x-6 lg:mb-20 md:mt-[80px]">
           <VoteDate />
           <InvitePeople />
         </div>
