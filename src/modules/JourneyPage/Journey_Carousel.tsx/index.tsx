@@ -9,12 +9,12 @@ import 'swiper/css/pagination'
 
 // import required modules
 import { Grid, Pagination, A11y } from 'swiper'
-import TypeLabel from '@/modules/HomePage/Banner/components/TypeLabel'
+
 import OpenFormBtn from '@/common/components/OpenFormBtn'
-import { useForm } from 'react-hook-form'
+// import { useForm } from 'react-hook-form'
 
 export default function App() {
-  const { register, watch } = useForm()
+  // const { register, watch } = useForm()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isHidden, setIsHidden] = useState(true)
 
@@ -28,7 +28,7 @@ export default function App() {
             排行程
           </h4>
           <div className="md:hidden flex space-x-4 mb-4 overflow-scroll md:overflow-auto">
-            <TypeLabel register={register} watch={watch} />
+            {/* <TypeLabel register={register} watch={watch} /> */}
           </div>
           <OpenFormBtn isHidden={isHidden} setIsHidden={setIsHidden} />
           {/* 規劃行程電腦表單 */}
