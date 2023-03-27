@@ -1,0 +1,35 @@
+.filepond--credits {
+  display: none;
+}
+
+.filepond--drop-label.filepond--drop-label label {
+  border: 1px solid #000;
+  padding: 8px 20px !important;
+}
+
+.uploadBtn {
+  display: flex;
+  align-items: center;
+}
+.uploadIcon {
+  background-image: url('../../public/upload.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.filepond--label-action {
+  text-decoration: none !important;
+}
+
+.filepond--root .filepond--hopper {
+  height: 132px !important;
+}
+
+.filepond--drop-label {
+  background-color: #efefef;
+  border-radius: 6px;
+  height: 132px !important;
+}

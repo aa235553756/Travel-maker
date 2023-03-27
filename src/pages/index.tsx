@@ -1,5 +1,10 @@
 import Head from 'next/head'
-import { Button } from '../styles/styled/button'
+import SeeOthers from '@/modules/HomePage/SeeOthers'
+import HotAttract from '@/modules/HomePage/HotAttract'
+import WhereIGO from '@/modules/HomePage/WhereIGO'
+import Explore from '@/modules/HomePage/Explore'
+import Feature from '@/modules/HomePage/Feature'
+import Banner from '@/modules/Banner'
 
 export default function Home() {
   return (
@@ -10,10 +15,14 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <h1>hello,world</h1>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
-      <Button>我是按鈕</Button>
-      <Button $primary={true}>我是按鈕</Button>
+      <div>
+        <Banner />
+        <WhereIGO />
+        <Feature />
+        <Explore />
+        <SeeOthers />
+        <HotAttract />
+      </div>
     </>
   )
 }
