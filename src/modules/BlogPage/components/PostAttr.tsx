@@ -1,11 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
-import { BsGeoAltFill, BsImageFill } from 'react-icons/bs'
+import UploadImage from './UploadImage'
+import { BsGeoAltFill } from 'react-icons/bs'
 
-interface PostAttrProps {
-  attractName: string
-}
-
-const PostAttr: React.FC<PostAttrProps> = ({ attractName }) => {
+export default function PostAttr({ attractName }: { attractName: string }) {
   return (
     <div className="flex flex-col space-y-4">
       {/* 景點 */}
@@ -13,23 +11,19 @@ const PostAttr: React.FC<PostAttrProps> = ({ attractName }) => {
         <BsGeoAltFill />
         <span className="text-lg">{attractName}</span>
       </div>
+      
       {/* 上傳照片 */}
-      <div className="bg-[#d7d7d7] h-[132px] flex justify-center items-center">
-        <button className="border px-5 py-2 flex space-x-2 items-center">
-          <BsImageFill />
-          <span>上傳照片</span>
-        </button>
-      </div>
+      <UploadImage />
+
       {/* 輸入內容 */}
       <textarea
         name="blogContent"
         cols={30}
         rows={10}
         className="border p-3 w-full"
-        placeholder='請輸入內容'
+        placeholder="請輸入內容"
+        style={{ resize: 'none' }}
       ></textarea>
     </div>
   )
 }
-
-export default PostAttr

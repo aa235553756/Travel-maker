@@ -1,7 +1,7 @@
 import SearchButton from '@/common/components/searchButton'
 import React, { useState } from 'react'
 import Select from 'react-select'
-import JourneyCard from '@/common/components/JourneyCard'
+import TourCard from '@/common/components/card/TourCard'
 import ReactPaginate from 'react-paginate'
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs'
 
@@ -121,7 +121,7 @@ export default function HotTopics() {
             }
 
             return (
-              <JourneyCard
+              <TourCard
                 key={index}
                 favorites={1.5}
                 number={1}

@@ -1,25 +1,38 @@
 import React from 'react'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
-import TrackCard from '@/common/components/TrackCard'
-import SeeMore from '@/common/components/SeeMoreButton'
-import { MdKeyboardArrowDown } from 'react-icons/md'
+import FollowUserCard from '@/modules/MemberCenterPage/components/FollowUserCard'
+import SeeMore from '@/common/components/SeeMore'
 
 export default function Track() {
   return (
     <div>
       {/* 手機版 */}
       <div className="container">
-        <h2 className="text-lg font-bold mt-8 mb-4 md:hidden">我的追蹤</h2>
-        {/* 詳細資訊區 */}
-        <div className="flex flex-col md:hidden">
-          <div className="flex flex-col space-y-6">
-            <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
-            <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
-            <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
-          </div>
-          <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-            <p>查看更多</p>
-            <MdKeyboardArrowDown />
+        <div className="pt-8 pb-[158px] md:hidden">
+          {' '}
+          <h2 className="text-lg font-bold mb-4">我的追蹤</h2>
+          {/* 詳細資訊區 */}
+          <div className="flex flex-col">
+            <div className="flex flex-col space-y-6">
+              <FollowUserCard
+                poster="DesignLab"
+                posts={2}
+                fans={10}
+                followers={1}
+              />
+              <FollowUserCard
+                poster="DesignLab"
+                posts={2}
+                fans={10}
+                followers={1}
+              />
+              <FollowUserCard
+                poster="DesignLab"
+                posts={2}
+                fans={10}
+                followers={1}
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -36,10 +49,25 @@ export default function Track() {
           </div>
           {/* 詳細資訊區 */}
           <div>
-            <div className="md:flex md:flex-col md:space-y-6 lg:flex-row lg:flex-wrap lg:space-x-6">
-              <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
-              <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
-              <TrackCard poster="DesignLab" posts={2} fans={10} trackers={1} />
+            <div className="md:flex md:flex-col md:space-y-6 md:mb-16 lg:flex-row lg:flex-wrap lg:space-x-6">
+              <FollowUserCard
+                poster="DesignLab"
+                posts={2}
+                fans={10}
+                followers={1}
+              />
+              <FollowUserCard
+                poster="DesignLab"
+                posts={2}
+                fans={10}
+                followers={1}
+              />
+              <FollowUserCard
+                poster="DesignLab"
+                posts={2}
+                fans={10}
+                followers={1}
+              />
             </div>
             <SeeMore />
           </div>

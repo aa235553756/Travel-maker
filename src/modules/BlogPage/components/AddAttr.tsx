@@ -1,27 +1,40 @@
 import React from 'react'
-import { BsGeoAltFill, BsImageFill } from 'react-icons/bs'
+import Select from 'react-select'
+import UploadImage from './UploadImage'
+import { BsGeoAltFill } from 'react-icons/bs'
 import { IoAddCircleOutline } from 'react-icons/io5'
 
-const AddAttr: React.FC = () => {
+export default function AddAttr() {
+  const AttrOptions = [
+    { value: '大安森林公園', label: '大安森林公園' },
+    { value: '中山蝴蝶園', label: '中山蝴蝶園' },
+    { value: '中正藝廊', label: '中正藝廊' },
+  ]
   return (
     <div className="flex flex-col space-y-4">
       {/* 景點 */}
       <div className="flex items-center space-x-2">
         <BsGeoAltFill />
-        <input
-          type="text"
-          className="border rounded-lg p-2"
-          placeholder="新增景點"
+        <Select
+          id="selectbox"
+          instanceId="selectbox"
+          options={AttrOptions}
+          isSearchable={true}
+          placeholder="請輸入關鍵字"
+          className="w-full md:w-1/3 rounded-md"
+          styles={{
+            control: (baseStyles) => ({
+              ...baseStyles,
+              height: '42px',
+            }),
+          }}
         />
         <IoAddCircleOutline className="text-xl" />
       </div>
+
       {/* 上傳照片 */}
-      <div className="bg-[#d7d7d7] h-[132px] flex justify-center items-center">
-        <button className="border px-5 py-2 flex space-x-2 items-center">
-          <BsImageFill />
-          <span>上傳照片</span>
-        </button>
-      </div>
+      <UploadImage />
+
       {/* 輸入內容 */}
       <textarea
         name="blogContent"
@@ -29,9 +42,8 @@ const AddAttr: React.FC = () => {
         rows={10}
         className="border p-3 w-full"
         placeholder="請輸入內容"
+        style={{ resize: 'none' }}
       ></textarea>
     </div>
   )
 }
-
-export default AddAttr

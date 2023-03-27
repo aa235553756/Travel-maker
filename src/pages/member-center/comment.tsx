@@ -1,32 +1,29 @@
 import React from 'react'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
-import CommentCard from '@/common/components/CommentCard'
-import SeeMore from '@/common/components/SeeMoreButton'
-import { MdKeyboardArrowDown } from 'react-icons/md'
+import CommentCard from '@/modules/MemberCenterPage/components/CommentCard'
+import SeeMore from '@/common/components/SeeMore'
 
 export default function Comment() {
   return (
     <div>
       {/* 手機版 */}
       <div className="container">
-        <h2 className="text-lg font-bold mt-8 mb-4 md:hidden">我的評論</h2>
-        {/* 詳細資訊區 */}
-        <div className="flex flex-col md:hidden">
-          <div className="flex flex-col space-y-6">
-            <CommentCard
-              user="小熊軟糖"
-              attract="大安森林公園"
-              content="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
-            />
-            <CommentCard
-              user="小熊軟糖"
-              attract="大安森林公園"
-              content="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
-            />
-          </div>
-          <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-            <p>查看更多</p>
-            <MdKeyboardArrowDown />
+        <div className="pt-8 pb-[158px] md:hidden">
+          <h2 className="text-lg font-bold mb-4">我的評論</h2>
+          {/* 詳細資訊區 */}
+          <div className="flex flex-col">
+            <div className="flex flex-col space-y-6">
+              <CommentCard
+                user="小熊軟糖"
+                attraction="大安森林公園"
+                comment="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
+              />
+              <CommentCard
+                user="小熊軟糖"
+                attraction="大安森林公園"
+                comment="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -43,16 +40,16 @@ export default function Comment() {
           </div>
           {/* 詳細資訊區 */}
           <div>
-            <div className="md:flex md:flex-col md:space-y-6 lg:flex-row lg:flex-wrap">
+            <div className="md:flex md:flex-col md:space-y-6  md:mb-16 lg:flex-row lg:flex-wrap">
               <CommentCard
                 user="小熊軟糖"
-                attract="大安森林公園"
-                content="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
+                attraction="大安森林公園"
+                comment="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
               />
               <CommentCard
                 user="小熊軟糖"
-                attract="大安森林公園"
-                content="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
+                attraction="大安森林公園"
+                comment="假日很多人來野餐，鋪地墊曬日光浴，享受悠閒放假時光，不需要開車去很遠的地方，搭捷運就可以到，開車來也有地下停車場可以停，很方便。"
               />
             </div>
             <SeeMore />
