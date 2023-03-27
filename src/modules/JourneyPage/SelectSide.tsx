@@ -1,5 +1,10 @@
 import React from 'react'
-import { tourType, transports, area, tourNumber } from '@/util/selectData'
+import {
+  CategoryId,
+  Transports,
+  DistrictName,
+  AttrCounts,
+} from '@/util/selectData'
 import { BsListCheck } from 'react-icons/bs'
 import {
   UseFormRegister,
@@ -52,7 +57,7 @@ export default function SelectSide({
 function LabelRadio({ register }: { register: UseFormRegister<IFormInput> }) {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-4">
-      {tourNumber.map((item, index) => {
+      {AttrCounts.map((item, index) => {
         return (
           <label
             key={index}
@@ -65,7 +70,7 @@ function LabelRadio({ register }: { register: UseFormRegister<IFormInput> }) {
               value={item.value}
               className="mr-2"
             />
-            {item.number}
+            {item.name}
           </label>
         )
       })}
@@ -76,20 +81,20 @@ function LabelRadio({ register }: { register: UseFormRegister<IFormInput> }) {
 function LableType() {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-3">
-      {/* tourType map */}
-      {tourType.map((item, index) => {
+      {/* CategoryId map */}
+      {CategoryId.map((item, index) => {
         return (
           <label
             key={index}
             className="ml-4 odd:!ml-0 [&:nth-child(1)]:w-[85px] [&:nth-child(2)]:!mt-0"
           >
             <input
-              name="tourNumber"
+              name="AttrCounts"
               type="checkbox"
               value={index}
               className="mr-2"
             />
-            {item}
+            {item.name}
           </label>
         )
       })}
@@ -100,19 +105,19 @@ function LableType() {
 function LableTransport({}) {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-3">
-      {transports.map((item, index) => {
+      {Transports.map((item, index) => {
         return (
           <label
             key={index}
             className="w-[85px] ml-4 odd:!ml-0 [&:nth-child(2)]:!mt-0"
           >
             <input
-              name="transports"
+              name="Transports"
               type="radio"
-              value={item}
+              value={item.name}
               className="mr-2"
             />
-            {item}
+            {item.name}
           </label>
         )
       })}
@@ -123,7 +128,7 @@ function LableTransport({}) {
 function LableArea({}) {
   return (
     <div className="flex flex-wrap px-4 pt-2 pb-5 space-y-3">
-      {area.map((item, index) => {
+      {DistrictName.map((item, index) => {
         if (index === 0 || index === 1) {
           return (
             <label
@@ -131,12 +136,11 @@ function LableArea({}) {
               className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0"
             >
               <input
-                name="tourNumber"
+                name="AttrCounts"
                 type="radio"
                 value={2}
                 className="mr-2"
               />
-              {item}
             </label>
           )
         }
@@ -146,7 +150,12 @@ function LableArea({}) {
             key={index}
             className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0"
           >
-            <input name="area" type="checkbox" value={2} className="mr-2" />
+            <input
+              name="DistrictName"
+              type="checkbox"
+              value={2}
+              className="mr-2"
+            />
             {item}
           </label>
         )
