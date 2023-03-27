@@ -1,7 +1,7 @@
 import SearchButton from '@/common/components/searchButton'
 import React, { useState } from 'react'
 import Select from 'react-select'
-import JourneyCard from '@/common/components/JourneyCard'
+import TourCard from '@/common/components/card/TourCard'
 import ReactPaginate from 'react-paginate'
 import { BsChevronLeft, BsChevronRight } from 'react-icons/bs'
 
@@ -106,32 +106,13 @@ export default function HotTopics() {
         {Array(9)
           .fill('')
           .map((item, index) => {
-            let extraClassName = ''
-            // 電腦版判斷
-            if (index === 1 || index === 2) {
-              extraClassName += 'lg:!mt-0'
-            }
-            if (index === 3 || index === 6) {
-              extraClassName += ' lg:!ml-0'
-            }
-            // 平板版判斷
-            if (index === 1) {
-              extraClassName += ' md:!mt-0'
-            }
-            if (index === 2 || index == 4 || index == 6 || index === 8) {
-              // 平板以下ml0
-              extraClassName += ' max-lg:!ml-0'
-            }
-
             return (
-              <JourneyCard
+              <TourCard
                 key={index}
-                favorites={1.5}
-                number={1}
-                title={'大安森林公園'}
-                extraClassName={
-                  extraClassName + ' md:w-[calc(50%-12px)] lg:max-w-[360px]'
-                }
+                likes={1.5}
+                countAttr={1}
+                tourName={'大安森林公園'}
+                showLike={true}
               />
             )
           })}

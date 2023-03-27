@@ -4,7 +4,6 @@ import BlogCard from '@/common/components/card/BlogCard'
 import SeeMore from '@/common/components/SeeMore'
 import Follows from '@/modules/BlogPage/components/Follows'
 import Fans from '@/modules/BlogPage/components/Fans'
-import FollowBtn from '@/common/components/button/FollowBtn'
 
 export default function MyBlog() {
   // tab class 切換
@@ -25,10 +24,8 @@ export default function MyBlog() {
             height={90}
             className="rounded-full min-h-[90px]"
           ></Image>
-          <h2 className="text-[22px] font-bold grow">老頭阿迪</h2>
-          <FollowBtn />
+          <h2 className="text-[22px] font-bold">小熊軟糖</h2>
         </div>
-
         {/* 頁籤 */}
         <div className="pb-10">
           <div className="flex justify-between pb-2">

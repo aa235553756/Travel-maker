@@ -3,9 +3,9 @@ import { MdKeyboardArrowDown } from 'react-icons/md'
 
 export default function SeeMore() {
   return (
-      <button className="flex items-center space-x-2 mx-auto p-7">
-        <p>查看更多</p>
+      <div className="flex justify-center items-center space-x-2">
+        <p>滾動觀看更多</p>
         <MdKeyboardArrowDown />
-      </button>
+      </div>
   )
 }

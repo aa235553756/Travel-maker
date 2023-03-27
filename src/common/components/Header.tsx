@@ -97,8 +97,8 @@ export default function Header() {
                   </Link>
                 </li>
                 <li className="flex space-x-2 items-center relative">
-                  <Link
-                    href=""
+                  <button
+                    type="button"
                     className="flex space-x-2 items-center"
                     onClick={() => {
                       showMemberState()
@@ -106,10 +106,15 @@ export default function Header() {
                   >
                     <IoLocationSharp className="text-lg" />
                     <span className="text-xl">會員中心</span>
-                  </Link>
+                  </button>
                   {showMember ? (
                     <div className="w-[300px] border ml-auto absolute right-0 top-[82px] z-10 rounded-lg shadow-lg bg-white">
-                      <Link href="/member-center">
+                      <Link
+                        href="/member-center"
+                        onClick={() => {
+                          showMemberState()
+                        }}
+                      >
                         <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
                           <div className="flex space-x-6 items-center">
                             <div className="bg-[#ccc] rounded-full w-[52px] h-[52px]"></div>
@@ -120,20 +125,26 @@ export default function Header() {
                       </Link>
                       <hr className="mx-[-20px]" />
                       <Link
-                        href="/social-media/1"
+                        href="/social-media"
                         className="block px-5 py-4 hover:bg-gray-100"
                         role="menuitem"
+                        onClick={() => {
+                          showMemberState()
+                        }}
                       >
                         我的社群
                       </Link>
                       <hr className="mx-[-20px]" />
-                      <a
-                        href="#"
+                      <Link
+                        href="/login"
                         className="block px-5 py-4 hover:bg-gray-100"
                         role="menuitem"
+                        onClick={() => {
+                          showMemberState()
+                        }}
                       >
                         登出{' '}
-                      </a>
+                      </Link>
                     </div>
                   ) : null}
                 </li>
@@ -282,7 +293,10 @@ export default function Header() {
                     </Link>
                   </li>
                   <li className="flex space-x-3 py-4 items-center">
-                    <Link href="" className="flex space-x-2 items-center">
+                    <Link
+                      href="/social-media"
+                      className="flex space-x-2 items-center"
+                    >
                       <FaBloggerB className="text-lg" />
                       <span>我的社群</span>
                     </Link>

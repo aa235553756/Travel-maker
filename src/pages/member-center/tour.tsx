@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import JourneyCard from '@/common/components/JourneyCard'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
-import SeeMore from '@/common/components/SeeMoreButton'
-import { MdKeyboardArrowDown } from 'react-icons/md'
+import TourCard from '@/common/components/card/TourCard'
+import SeeMore from '@/common/components/SeeMore'
 
 export default function Journey() {
   // tab class 切換
@@ -15,44 +14,58 @@ export default function Journey() {
     <div>
       {/* 手機版 */}
       <div className="container">
-        <h2 className="text-lg font-bold mt-8 mb-4 md:hidden">我的收藏行程</h2>
-        {/* 詳細資訊區 */}
-        <div className="flex flex-col md:hidden">
-          {/* tab 按鈕 */}
-          <div className="flex w-full">
-            <button
-              type="button"
-              className={`w-full text-center border-b-2 ${
-                activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
-              } p-4 mb-10`}
-              onClick={() => {
-                tabState(1)
-              }}
-            >
-              一般模式(3)
-            </button>
-            <button
-              type="button"
-              className={`w-full text-center border-b-2 ${
-                activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
-              } p-4 mb-10`}
-              onClick={() => {
-                tabState(2)
-              }}
-            >
-              房間模式(3)
-            </button>
-          </div>
-          {/* tab 內容 */}
-          <div>
-            <div className="flex flex-col space-y-6">
-              <JourneyCard title="好瘋狂熱血少年" number={4} favorites={100} />
-              <JourneyCard title="一路瘋狂到天亮" number={4} favorites={100} />
-              <JourneyCard title="好瘋狂熱血少年" number={4} favorites={100} />
+        <div className="pt-8 pb-[158px] md:hidden">
+          {' '}
+          <h2 className="text-lg font-bold mb-4">我的收藏行程</h2>
+          {/* 詳細資訊區 */}
+          <div className="flex flex-col">
+            {/* tab 按鈕 */}
+            <div className="flex w-full">
+              <button
+                type="button"
+                className={`w-full text-center border-b-2 ${
+                  activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
+                } p-4 mb-10`}
+                onClick={() => {
+                  tabState(1)
+                }}
+              >
+                一般模式(3)
+              </button>
+              <button
+                type="button"
+                className={`w-full text-center border-b-2 ${
+                  activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
+                } p-4 mb-10`}
+                onClick={() => {
+                  tabState(2)
+                }}
+              >
+                房間模式(3)
+              </button>
             </div>
-            <div className="flex items-center justify-center space-x-2 mt-7 mb-[100px]">
-              <p>查看更多</p>
-              <MdKeyboardArrowDown />
+            {/* tab 內容 */}
+            <div>
+              <div className="flex flex-col space-y-6 mb-8">
+                <TourCard
+                  tourName="好瘋狂熱血少年"
+                  countAttr={4}
+                  likes={100}
+                  showLike={false}
+                />
+                <TourCard
+                  tourName="好瘋狂熱血少年"
+                  countAttr={4}
+                  likes={100}
+                  showLike={false}
+                />
+                <TourCard
+                  tourName="好瘋狂熱血少年"
+                  countAttr={4}
+                  likes={100}
+                  showLike={false}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -69,9 +82,9 @@ export default function Journey() {
             <div className="md:px-10 md:py-6">共有6個收藏行程</div>
           </div>
           {/* 詳細資訊區 */}
-          <div className="flex flex-col">
+          <div className="md:flex md:flex-col">
             {/* tab 按鈕 */}
-            <div className="flex w-full">
+            <div className="md:flex md:w-full">
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
@@ -97,21 +110,24 @@ export default function Journey() {
             </div>
             {/* tab 內容 */}
             <div>
-              <div className="md:flex md:flex-col md:space-y-6 lg:flex-row lg:flex-wrap lg:space-x-6">
-                <JourneyCard
-                  title="好瘋狂熱血少年"
-                  number={4}
-                  favorites={100}
+              <div className="md:flex md:flex-col md:space-y-6 md:mb-16 lg:flex-row lg:flex-wrap lg:space-x-6">
+                <TourCard
+                  tourName="好瘋狂熱血少年"
+                  countAttr={4}
+                  likes={100}
+                  showLike={false}
                 />
-                <JourneyCard
-                  title="一路瘋狂到天亮"
-                  number={4}
-                  favorites={100}
+                <TourCard
+                  tourName="好瘋狂熱血少年"
+                  countAttr={4}
+                  likes={100}
+                  showLike={false}
                 />
-                <JourneyCard
-                  title="好瘋狂熱血少年"
-                  number={4}
-                  favorites={100}
+                <TourCard
+                  tourName="好瘋狂熱血少年"
+                  countAttr={4}
+                  likes={100}
+                  showLike={false}
                 />
               </div>
               <SeeMore />
