@@ -53,7 +53,7 @@ export default function Header() {
   return (
     <div>
       {/* 電腦版 */}
-      <div className="hidden md:h-[120px] md:bg-[#d9d9d9] md:flex md:items-center md:justify-between">
+      <div className="absolute top-0 w-full hidden md:h-[120px] md:bg-glass-45 md:flex md:items-center md:justify-between">
         <div className="container">
           <div className="flex items-center justify-between">
             {/* logo+名稱 */}

@@ -36,6 +36,7 @@ export default function HotTopics() {
       {/* 三個Select */}
       <div className="flex mb-7 flex-wrap md:mb-11 md:flex-nowrap md:space-x-6">
         <Select
+          instanceId="selectbox"
           options={TypeOptions}
           placeholder="類別"
           className="w-full mb-7 md:mb-0 md:w-1/4"
@@ -53,6 +54,7 @@ export default function HotTopics() {
           }}
         />
         <Select
+          instanceId="selectbox"
           options={AreaOptions}
           placeholder="區域"
           isMulti={true}
@@ -65,6 +67,7 @@ export default function HotTopics() {
           }}
         />
         <Select
+          instanceId="selectbox"
           options={AttrOptions}
           isSearchable={true}
           placeholder="請輸入關鍵字"
