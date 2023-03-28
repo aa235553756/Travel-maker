@@ -37,7 +37,7 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        'hero-pattern': "url('/bannerBg.png')",
+        'banner': "url('/bannerBg.png')",
         'footer-texture': "url('/img/footer-texture.png')",
       },
       colors: {

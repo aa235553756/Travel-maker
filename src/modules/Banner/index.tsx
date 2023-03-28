@@ -11,7 +11,7 @@ import TypeLabel from './TypeLabel'
 import BannerSelectorMobile from '@/modules/Banner/BannerSelectorMobile'
 import BannerTitle from '@/modules/Banner/BannerTitle'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
-import { defaultValueProp } from '@/util/type'
+import { defaultValueProp } from '@/util/types'
 
 export default function Banner() {
   // 這邊是ReactHookForm，有分電腦版,手機版
@@ -86,15 +86,9 @@ export default function Banner() {
   }, [isHidden])
 
   return (
-    <div
-      // bg名稱待修改
-      // 包含header
-      className="bg-hero-pattern bg-cover bg-center bg-no-repeat"
-    >
-      {/* 預留header */}
-      <div className="h-[120px] hidden md:block"></div>
+    <div className="bg-banner pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
       <div className="container">
-        <div className="pt-[58px] xl:pt-[80px] md:pt-8 lg:h-[100vh-120px] xl:h-auto pb-16 w-full mx-auto lg:w-[744px] md:pb-[145px]">
+        <div className="w-full lg:w-2/3 mx-auto pt-14 md:pt-8 xl:pt-20 pb-16 md:pb-36">
           <BannerTitle />
           {/* 電腦版行程類別 */}
           <form onSubmit={handleSubmit(onSubmit)} id={formId}>
@@ -120,7 +114,8 @@ export default function Banner() {
 
           {/* 電腦版toggle下拉-按鈕 */}
           <div className="hidden w-full rounded-xl md:h-[86px] md:bg-glass-45 md:flex md:p-4">
-            <button
+            <a
+              href="#bannerTitle"
               className="bg-white text-[#9F9F9F] rounded-xl w-2/5 px-5 py-4 flex items-center justify-between"
               onClick={() => {
                 toggleState()
@@ -128,8 +123,9 @@ export default function Banner() {
             >
               行程/距離
               <BsChevronDown />
-            </button>
-            <button
+            </a>
+            <a
+              href="#bannerTitle"
               className="bg-white text-[#9F9F9F] ml-5 rounded-xl w-2/5 px-5 py-4 flex items-center justify-between"
               onClick={() => {
                 areaToggleState()
@@ -137,7 +133,7 @@ export default function Banner() {
             >
               請選擇區域
               <BsChevronDown />
-            </button>
+            </a>
             {/* 電腦版開始規劃按鈕 */}
             <button
               form={formId}
@@ -158,151 +154,163 @@ export default function Banner() {
             <div className="py-2 px-4 bg-primary rounded-lg">開始規劃</div>
           </button>
           {/* 電腦版選擇行程/距離 下拉選單 */}
-          {/* 換null試試看 */}
-          <form
-            className={isToggle ? 'w-full bg-[#d7d7d7] px-5 py-6' : 'hidden'}
-          >
-            {/* 選擇行程 */}
-            <p className="text-xl mb-2 font-bold">
-              選擇行程<span>(必選)</span>
-            </p>
-            <div className="flex space-x-5 mb-5">
-              {AttrCounts.map((item, index) => {
-                let className = 'w-20 py-1 border text-center'
-                className +=
-                  watch('AttrCounts') === item.value ? ' border-red-600' : ''
-                return (
-                  <label key={index} className={className}>
-                    <input
-                      type="radio"
-                      className="hidden"
-                      {...register('AttrCounts', { required: true })}
-                      value={item.value}
-                      defaultChecked={item.checked}
-                    />
-                    {item.name}
-                  </label>
-                )
-              })}
-            </div>
-            {/* 選擇交通工具 */}
-            <p className="text-xl mb-2 font-bold">選擇交通工具</p>
-            <div className="flex space-x-5 mb-6">
-              {Transports.map((item, index) => {
-                let className = 'w-20 py-1 border text-center'
-                // 判斷表單是否有相同值，加上對應className
-                className +=
-                  watch('Transports') === item.value ? ' border-red-600' : ''
-                return (
-                  <label key={index} className={className}>
-                    <input
-                      type="radio"
-                      className="hidden"
-                      {...register('Transports', { required: true })}
-                      value={item.value}
-                      defaultChecked={item.checked}
-                    />
-                    {item.name}
-                  </label>
-                )
-              })}
-            </div>
-            <hr className="mb-6" />
-            <button
-              type="button"
-              className="px-7 py-3 bg-[#ccc] block ml-auto"
-              onClick={() => {
-                areaToggleState()
-              }}
+          <div className="w-full relative">
+            <form
+              className={
+                isToggle
+                  ? 'absolute z-10 px-5 py-6 bg-[#d7d7d7] hidden md:block'
+                  : 'hidden'
+              }
             >
-              OK！下一步
-            </button>
-          </form>
+              {/* 選擇行程 */}
+              <p className="text-xl mb-2 font-bold">
+                選擇行程<span>(必選)</span>
+              </p>
+              <div className="flex space-x-5 mb-5">
+                {AttrCounts.map((item, index) => {
+                  let className = 'w-20 py-1 border text-center'
+                  className +=
+                    watch('AttrCounts') === item.value ? ' border-red-600' : ''
+                  return (
+                    <label key={index} className={className}>
+                      <input
+                        type="radio"
+                        className="hidden"
+                        {...register('AttrCounts', { required: true })}
+                        value={item.value}
+                        defaultChecked={item.checked}
+                      />
+                      {item.name}
+                    </label>
+                  )
+                })}
+              </div>
+              {/* 選擇交通工具 */}
+              <p className="text-xl mb-2 font-bold">選擇交通工具</p>
+              <div className="flex space-x-5 mb-6">
+                {Transports.map((item, index) => {
+                  let className = 'w-20 py-1 border text-center'
+                  // 判斷表單是否有相同值，加上對應className
+                  className +=
+                    watch('Transports') === item.value ? ' border-red-600' : ''
+                  return (
+                    <label key={index} className={className}>
+                      <input
+                        type="radio"
+                        className="hidden"
+                        {...register('Transports', { required: true })}
+                        value={item.value}
+                        defaultChecked={item.checked}
+                      />
+                      {item.name}
+                    </label>
+                  )
+                })}
+              </div>
+              <hr className="mb-6" />
+              <button
+                type="button"
+                className="px-7 py-3 bg-[#ccc] block ml-auto"
+                onClick={() => {
+                  areaToggleState()
+                }}
+              >
+                OK！下一步
+              </button>
+            </form>
+          </div>
 
           {/* 電腦版選擇區域 下拉選單 */}
-          <form
-            className={areaToggle ? 'w-full bg-[#d7d7d7] px-5 py-6' : 'hidden'}
-          >
-            {/* 選擇區域複選 */}
-            <p className="text-xl mb-2 font-bold">
-              選擇區域<span>(複選)</span>
-            </p>
-            {/* 鄰近Label */}
-            {/* 這邊為了做判斷，而一定要使用陣列回傳  */}
-            {[''].map((index) => {
-              let className = 'block w-20 py-1 mb-5 border text-center'
-              // 判斷表單值，賦予對應className
-              className += watch('nearBy') ? ' border-red-600' : ''
-              return (
-                <label key={index} className={className}>
-                  <input
-                    type="checkbox"
-                    className="hidden"
-                    {...register('nearBy')}
-                    onClick={() => {
-                      setValue('DistrictName', [])
-                    }}
-                  />
-                  鄰近
-                </label>
-              )
-            })}
 
-            <hr className="mb-5" />
-            {/* 區域Label */}
-            <div className="flex flex-wrap mb-1">
-              {DistrictName.map((item, index) => {
-                const DistrictName = { ...register('DistrictName') }
-                let className = 'w-20 py-1 border text-center mr-5 mb-5'
-                className += watch('DistrictName').includes(item)
-                  ? ' border-red-600'
-                  : ''
-                const handleOnChange = (
-                  e: React.ChangeEvent<HTMLInputElement>
-                ) => {
-                  function setCurrentValue(bool: boolean) {
-                    DistrictName.onChange(e)
-                    const data = watch('DistrictName')
-                    setValue('nearBy', false)
-                    // 篩選data，設定表單
-                    setValue(
-                      'DistrictName',
-                      data.filter((item) => {
-                        return bool ? item !== '不限' : item === '不限'
-                      })
-                    )
-                  }
-                  // 判斷是否為'不限'，執行不同參數函式
-                  item !== '不限'
-                    ? setCurrentValue(true)
-                    : setCurrentValue(false)
-                }
+          <div className="w-full relative">
+            <form
+              className={
+                areaToggle
+                  ? 'absolute z-10 px-5 py-6 bg-[#d7d7d7] hidden md:block'
+                  : 'hidden'
+              }
+            >
+              {/* 選擇區域複選 */}
+              <p className="text-xl mb-2 font-bold">
+                選擇區域<span>(複選)</span>
+              </p>
+              {/* 鄰近Label */}
+              {/* 這邊為了做判斷，而一定要使用陣列回傳  */}
+              {[''].map((index) => {
+                let className = 'block w-20 py-1 mb-5 border text-center'
+                // 判斷表單值，賦予對應className
+                className += watch('nearBy') ? ' border-red-600' : ''
                 return (
                   <label key={index} className={className}>
                     <input
                       type="checkbox"
                       className="hidden"
-                      value={item}
-                      {...register('DistrictName')}
-                      onChange={handleOnChange}
+                      {...register('nearBy')}
+                      onClick={() => {
+                        setValue('DistrictName', [])
+                      }}
                     />
-                    {item}
+                    鄰近
                   </label>
                 )
               })}
-            </div>
-            <hr className="mb-6" />
-            {/* OK按鈕 */}
-            <button
-              className="px-7 py-3 bg-[#ccc] block ml-auto"
-              type="button"
-              onClick={() => {
-                areaToggleState()
-              }}
-            >
-              OK！開始規劃
-            </button>
-          </form>
+
+              <hr className="mb-5" />
+              {/* 區域Label */}
+              <div className="flex flex-wrap mb-1">
+                {DistrictName.map((item, index) => {
+                  const DistrictName = { ...register('DistrictName') }
+                  let className = 'w-20 py-1 border text-center mr-5 mb-5'
+                  className += watch('DistrictName').includes(item)
+                    ? ' border-red-600'
+                    : ''
+                  const handleOnChange = (
+                    e: React.ChangeEvent<HTMLInputElement>
+                  ) => {
+                    function setCurrentValue(bool: boolean) {
+                      DistrictName.onChange(e)
+                      const data = watch('DistrictName')
+                      setValue('nearBy', false)
+                      // 篩選data，設定表單
+                      setValue(
+                        'DistrictName',
+                        data.filter((item) => {
+                          return bool ? item !== '不限' : item === '不限'
+                        })
+                      )
+                    }
+                    // 判斷是否為'不限'，執行不同參數函式
+                    item !== '不限'
+                      ? setCurrentValue(true)
+                      : setCurrentValue(false)
+                  }
+                  return (
+                    <label key={index} className={className}>
+                      <input
+                        type="checkbox"
+                        className="hidden"
+                        value={item}
+                        {...register('DistrictName')}
+                        onChange={handleOnChange}
+                      />
+                      {item}
+                    </label>
+                  )
+                })}
+              </div>
+              <hr className="mb-6" />
+              {/* OK按鈕 */}
+              <button
+                className="px-7 py-3 bg-[#ccc] block ml-auto"
+                type="button"
+                onClick={() => {
+                  areaToggleState()
+                }}
+              >
+                OK！開始規劃
+              </button>
+            </form>
+          </div>
 
           {/* 手機版顯示下拉選單 Modal */}
           <BannerSelectorMobile

@@ -11,13 +11,13 @@ import {
   UseFormHandleSubmit,
   SubmitHandler,
 } from 'react-hook-form'
-import { IFormInput } from '@/util/types'
+import { defaultValueProp } from '@/util/types'
 
 interface SelectSideProp {
   formId: string
-  register: UseFormRegister<IFormInput>
-  handleSubmit: UseFormHandleSubmit<IFormInput>
-  onSubmit: SubmitHandler<IFormInput>
+  register: UseFormRegister<defaultValueProp>
+  handleSubmit: UseFormHandleSubmit<defaultValueProp>
+  onSubmit: SubmitHandler<defaultValueProp>
 }
 
 export default function SelectSide({
@@ -54,7 +54,11 @@ export default function SelectSide({
   )
 }
 
-function LabelRadio({ register }: { register: UseFormRegister<IFormInput> }) {
+function LabelRadio({
+  register,
+}: {
+  register: UseFormRegister<defaultValueProp>
+}) {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-4">
       {AttrCounts.map((item, index) => {
@@ -64,7 +68,7 @@ function LabelRadio({ register }: { register: UseFormRegister<IFormInput> }) {
             className="w-[85px] ml-4 odd:!ml-0 flex items-center [&:nth-child(2)]:!mt-0"
           >
             <input
-              {...register('Journeys')}
+              {...register('CategoryId')}
               type="radio"
               defaultChecked={index === 0 ? true : false}
               value={item.value}

@@ -2,7 +2,7 @@ import React from 'react'
 import { MdOutlineCancel } from 'react-icons/md'
 import { DistrictName, AttrCounts, Transports } from '@/util/selectData'
 import { UseFormRegister, UseFormWatch, UseFormSetValue } from 'react-hook-form'
-import { defaultValueProp } from '@/util/type'
+import { defaultValueProp } from '@/util/types'
 
 interface BannerSelectorMobileProp {
   isHidden: boolean

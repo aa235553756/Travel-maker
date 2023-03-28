@@ -51,9 +51,9 @@ export default function Header() {
   }, [isHam])
 
   return (
-    <div>
+    <div className="md:mt-[120px]">
       {/* 電腦版 */}
-      <div className="absolute top-0 w-full hidden md:h-[120px] md:bg-glass-45 md:flex md:items-center md:justify-between">
+      <div className="fixed z-10 top-0 w-full hidden lg:flex  md:h-[120px] md:bg-glass-45 md:items-center md:justify-between">
         <div className="container">
           <div className="flex items-center justify-between">
             {/* logo+名稱 */}
@@ -158,9 +158,8 @@ export default function Header() {
           </div>
         </div>
       </div>
-
       {/* 手機版 */}
-      <div className="block md:hidden">
+      <div className="fixed top-0 w-full z-10 block lg:hidden">
         <div className="container">
           {isSearching ? (
             <div className="flex justify-between items-center h-16">

@@ -6,15 +6,15 @@ import SelectSide from '@/modules/JourneyPage/SelectSide'
 import Sortable from '@/common/components/Sortable'
 import { BsLink45Deg, BsList } from 'react-icons/bs'
 import { MdSave, MdOutlineCancel } from 'react-icons/md'
-import { IFormInput } from '@/util/types'
+import { defaultValueProp } from '@/util/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 export default function PlanningTour() {
   const [tabPos, setTabPos] = useState('備用景點')
-  const { register, handleSubmit } = useForm<IFormInput>()
+  const { register, handleSubmit } = useForm<defaultValueProp>()
   // 這邊打POST取得隨機行程
   const formId = 'planning-tour-form'
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<defaultValueProp> = (data) => console.log(data)
 
   return (
     <div>
