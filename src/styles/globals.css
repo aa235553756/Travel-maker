@@ -7,6 +7,7 @@
 @layer base {
   body {
     font-family: 'Noto Sans TC', sans-serif;
+    scroll-behavior: smooth;
   }
 
   input,
@@ -46,6 +47,4 @@
     background-size: 18px;
     background-position: right 0.7rem top 50%;
   }
-
- 
 }

@@ -11,7 +11,7 @@ import {
 import { FaCameraRetro } from 'react-icons/fa'
 import { HiUserGroup } from 'react-icons/hi'
 import { RiBarChart2Line } from 'react-icons/ri'
-import { defaultValueProp } from '@/util/type'
+import { defaultValueProp } from '@/util/types'
 
 const iconArray = [
   <MdDirectionsRun key={0} />,
@@ -56,7 +56,7 @@ export default function TypeLabel({
         }
 
         let className =
-          'py-4 text-[#797979] text-center border-2 border-white bg-glass-default w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-75'
+          'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass-default w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-green-100'
         // 取決表單內是否有該值，賦予樣式
         className += watch('CategoryId').includes(item.value)
           ? ' !bg-secondary !text-white'

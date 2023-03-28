@@ -11,7 +11,7 @@ import TypeLabel from './TypeLabel'
 import BannerSelectorMobile from '@/modules/Banner/BannerSelectorMobile'
 import BannerTitle from '@/modules/Banner/BannerTitle'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
-import { defaultValueProp } from '@/util/type'
+import { defaultValueProp } from '@/util/types'
 
 export default function Banner() {
   // 這邊是ReactHookForm，有分電腦版,手機版
@@ -86,15 +86,9 @@ export default function Banner() {
   }, [isHidden])
 
   return (
-    <div
-      // bg名稱待修改
-      // 包含header
-      className="bg-hero-pattern bg-cover bg-center bg-no-repeat"
-    >
-      {/* 預留header */}
-      <div className="h-[120px] hidden md:block"></div>
+    <div className="bg-banner pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
       <div className="container">
-        <div className="pt-[58px] xl:pt-[80px] md:pt-8 lg:h-[100vh-120px] xl:h-auto pb-16 w-full mx-auto lg:w-[744px] md:pb-[145px]">
+        <div className="w-full lg:w-2/3 mx-auto pt-14 md:pt-8 xl:pt-20 pb-16 md:pb-36">
           <BannerTitle />
           {/* 電腦版行程類別 */}
           <form onSubmit={handleSubmit(onSubmit)} id={formId}>
@@ -120,7 +114,8 @@ export default function Banner() {
 
           {/* 電腦版toggle下拉-按鈕 */}
           <div className="hidden w-full rounded-xl md:h-[86px] md:bg-glass-45 md:flex md:p-4">
-            <button
+            <a
+              href="#bannerTitle"
               className="bg-white text-[#9F9F9F] rounded-xl w-2/5 px-5 py-4 flex items-center justify-between"
               onClick={() => {
                 toggleState()
@@ -128,8 +123,9 @@ export default function Banner() {
             >
               行程/距離
               <BsChevronDown />
-            </button>
-            <button
+            </a>
+            <a
+              href="#bannerTitle"
               className="bg-white text-[#9F9F9F] ml-5 rounded-xl w-2/5 px-5 py-4 flex items-center justify-between"
               onClick={() => {
                 areaToggleState()
@@ -137,7 +133,7 @@ export default function Banner() {
             >
               請選擇區域
               <BsChevronDown />
-            </button>
+            </a>
             {/* 電腦版開始規劃按鈕 */}
             <button
               form={formId}
@@ -158,9 +154,12 @@ export default function Banner() {
             <div className="py-2 px-4 bg-primary rounded-lg">開始規劃</div>
           </button>
           {/* 電腦版選擇行程/距離 下拉選單 */}
-          {/* 換null試試看 */}
           <form
-            className={isToggle ? 'w-full bg-[#d7d7d7] px-5 py-6' : 'hidden'}
+            className={
+              isToggle
+                ? 'absolute z-10 px-5 py-6 w-2/3 bg-[#d7d7d7] hidden md:block'
+                : 'hidden'
+            }
           >
             {/* 選擇行程 */}
             <p className="text-xl mb-2 font-bold">
@@ -221,7 +220,11 @@ export default function Banner() {
 
           {/* 電腦版選擇區域 下拉選單 */}
           <form
-            className={areaToggle ? 'w-full bg-[#d7d7d7] px-5 py-6' : 'hidden'}
+            className={
+              areaToggle
+                ? 'absolute z-10 px-5 py-6 w-2/3 bg-[#d7d7d7] hidden md:block'
+                : 'hidden'
+            }
           >
             {/* 選擇區域複選 */}
             <p className="text-xl mb-2 font-bold">
