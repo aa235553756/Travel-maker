@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { FaStarOfLife } from 'react-icons/fa'
 
+// 準備實作登入
 export default function LoginAndSignUp() {
   const {
     register,
