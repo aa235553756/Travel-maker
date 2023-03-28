@@ -1,7 +1,7 @@
 import LazySortable from '@/common/components/LazySortable'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
-import { defaultValueProp } from '@/util/typess'
+import { defaultValueProp } from '@/util/types'
 import React from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { BsLink45Deg, BsHeart, BsPlusLg } from 'react-icons/bs'

@@ -11,7 +11,7 @@ import {
   UseFormHandleSubmit,
   SubmitHandler,
 } from 'react-hook-form'
-import { defaultValueProp } from '@/util/typess'
+import { defaultValueProp } from '@/util/types'
 
 interface SelectSideProp {
   formId: string

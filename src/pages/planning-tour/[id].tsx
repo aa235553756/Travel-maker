@@ -6,7 +6,7 @@ import SelectSide from '@/modules/JourneyPage/SelectSide'
 import Sortable from '@/common/components/Sortable'
 import { BsLink45Deg, BsList } from 'react-icons/bs'
 import { MdSave, MdOutlineCancel } from 'react-icons/md'
-import { defaultValueProp } from '@/util/typess'
+import { defaultValueProp } from '@/util/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
 
 export default function PlanningTour() {
