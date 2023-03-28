@@ -68,7 +68,7 @@ function LabelRadio({
             className="w-[85px] ml-4 odd:!ml-0 flex items-center [&:nth-child(2)]:!mt-0"
           >
             <input
-              {...register('Journeys')}
+              {...register('CategoryId')}
               type="radio"
               defaultChecked={index === 0 ? true : false}
               value={item.value}
