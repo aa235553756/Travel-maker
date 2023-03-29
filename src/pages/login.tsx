@@ -1,3 +1,4 @@
+import { getCookie, setCookie } from 'cookies-next'
 import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { FaStarOfLife } from 'react-icons/fa'
@@ -12,14 +13,46 @@ export default function LoginAndSignUp() {
   } = useForm<FormValues>()
 
   interface FormValues {
-    email: string
+    Account: string
     nickname: string
-    password: string
+    Password: string
     passwordRepeat: string
   }
 
-  const onSubmit: SubmitHandler<FormValues> = (data) =>
-    console.log(JSON.stringify(data))
+  const onSubmit: SubmitHandler<FormValues> = (data: FormValues) => {
+    alert(JSON.stringify(data))
+    // 五倍login
+    fetch('https://todoo.5xcamp.us/users/sign_in', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user: {
+          email: 'user01@gmail.com',
+          password: 'string',
+        },
+      }),
+    })
+      .then((res) => {
+        console.log(res.headers.get('authorization'))
+        setCookie('auth', res.headers.get('authorization'))
+        return res
+      })
+      .then((res) => res.json())
+      .then(console.log)
+    // travel_meet login
+    fetch('https://travelmaker.rocket-coding.com/api/users/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    })
+      .then((res) => {
+        return res
+      })
+      .then((res) => res.json())
+      .then(console.log)
+  }
 
   // 登入註冊內容切換
   const [isLogin, setIsLogin] = useState(true)
@@ -35,6 +68,13 @@ export default function LoginAndSignUp() {
 
   return (
     <div>
+      <button
+        onClick={() => {
+          console.log(getCookie('auth'))
+        }}
+      >
+        auth
+      </button>
       <div className="container">
         <div>
           <div className="hidden md:flex md:justify-around md:bg-[#ccc] md:w-full md:py-5 mb-20">
@@ -84,11 +124,12 @@ export default function LoginAndSignUp() {
                     帳號
                   </label>
                   <input
+                    value="user@example.com"
                     className="border px-3 py-4"
                     id="emailLogin"
                     type="email"
                     placeholder="請輸入 Email"
-                    {...register('email', {
+                    {...register('Account', {
                       required: { value: true, message: '此欄位必填寫' },
                       pattern: {
                         value: /^\S+@\S+$/i,
@@ -97,7 +138,7 @@ export default function LoginAndSignUp() {
                     })}
                   />
                   <span className="text-red-900 !mt-2">
-                    {errors.email?.message}
+                    {errors.Account?.message}
                   </span>
                 </div>
 
@@ -106,17 +147,19 @@ export default function LoginAndSignUp() {
                     密碼
                   </label>
                   <input
+                    value="string"
                     className="border px-3 py-4"
                     id="passwordLogin"
                     type="password"
                     placeholder="請輸入密碼"
-                    {...register('password', {
+                    {...register('Password', {
                       required: { value: true, message: '此欄位必填寫' },
-                      minLength: { value: 8, message: '密碼至少為 8 碼' },
+                      minLength: { value: 6, message: '密碼至少為 6 碼' },
+                      // minLength: { value: 8, message: '密碼至少為 8 碼' },
                     })}
                   />
                   <span className="text-red-900 !mt-2">
-                    {errors.password?.message}
+                    {errors.Password?.message}
                   </span>
                 </div>
 
@@ -161,7 +204,7 @@ export default function LoginAndSignUp() {
                     id="email"
                     type="email"
                     placeholder="請輸入 Email"
-                    {...register('email', {
+                    {...register('Account', {
                       required: { value: true, message: '此欄位必填寫' },
                       pattern: {
                         value: /^\S+@\S+$/i,
@@ -170,7 +213,7 @@ export default function LoginAndSignUp() {
                     })}
                   />
                   <span className="text-red-900 !mt-2">
-                    {errors.email?.message}
+                    {errors.Account?.message}
                   </span>
                 </div>
 
@@ -213,13 +256,13 @@ export default function LoginAndSignUp() {
                     id="password"
                     type="password"
                     placeholder="請輸入密碼"
-                    {...register('password', {
+                    {...register('Password', {
                       required: { value: true, message: '此欄位必填寫' },
                       minLength: { value: 8, message: '密碼至少為 8 碼' },
                     })}
                   />
                   <span className="text-red-900 !mt-2">
-                    {errors.password?.message}
+                    {errors.Password?.message}
                   </span>
                 </div>
 
@@ -239,7 +282,7 @@ export default function LoginAndSignUp() {
                     {...register('passwordRepeat', {
                       required: { value: true, message: '此欄位必填寫' },
                       validate: (val) => {
-                        if (watch('password') !== val) {
+                        if (watch('Password') !== val) {
                           return '密碼不一致'
                         }
                       },
@@ -271,3 +314,7 @@ export default function LoginAndSignUp() {
     </div>
   )
 }
+
+//todo
+// setCookies
+// 把用戶資訊存到redux

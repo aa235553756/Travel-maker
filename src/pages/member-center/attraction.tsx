@@ -20,7 +20,7 @@ export default function Attract() {
                 district="大安區"
                 attractName="大安森林公園"
               />
-               <AttrCard
+              <AttrCard
                 showSelect={true}
                 showCollect={true}
                 showDetail={true}
@@ -66,7 +66,7 @@ export default function Attract() {
                 district="大安區"
                 attractName="大安森林公園"
               />
-               <AttrCard
+              <AttrCard
                 showSelect={true}
                 showCollect={true}
                 showDetail={true}
