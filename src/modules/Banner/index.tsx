@@ -116,7 +116,7 @@ export default function Banner() {
           <div className="hidden w-full rounded-xl md:h-[86px] md:bg-glass-45 md:flex md:p-4">
             <a
               href="#bannerTitle"
-              className="bg-white text-[#9F9F9F] rounded-xl w-2/5 px-5 py-4 flex items-center justify-between"
+              className="bg-white text-[#9F9F9F] rounded-xl w-2/5 px-5 py-4 flex items-center justify-between md:text-xl"
               onClick={() => {
                 toggleState()
               }}
@@ -126,7 +126,7 @@ export default function Banner() {
             </a>
             <a
               href="#bannerTitle"
-              className="bg-white text-[#9F9F9F] ml-5 rounded-xl w-2/5 px-5 py-4 flex items-center justify-between"
+              className="bg-white text-[#9F9F9F] ml-5 rounded-xl w-2/5 px-5 py-4 flex items-center justify-between md:text-xl"
               onClick={() => {
                 areaToggleState()
               }}
@@ -137,7 +137,7 @@ export default function Banner() {
             {/* 電腦版開始規劃按鈕 */}
             <button
               form={formId}
-              className="w-1/5 ml-6 bg-primary text-white p-4 block rounded-md"
+              className="w-1/5 ml-6 bg-primary text-white px-4 block rounded-md md:text-xl"
               onClick={handleErrors}
             >
               開始規劃

@@ -50,6 +50,8 @@ module.exports = {
         }
         // button text 9F9F9F
         // TypeLabel text 797979
+        // 首頁 放鬆療癒 4B673B
+        // 開啟隨機產生器,事前還在..? 646464
       }
     },
   },
