@@ -14,7 +14,7 @@ export default function WhereIGO() {
           </p>
           <ChageButton lg_display={true} />
         </div>
-        <div className="w-[316px] relative mx-auto md:w-auto lg:mr-0">
+        <div className="group w-[316px] relative mx-auto md:w-auto lg:mr-0">
           <div className="flex flex-wrap justify-center md:justify-start md:flex-nowrap mb-8 lg:-mb-5">
             {Array(4)
               .fill('')
@@ -22,7 +22,7 @@ export default function WhereIGO() {
                 return (
                   <div
                     key={index}
-                    className="w-[148px] h-[148px] mr-5 even:mr-0 mb-5 md:even:mr-5 [&:nth-child(4)]:mr-0 custom-shadow relative"
+                    className="w-[148px] h-[148px] mr-5 even:mr-0 mb-5 md:even:mr-5 [&:nth-child(4)]:mr-0 custom-shadow"
                   >
                     <img
                       className="object-cover h-full"
@@ -42,3 +42,6 @@ export default function WhereIGO() {
     </div>
   )
 }
+
+// todo
+// 這邊換一組需要動畫
