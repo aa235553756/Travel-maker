@@ -26,21 +26,21 @@ export default function CommentCard({
             className="rounded-full min-h-[40px]"
           ></Image>
           {/* 手機版 */}
-          <div className="flex flex-col md:hidden">
+          <div className="flex flex-col lg:hidden">
             <span className="text-sm">{user}</span>
             <div className="flex items-center space-x-3">
               <p>{attraction}</p>
             </div>
           </div>
           {/* 電腦版 */}
-          <div className="hidden md:flex md:flex-col">
+          <div className="hidden lg:flex lg:flex-col">
             <span className="text-sm">{user}</span>
             <div className="flex items-center space-x-3">
               <p>{attraction}</p>
-              <div className="leading-3 md:hidden">
+              <div className="leading-3">
                 <CustomStar rating={4.5} />
               </div>
-              <p className=" md:hidden">5個月前</p>
+              <p>5個月前</p>
             </div>
           </div>
         </div>
@@ -53,7 +53,6 @@ export default function CommentCard({
           />
         </div>
         <div className="lg:hidden">
-          {' '}
           <MoreBtn></MoreBtn>
         </div>
       </div>

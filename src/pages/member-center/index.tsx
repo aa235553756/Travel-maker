@@ -1,4 +1,5 @@
 import React from 'react'
+import Image from 'next/image'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import { BsLightbulb } from 'react-icons/bs'
 import { useRouter } from 'next/router'
@@ -10,12 +11,18 @@ export default function MemberCenter() {
   return (
     <div>
       {/* 手機版 */}
-      <div className="container">
-        <h2 className="text-lg font-bold mt-8 mb-4 md:hidden">帳號設定</h2>
+      <div className="container mt-[96px] mb-[100px]">
+        <h2 className="text-lg font-bold mb-10 md:hidden">帳號設定</h2>
         <div className="bg-[#d7d7d7] px-7 py-5 flex flex-col space-y-4 w-full md:hidden">
           <div className="flex items-center">
             <div className="w-[80px]">頭像</div>
-            <div className="w-[56px] h-[56px] bg-[#ccc] rounded-full"></div>
+            <Image
+              width="56"
+              height="56"
+              src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+              alt="圖片"
+              className="h-[56px] rounded-full"
+            ></Image>
           </div>
           <div className="flex items-center">
             <div className="w-[80px]">暱稱</div>
@@ -36,7 +43,7 @@ export default function MemberCenter() {
             <h2 className="md:text-2xl md:font-bold md:px-10 md:py-8">
               帳號設定
             </h2>
-            <hr className="md:w-full " />
+            <hr className="md:w-full" />
             <div className="md:flex md:items-center md:space-x-2  md:px-10 md:py-6">
               <BsLightbulb />
               <p>為了確保用戶身份的真實性，您無法變更電子信箱。</p>

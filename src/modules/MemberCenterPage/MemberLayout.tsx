@@ -16,7 +16,7 @@ export default function MemberLayout({ children, path }: Props) {
     <div>
       <div className="container">
         {/* 電腦版 */}
-        <div className="hidden md:flex md:space-x-6 md:mt-[80px] mb-[160px]">
+        <div className="hidden md:flex md:space-x-6 md:mt-[200px] md:mb-[156px]">
           <div className="md:w-1/3 md:flex md:flex-col md:space-y-7">
             {/* 個人資訊區 */}
             <div className="md:bg-[#d7d7d7] md:px-7 md:py-12 md:flex md:flex-col md:space-y-4">

@@ -8,7 +8,7 @@ export default function Comment() {
     <div>
       {/* 手機版 */}
       <div className="container">
-        <div className="pt-8 pb-[158px] md:hidden">
+        <div className="md:hidden mt-24 mb-[100px] ">
           <h2 className="text-lg font-bold mb-4">我的評論</h2>
           {/* 詳細資訊區 */}
           <div className="flex flex-col">

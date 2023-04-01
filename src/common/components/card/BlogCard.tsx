@@ -17,8 +17,8 @@ export default function BlogCard({
   time: string
 }) {
   return (
-    <div className="border rounded-md w-full relative lg:w-[calc(50%-12px)] lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
-      <div className="absolute top-4 right-4 flex space-x-2 z-10">
+    <div className="border rounded-md relative">
+      <div className="absolute top-4 right-4 flex space-x-2 z-5">
         {showCollect && <CollectBtn />}
       </div>
       <Link href="../blog/view-blog/1">

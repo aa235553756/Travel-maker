@@ -16,7 +16,7 @@ export default function Blog() {
     <div>
       {/* 手機版 */}
       <div className="container">
-        <div className="pt-8 pb-[158px] md:hidden">
+        <div className="md:hidden mt-24 mb-[100px] ">
           {' '}
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-bold mt-8 mb-4 ">我的遊記</h2>
@@ -40,18 +40,53 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 3 ? 'border-[#000]' : 'border-[#ccc]'
+                  activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
                 } p-3 mb-10`}
                 onClick={() => {
-                  tabState(4)
+                  tabState(2)
                 }}
               >
                 草稿遊記(1)
               </button>
             </div>
             {/* tab 內容 */}
-            <div>
-              <div className="flex flex-col space-y-6 mb-8">
+            {activeTab === 1 && (
+              <div className="flex flex-col space-y-6">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <BlogCard
+                        key={index}
+                        showCollect={true}
+                        blogName="好瘋狂熱血少年"
+                        poster="老頭阿迪"
+                        time="2023-03-01 18:00"
+                      />
+                    )
+                  })}
+              </div>
+            )}
+            {activeTab === 2 && (
+              <div className="flex flex-col space-y-6">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <BlogDraftCard
+                        key={index}
+                        showDelete={true}
+                        blogName="漫步鳥語人森"
+                        poster="小熊的旅行食蹤"
+                        time="2023-03-01 18:00"
+                      />
+                    )
+                  })}
+              </div>
+            )}
+
+            {/* <div>
+              <div className="flex flex-col space-y-6">
                 <BlogCard
                   showCollect={true}
                   blogName="好瘋狂熱血少年"
@@ -67,17 +102,11 @@ export default function Blog() {
                 <BlogDraftCard
                   showDelete={true}
                   blogName="好瘋狂熱血少年"
-                  poster="小熊軟糖"
-                  time="2023-03-01 18:00"
-                />
-                <BlogDraftCard
-                  showDelete={true}
-                  blogName="好瘋狂熱血少年"
-                  poster="小熊軟糖"
+                  poster="老頭阿迪"
                   time="2023-03-01 18:00"
                 />
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -123,32 +152,42 @@ export default function Blog() {
               </button>
             </div>
             {/* tab 內容 */}
-            <div className="md:flex md:flex-col md:space-y-6 md:mb-16 lg:flex-row lg:flex-wrap lg:space-x-6">
-              <BlogCard
-                showCollect={true}
-                blogName="好瘋狂熱血少年"
-                poster="老頭阿迪"
-                time="2023-03-01 18:00"
-              />
-              <BlogCard
-                showCollect={true}
-                blogName="好瘋狂熱血少年"
-                poster="老頭阿迪"
-                time="2023-03-01 18:00"
-              />
-              <BlogDraftCard
-                showDelete={true}
-                blogName="好瘋狂熱血少年"
-                poster="小熊軟糖"
-                time="2023-03-01 18:00"
-              />
-              <BlogDraftCard
-                showDelete={true}
-                blogName="好瘋狂熱血少年"
-                poster="小熊軟糖"
-                time="2023-03-01 18:00"
-              />
-            </div>
+            {activeTab === 1 && (
+              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
+                        <BlogCard
+                          showCollect={true}
+                          blogName="大小朋友手作烘焙DIY"
+                          poster="阿如小日子"
+                          time="2023-02-12 17:00"
+                        />
+                      </div>
+                    )
+                  })}
+              </div>
+            )}
+            {activeTab === 2 && (
+              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
+                        <BlogDraftCard
+                          showDelete={true}
+                          blogName="漫步鳥語人森"
+                          poster="小熊的旅行食蹤"
+                          time="2023-03-01 18:00"
+                        />
+                      </div>
+                    )
+                  })}
+              </div>
+            )}
             <SeeMore />
           </div>
         </div>
