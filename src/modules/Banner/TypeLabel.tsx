@@ -56,10 +56,10 @@ export default function TypeLabel({
         }
 
         let className =
-          'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass-default w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-green-100'
+          'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-green-100'
         // 取決表單內是否有該值，賦予樣式
         className += watch('CategoryId').includes(item.value)
-          ? ' !bg-secondary !text-white'
+          ? ' !bg-primary-dark !text-white'
           : ''
         return (
           <label key={index} className={className}>

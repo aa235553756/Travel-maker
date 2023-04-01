@@ -54,7 +54,7 @@ export default function SeeOthers({}: SeeOthersProp) {
       </h3>
       <div className="md:flex">
         {/* 這是地圖 */}
-        <div className="bg-[#E7E7E7] h-[324px] mb-6 order-1 flex-grow md:mb-0 md:h-auto">
+        <div className="bg-gray-E7 h-[324px] mb-6 order-1 flex-grow md:mb-0 md:h-auto">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d1872701.4985836851!2d120.6402133!3d23.546162!3m2!1i1024!2i768!4f13.1!5e0!3m2!1szh-TW!2stw!4v1680247548163!5m2!1szh-TW!2stw"
             allowFullScreen={true}

@@ -20,7 +20,7 @@ export default function Home() {
         <WhereIGO />
         <Feature />
         <Explore />
-        <SeeOthers />
+        <SeeOthers TourName={''} CategoryId={0} Like={0} ImageUrl={''} />
         <HotAttract />
       </div>
     </>

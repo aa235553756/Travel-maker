@@ -11,14 +11,14 @@ export default function Feature() {
           <h3 className="text-[22px] mb-3 lg:text-4xl lg:mb-10">
             我們可以幫你...
           </h3>
-          <p className="text-[#646464] mb-6 lg:mb-4 lg:text-xl">
+          <p className="text-gray-64 mb-6 lg:mb-4 lg:text-xl">
             跟朋友聚會，事前還在燒腦規劃嗎？
             <br />
             出門在外，還在搜尋附近有甚麼好玩好吃的嗎？
             <br />
             處在陌生城市想要到處踩點，還在一籌莫展嗎？
           </p>
-          <p className="text-[#646464] lg:text-xl">
+          <p className="text-gray-64 lg:text-xl">
             以上問題聚會趣都可以幫你解決
             <br />
             規劃行程不必愁，動動手指開心去！
@@ -28,7 +28,7 @@ export default function Feature() {
           <FeatureBlock>
             <BsArrowRepeat className="text-[30px] lg:text-5xl mb-3" />
             <h4 className="mb-2">隨機產生器</h4>
-            <p className="text-[#737373] text-sm lg:text-base ">
+            <p className="text-gray-73 text-sm lg:text-base ">
               想不到去哪裡？只要選擇篩選器內容就能幫您客製專屬的
               <span className="hidden min-[378px]:inline">隨機行程</span>
               <span className="min-[378px]:hidden">...</span>。
@@ -37,7 +37,7 @@ export default function Feature() {
           <FeatureBlock>
             <FiHeart className="text-[30px] lg:text-5xl mb-3" />
             <h4 className="mb-2">加入收藏</h4>
-            <p className="text-[#737373] text-sm lg:text-base ">
+            <p className="text-gray-73 text-sm lg:text-base ">
               滿滿的的景點行程眼花撩亂了嗎？收藏功能讓你聚會不再
               <span className="hidden min-[378px]:inline">靈感枯竭</span>
               <span className="min-[378px]:hidden">...</span>。
@@ -46,7 +46,7 @@ export default function Feature() {
           <FeatureBlock>
             <BsPencilSquare className="text-[30px] lg:text-5xl mb-3" />
             <h4 className="mb-2">編輯行程</h4>
-            <p className="text-[#737373] text-sm lg:text-base ">
+            <p className="text-gray-73 text-sm lg:text-base ">
               隨機產生行程後，想要變更行程嗎？動動手指便能幫你完
               <span className="hidden min-[378px]:inline">成</span>
               <span className="min-[378px]:hidden">...</span>。
@@ -55,7 +55,7 @@ export default function Feature() {
           <FeatureBlock>
             <MdOutlineMenuBook className="text-[30px] lg:text-5xl mb-3" />
             <h4 className="mb-2">部落格</h4>
-            <p className="text-[#737373] text-sm lg:text-base ">
+            <p className="text-gray-73 text-sm lg:text-base ">
               只能排行程？我們還能還能讓你記錄生活、抒發情感及
               <span className="hidden min-[378px]:inline">分享資訊</span>
               <span className="min-[378px]:hidden">...</span>。

@@ -19,7 +19,7 @@ export default function Explore() {
             </div>
             {/* param */}
             <div className="w-full lg:w-[456px]">
-              <p className="mb-12 lg:mb-6 md:text-lg lg:text-xl lg:leading-[1.5] text-[#737373]">
+              <p className="mb-12 lg:mb-6 md:text-lg lg:text-xl lg:leading-[1.5] text-gray-73">
                 熱鬧繁榮的台北，充滿各種自然景致，還有文藝氣息的文創園區與在地必嚐美食，等待著體驗歷史人文的靈魂旅行。想要來場隨機之旅嗎？在台灣這片土地上探索台北的每個角落，快來一起朝聖。
               </p>
               <div className="mx-auto hidden lg:block lg:float-right">

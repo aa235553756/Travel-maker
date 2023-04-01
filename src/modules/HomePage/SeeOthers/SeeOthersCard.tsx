@@ -26,7 +26,7 @@ export function SeeOthersCard({
           <h4 className="text-lg mb-3 lg:text-xl text-white lg:mb-5">
             {TourName}
           </h4>
-          <div className="flex justify-between text-[#737373]">
+          <div className="flex justify-between text-gray-73">
             <span className="text-white  text-sm rounded-2xl py-[2px] lg:py-2 px-3 lg:px-7 lg:text-base border border-white lg:rounded-[20px]">
               {Category}
             </span>

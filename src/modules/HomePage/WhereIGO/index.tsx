@@ -9,7 +9,7 @@ export default function WhereIGO() {
           <h3 className="text-[22px] mb-2 lg:h-[52px] lg:text-4xl">
             我想去哪裡...
           </h3>
-          <p className="text-[#646464] mb-10 lg:text-2xl">
+          <p className="text-gray-64 mb-10 lg:text-2xl">
             開啟隨機產生器，讓你每天生活有樂趣。
           </p>
           <ChageButton lg_display={true} />
