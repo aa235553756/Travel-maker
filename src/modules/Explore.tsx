@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import ExploreCarousel from '../../../package/HomePage/ExploreCarousel'
+import ExploreCarousel from './ExploreCarousel'
 
 export default function Explore() {
   return (

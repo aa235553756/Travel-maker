@@ -1,6 +1,6 @@
 import AttrCard from '@/common/components/card/AttrCard'
 import React from 'react'
-import { BsFillStarFill, BsStar, BsGeoAltFill } from 'react-icons/bs'
+import { BsGeoAltFill } from 'react-icons/bs'
 
 export default function HotAttract() {
   return (

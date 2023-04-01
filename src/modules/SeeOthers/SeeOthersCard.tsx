@@ -1,6 +1,6 @@
 import React from 'react'
 import { BsHeart } from 'react-icons/bs'
-import { SeeOthersHoverEffect } from '@/modules/SeeOthersHoverEffect'
+import { SeeOthersHoverEffect } from '@/modules/SeeOthers/SeeOthersHoverEffect'
 import { SeeOthersCardProp } from './index'
 
 export function SeeOthersCard({
