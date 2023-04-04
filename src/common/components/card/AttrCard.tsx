@@ -13,15 +13,18 @@ export default function AttractCard({
   showDetail,
   district,
   attractName,
+  rating,
 }: {
-  showSelect: boolean
-  showCollect: boolean
-  showDetail: boolean
+  showSelect?: boolean
+  showCollect?: boolean
+  showDetail?: boolean
   district: string
   attractName: string
+  rating: number
 }) {
   return (
-    <div className="rounded-md w-full shadow-xl lg:w-[calc(50%-12px)] lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
+    // 因為有lg直式三欄，我把兩欄lg:w-[calc(50%-12px)]，改成 max-w-[328px]。
+    <div className="max-w-[328px] rounded-md w-full shadow-xl lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
       <div className="relative w-full">
         <Image
           src="https://www.travel.taipei/content/images/attractions/222058/1024x768_attractions-image-hbt3wz-7l0yeewd968btkw.jpg"
@@ -42,7 +45,7 @@ export default function AttractCard({
         </div>
         <p className="text-lg mb-3">{attractName}</p>
         <div className="mb-3">
-          <CustomStar rating={4} />
+          <CustomStar rating={rating} />
         </div>
         <div className="flex space-x-2 mb-7">
           <TypeTag type="城市走走"></TypeTag>

@@ -14,7 +14,7 @@ interface attractionAroundsProp {
 export default function AttrArounds({ attrArounds }: attrAroundsProp) {
   return (
     <div>
-      <h4 className="mb-6 text-lg text-[#737373] font-bold md:text-2xl md:mb-7">
+      <h4 className="mb-6 text-lg text-gray-73 font-bold md:text-2xl md:mb-7">
         更多周邊景點
       </h4>
       <ul className="flex flex-wrap md:flex-nowrap md:space-x-6 space-y-5 md:space-y-0">

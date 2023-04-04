@@ -37,7 +37,7 @@ export default function SelectSide({
         <form
           id={formId}
           onSubmit={handleSubmit(onSubmit)}
-          className="mb-12 md:w-[218px] lg:w-[264px] bg-[#D9D9D9]"
+          className="mb-12 md:w-[218px] lg:w-[264px] bg-gray-D9"
         >
           <h3 className="py-2 px-4">篩選內容</h3>
           <div className="py-1 px-4 bg-[#C4C4C4]">選擇行程（必選）</div>

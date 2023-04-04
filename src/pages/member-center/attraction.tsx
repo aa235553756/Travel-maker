@@ -19,13 +19,15 @@ export default function Attract() {
                 showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
+                rating={1.5}
               />
-               <AttrCard
+              <AttrCard
                 showSelect={true}
                 showCollect={true}
                 showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
+                rating={1.5}
               />
               <AttrCard
                 showSelect={false}
@@ -33,6 +35,7 @@ export default function Attract() {
                 showDetail={false}
                 district="大安區"
                 attractName="大安森林公園"
+                rating={1.5}
               />
               <AttrCard
                 showSelect={false}
@@ -40,6 +43,7 @@ export default function Attract() {
                 showDetail={false}
                 district="大安區"
                 attractName="大安森林公園"
+                rating={1.5}
               />
             </div>
           </div>
@@ -65,13 +69,7 @@ export default function Attract() {
                 showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
-              />
-               <AttrCard
-                showSelect={true}
-                showCollect={true}
-                showDetail={true}
-                district="大安區"
-                attractName="大安森林公園"
+                rating={1.5}
               />
               <AttrCard
                 showSelect={true}
@@ -79,6 +77,7 @@ export default function Attract() {
                 showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
+                rating={1.5}
               />
               <AttrCard
                 showSelect={true}
@@ -86,6 +85,15 @@ export default function Attract() {
                 showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
+                rating={1.5}
+              />
+              <AttrCard
+                showSelect={true}
+                showCollect={true}
+                showDetail={true}
+                district="大安區"
+                attractName="大安森林公園"
+                rating={1.5}
               />
             </div>
             <SeeMore />
