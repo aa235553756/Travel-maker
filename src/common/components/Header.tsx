@@ -80,7 +80,7 @@ export default function Header() {
               <ul className="flex flex-shrink-0 space-x-5">
                 <li className="flex space-x-2 items-center">
                   <Link
-                    href="/planning-tour/1"
+                    href="/random-tour"
                     className="flex space-x-2 items-center"
                   >
                     <IoLocationSharp className="text-lg" />

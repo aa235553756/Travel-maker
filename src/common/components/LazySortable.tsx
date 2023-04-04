@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import React, { useState } from 'react'
 import { ReactSortable } from 'react-sortablejs'
 
@@ -7,7 +8,7 @@ interface ItemType {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function Sortable() {
+export default function Sortable({ data }) {
   const [state, setState] = useState<ItemType[]>([
     { id: 1, name: '1' },
     { id: 2, name: '2' },
@@ -26,14 +27,20 @@ export default function Sortable() {
       // 這之後要換swiper請無視gap
       className="flex overflow-x-scroll max-w-[840px] max-lg:w-[828px] gap-x-10 md:gap-x-9 gap-y-6"
     >
-      {state.map((item) => (
+      {state.map((item, index) => (
         <div
           key={item.id}
-          className="min-w-[180px] w-[calc(25%-30px)] cursor-pointer duration-150"
+          className="min-w-[180px] w-[calc(25%-30px)] cursor-pointer duration-150 relative"
         >
-          <img
-            src={`https://picsum.photos/id/1${item.id}/600/600`}
+          <div className="absolute bottom-2 left-1/2 translate-x-[-50%]  whitespace-nowrap text-white custohadow text-lg">
+            {data[index]?.AttractionName}
+          </div>
+          <Image
+            src={data[index]?.ImageUrl}
             alt="slide 1"
+            width={180}
+            height={180}
+            className="object-cover w-full h-full "
           />
         </div>
       ))}
