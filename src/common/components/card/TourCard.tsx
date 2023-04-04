@@ -3,21 +3,26 @@ import Link from 'next/link'
 import Image from 'next/image'
 import LikeBtn from '../button/LikeBtn'
 import DeleteBtn from '../button/DeleteBtn'
+import { RiUser3Fill } from "react-icons/ri";
 
 export default function TourCard({
   tourName,
   countAttr,
   likes,
   showLike,
+  creator,
+  showCreator,
 }: {
   tourName: string
   countAttr: number
   likes: number
   showLike: boolean
+  creator: string
+  showCreator: boolean
 }) {
   return (
-    <div className="bg-[#d7d7d7] rounded-md w-full relative lg:w-[calc(50%-12px)]  lg:even:!mt-0 lg:odd:!ml-0">
-      <div className="absolute top-5 right-5 z-10">
+    <div className="bg-[#d7d7d7] rounded-md relative">
+      <div className="absolute top-5 right-5 z-5">
         <DeleteBtn
           onClick={() => {
             alert('確定要刪除，刪除後將無法復原?')
@@ -40,14 +45,14 @@ export default function TourCard({
             alt="圖片"
             width={175}
             height={117}
-            className="w-[calc(50%-4px)] min-h-[120px] mr-1"
+            className="w-[calc(50%-4px)] min-h-[120px] mr-1 hidden md:block"
           ></Image>
           <Image
             src="https://www.travel.taipei/image/176951/?r=1590134596966"
             alt="圖片"
             width={175}
             height={117}
-            className="w-[calc(50%-4px)] min-h-[120px] ml-1"
+            className="w-[calc(50%-4px)] min-h-[120px] ml-1 hidden md:block"
           ></Image>
         </div>
         <div className="p-4">
@@ -58,6 +63,11 @@ export default function TourCard({
               {showLike && (
                 <>
                   <LikeBtn /> <span>{likes}</span>
+                </>
+              )}
+              {showCreator && (
+                <>
+                  <RiUser3Fill /> <span>{creator}</span>
                 </>
               )}
             </div>

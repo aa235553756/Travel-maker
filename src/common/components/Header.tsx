@@ -159,7 +159,7 @@ export default function Header() {
         </div>
       </div>
       {/* 手機版 */}
-      <div className="fixed top-0 w-full z-10 block lg:hidden">
+      <div className="fixed top-0 w-full z-10 block bg-white lg:hidden">
         <div className="container">
           {isSearching ? (
             <div className="flex justify-between items-center h-16">
@@ -209,15 +209,24 @@ export default function Header() {
           <div className="p-5 h-[calc(100vh-64px)] text-center overflow-auto">
             <ul className="inline-flex flex-col ">
               <li className="flex space-x-3 py-4 items-center">
-                <Link href="/" className="flex space-x-2 items-center">
+                <Link
+                  href="/"
+                  className="flex space-x-2 items-center"
+                  onClick={() => {
+                    hamState()
+                  }}
+                >
                   <IoHomeOutline className="text-lg" />
                   <span>回首頁</span>
                 </Link>
               </li>
               <li className="flex space-x-3 py-4 items-center">
                 <Link
-                  href="/LoginAndSignUp"
+                  href="/login"
                   className="flex space-x-2 items-center"
+                  onClick={() => {
+                    hamState()
+                  }}
                 >
                   <FaUserCircle className="text-lg" />
                   <span>登入/註冊</span>
@@ -241,6 +250,9 @@ export default function Header() {
                     <Link
                       href="/member-center"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <SlSettings className="text-lg" />
                       <span>帳號設定</span>
@@ -250,6 +262,9 @@ export default function Header() {
                     <Link
                       href="/member-center/tour"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <AiOutlineHeart className="text-lg" />
                       <span>我的收藏行程</span>
@@ -259,6 +274,9 @@ export default function Header() {
                     <Link
                       href="/member-center/attraction"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <GrLocation className="text-lg" />
                       <span>我的收藏景點</span>
@@ -268,6 +286,9 @@ export default function Header() {
                     <Link
                       href="/member-center/blog"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <BsPencil className="text-lg" />
                       <span>我的遊記</span>
@@ -277,6 +298,9 @@ export default function Header() {
                     <Link
                       href="/member-center/follow"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <BsBookmarkHeart className="text-lg" />
                       <span>我的追蹤</span>
@@ -286,6 +310,9 @@ export default function Header() {
                     <Link
                       href="/member-center/comment"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <FaRegCommentDots className="text-lg" />
                       <span>我的評論</span>
@@ -295,6 +322,9 @@ export default function Header() {
                     <Link
                       href="/social-media"
                       className="flex space-x-2 items-center"
+                      onClick={() => {
+                        hamState()
+                      }}
                     >
                       <FaBloggerB className="text-lg" />
                       <span>我的社群</span>
@@ -309,14 +339,25 @@ export default function Header() {
                 <Link
                   href="/planning-tour/1"
                   className="flex space-x-2 items-center"
+                  onClick={() => {
+                    hamState()
+                  }}
                 >
                   <IoLocationSharp className="text-lg" />
                   <span>規劃行程</span>
                 </Link>
               </li>
               <li className="flex space-x-3 py-4 items-center">
-                <BsFillFlagFill className="text-lg" />
-                <span>熱門話題</span>
+                <Link
+                  href="/hot-topics/attractions"
+                  className="flex space-x-2 items-center"
+                  onClick={() => {
+                    hamState()
+                  }}
+                >
+                  <BsFillFlagFill className="text-lg" />
+                  <span>熱門話題</span>
+                </Link>
               </li>
             </ul>
             <hr />

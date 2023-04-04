@@ -32,7 +32,7 @@ export default function HotTopics() {
   }
 
   return (
-    <div className="container pt-10 pb-[100px] md:pt-20 md:pb-[160px]">
+    <div className="container pt-[104px] pb-[100px] md:pt-20 md:pb-[160px]">
       {/* 三個Select */}
       <div className="flex mb-7 flex-wrap md:mb-11 md:flex-nowrap md:space-x-6">
         <Select
@@ -101,22 +101,27 @@ export default function HotTopics() {
 
         <div className="flex-grow border-b"></div>
       </ul>
+
       {/* 各種卡片 */}
-      <div className="flex flex-wrap justify-center space-y-10 border-content md:space-x-6 mb-[72px] md:mb-25">
+      <div className="flex flex-wrap -my-5 mb-[100px] lg:-mx-3">
         {Array(9)
           .fill('')
           .map((item, index) => {
             return (
-              <TourCard
-                key={index}
-                likes={1.5}
-                countAttr={1}
-                tourName={'大安森林公園'}
-                showLike={true}
-              />
+              <div key={index} className="w-full py-5 lg:w-1/3 lg:px-3">
+                <TourCard
+                  likes={1.5}
+                  countAttr={1}
+                  tourName={'大安森林公園'}
+                  showLike={true}
+                  creator={''}
+                  showCreator={false}
+                />
+              </div>
             )
           })}
       </div>
+
       {/* 頁籤元件 */}
       <div className="flex justify-center mt-8">
         <ReactPaginate

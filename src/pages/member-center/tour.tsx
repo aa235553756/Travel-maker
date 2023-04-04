@@ -14,8 +14,7 @@ export default function Journey() {
     <div>
       {/* 手機版 */}
       <div className="container">
-        <div className="pt-8 pb-[158px] md:hidden">
-          {' '}
+        <div className="md:hidden mt-24 mb-[100px] ">
           <h2 className="text-lg font-bold mb-4">我的收藏行程</h2>
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
@@ -45,31 +44,48 @@ export default function Journey() {
               </button>
             </div>
             {/* tab 內容 */}
-            <div>
-              <div className="flex flex-col space-y-6 mb-8">
-                <TourCard
-                  tourName="好瘋狂熱血少年"
-                  countAttr={4}
-                  likes={100}
-                  showLike={false}
-                />
-                <TourCard
-                  tourName="好瘋狂熱血少年"
-                  countAttr={4}
-                  likes={100}
-                  showLike={false}
-                />
-                <TourCard
-                  tourName="好瘋狂熱血少年"
-                  countAttr={4}
-                  likes={100}
-                  showLike={false}
-                />
+            {activeTab === 1 && (
+              <div className="flex flex-col space-y-6">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <TourCard
+                        key={index}
+                        likes={235}
+                        countAttr={4}
+                        tourName={'小孩瘋愛好玩公園'}
+                        showLike={true}
+                        creator={''}
+                        showCreator={false}
+                      />
+                    )
+                  })}
               </div>
-            </div>
+            )}
+            {activeTab === 2 && (
+              <div className="flex flex-col space-y-6">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <TourCard
+                        key={index}
+                        likes={1.5}
+                        countAttr={1}
+                        tourName={'大安森林公園'}
+                        showLike={false}
+                        creator={'阿洋小公主'}
+                        showCreator={true}
+                      />
+                    )
+                  })}
+              </div>
+            )}
           </div>
         </div>
       </div>
+
       {/* 電腦版 */}
       <MemberLayout path="Journey">
         <div className="md:flex md:flex-col md:space-y-7 md:w-2/3">
@@ -109,29 +125,47 @@ export default function Journey() {
               </button>
             </div>
             {/* tab 內容 */}
-            <div>
-              <div className="md:flex md:flex-col md:space-y-6 md:mb-16 lg:flex-row lg:flex-wrap lg:space-x-6">
-                <TourCard
-                  tourName="好瘋狂熱血少年"
-                  countAttr={4}
-                  likes={100}
-                  showLike={false}
-                />
-                <TourCard
-                  tourName="好瘋狂熱血少年"
-                  countAttr={4}
-                  likes={100}
-                  showLike={false}
-                />
-                <TourCard
-                  tourName="好瘋狂熱血少年"
-                  countAttr={4}
-                  likes={100}
-                  showLike={false}
-                />
+            {activeTab === 1 && (
+              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
+                        <TourCard
+                          likes={235}
+                          countAttr={4}
+                          tourName={'小孩瘋愛好玩公園'}
+                          showLike={true}
+                          creator={''}
+                          showCreator={false}
+                        />
+                      </div>
+                    )
+                  })}
               </div>
-              <SeeMore />
-            </div>
+            )}
+            {activeTab === 2 && (
+              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+                {Array(20)
+                  .fill('')
+                  .map((item, index) => {
+                    return (
+                      <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
+                        <TourCard
+                          likes={1.5}
+                          countAttr={1}
+                          tourName={'大安森林公園'}
+                          showLike={false}
+                          creator={'阿洋小公主'}
+                          showCreator={true}
+                        />
+                      </div>
+                    )
+                  })}
+              </div>
+            )}
+            <SeeMore />
           </div>
         </div>
       </MemberLayout>

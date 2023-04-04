@@ -8,7 +8,7 @@ export default function Attract() {
     <div>
       {/* 手機版 */}
       <div className="container">
-        <div className="pt-8 pb-[158px] md:hidden">
+        <div className="md:hidden mt-24 mb-[100px] ">
           <h2 className="text-lg font-bold mb-4">我的收藏景點</h2>
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
@@ -16,7 +16,6 @@ export default function Attract() {
               <AttrCard
                 showSelect={true}
                 showCollect={true}
-                showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
                 rating={1.5}
@@ -24,7 +23,6 @@ export default function Attract() {
               <AttrCard
                 showSelect={true}
                 showCollect={true}
-                showDetail={true}
                 district="大安區"
                 attractName="大安森林公園"
                 rating={1.5}
@@ -32,7 +30,6 @@ export default function Attract() {
               <AttrCard
                 showSelect={false}
                 showCollect={false}
-                showDetail={false}
                 district="大安區"
                 attractName="大安森林公園"
                 rating={1.5}
@@ -40,7 +37,6 @@ export default function Attract() {
               <AttrCard
                 showSelect={false}
                 showCollect={false}
-                showDetail={false}
                 district="大安區"
                 attractName="大安森林公園"
                 rating={1.5}
@@ -49,6 +45,7 @@ export default function Attract() {
           </div>
         </div>
       </div>
+
       {/* 電腦版 */}
       <MemberLayout path="Attract">
         <div className="md:flex md:flex-col md:space-y-7 md:w-2/3">
@@ -62,39 +59,22 @@ export default function Attract() {
           </div>
           {/* 詳細資訊區 */}
           <div>
-            <div className="md:flex md:flex-col md:space-y-6 md:mb-16 lg:flex-row lg:flex-wrap lg:space-x-6">
-              <AttrCard
-                showSelect={true}
-                showCollect={true}
-                showDetail={true}
-                district="大安區"
-                attractName="大安森林公園"
-                rating={1.5}
-              />
-              <AttrCard
-                showSelect={true}
-                showCollect={true}
-                showDetail={true}
-                district="大安區"
-                attractName="大安森林公園"
-                rating={1.5}
-              />
-              <AttrCard
-                showSelect={true}
-                showCollect={true}
-                showDetail={true}
-                district="大安區"
-                attractName="大安森林公園"
-                rating={1.5}
-              />
-              <AttrCard
-                showSelect={true}
-                showCollect={true}
-                showDetail={true}
-                district="大安區"
-                attractName="大安森林公園"
-                rating={1.5}
-              />
+            <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+              {Array(20)
+                .fill('')
+                .map((item, index) => {
+                  return (
+                    <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
+                      <AttrCard
+                        showSelect={true}
+                        showCollect={true}
+                        district="大安區"
+                        attractName="大安森林公園"
+                        rating={1.5}
+                      />
+                    </div>
+                  )
+                })}
             </div>
             <SeeMore />
           </div>

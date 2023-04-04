@@ -18,7 +18,7 @@ export default function HotAttract() {
                 return (
                   <div
                     key={index}
-                    className="md:[&:nth-child(3)]:hidden lg:[&:nth-child(3)]:block"
+                    className="max-w-[328px] md:[&:nth-child(3)]:hidden lg:[&:nth-child(3)]:block"
                   >
                     <AttrCard
                       attractName="彩虹橋"

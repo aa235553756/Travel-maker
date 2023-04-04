@@ -15,8 +15,8 @@ export default function BlogDraftCard({
   time: string
 }) {
   return (
-    <div className="border rounded-md w-full relative lg:w-[calc(50%-12px)] lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
-      <div className="absolute top-5 right-5 flex space-x-2 z-10">
+    <div className="border rounded-md relative">
+      <div className="absolute top-5 right-5 flex space-x-2 z-5">
         {showDelete && (
           <DeleteBtn
             onClick={() => {
