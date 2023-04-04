@@ -23,7 +23,7 @@ export default function RandomTourIndex() {
             onSubmit={onSubmit}
             register={register}
           />
-          <button form={formId} className="py-4 w-full bg-[#737373] text-white">
+          <button form={formId} className="py-4 w-full bg-gray-73 text-white">
             隨機產生行程
           </button>
         </div>
@@ -46,11 +46,11 @@ export default function RandomTourIndex() {
           {/* 地圖 */}
           <div className="mb-12 h-full bg-[#D7D7D7]">我是地圖</div>
           <div className="ml-auto">
-            <button className="inline-flex mr-11 justify-center px-10 py-4 items-center bg-[#D9D9D9]">
+            <button className="inline-flex mr-11 justify-center px-10 py-4 items-center bg-gray-D9">
               <BsPlusLg className="text-lg mr-2" />
               邀請
             </button>
-            <button className="inline-flex justify-center px-10 py-4 items-center bg-[#D9D9D9]">
+            <button className="inline-flex justify-center px-10 py-4 items-center bg-gray-D9">
               <BsHeart className="text-lg mr-2" />
               收藏
             </button>

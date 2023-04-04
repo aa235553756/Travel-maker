@@ -32,7 +32,7 @@ export default function App() {
           </div>
           <OpenFormBtn isHidden={isHidden} setIsHidden={setIsHidden} />
           {/* 規劃行程電腦表單 */}
-          <div className="hidden md:block h-[580px] bg-[#D9D9D9] min-w-[264px] mb-4">
+          <div className="hidden md:block h-[580px] bg-gray-D9 min-w-[264px] mb-4">
             我是排行程表單
           </div>
           {/* 手機版送出 */}
@@ -44,19 +44,19 @@ export default function App() {
             開始規劃
           </button>
           {/* 電腦版送出 */}
-          <button className="hidden md:block w-full py-4 bg-[#737373] text-white rounded-md">
+          <button className="hidden md:block w-full py-4 bg-gray-73 text-white rounded-md">
             隨機產生行程
           </button>
         </form>
         <div className="lg:w-[calc(75%-12px)] w-full flex flex-col">
           <h4 className="font-bold mb-4">行程名稱：美食吃透透</h4>
-          <div className="bg-[#D9D9D9] flex flex-wrap mb-8">
+          <div className="bg-gray-D9 flex flex-wrap mb-8">
             <div className="md:w-1/4 w-1/2 aspect-square border"></div>
             <div className="md:w-1/4 w-1/2 aspect-square border"></div>
             <div className="md:w-1/4 w-1/2 aspect-square border"></div>
             <div className="md:w-1/4 w-1/2 aspect-square border"></div>
           </div>
-          <div className="bg-[#737373] h-full min-h-[485px]">我是地圖</div>
+          <div className="bg-gray-73 h-full min-h-[485px]">我是地圖</div>
           <button>儲存</button>
         </div>
       </div>

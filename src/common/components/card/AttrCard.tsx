@@ -12,13 +12,19 @@ export default function AttractCard({
   showCollect,
   district,
   attractName,
+  rating,
 }: {
-  showSelect: boolean
-  showCollect: boolean
+  showSelect?: boolean
+  showCollect?: boolean
+  showDetail?: boolean
   district: string
   attractName: string
+  rating: number
 }) {
   return (
+    // 幹...這邊同一張卡片首頁是328,會員是360,
+    // 我原本想下max-w-[328]在卡片上,改下在外面一層
+    // omgosh,然後會員手機版是396 偶的天 (首頁手機328)
     <div className="rounded-md relative shadow-xl">
       <div className="absolute top-5 right-5 flex space-x-2">
         {showCollect && <CollectBtn />}
@@ -41,7 +47,7 @@ export default function AttractCard({
           </div>
           <p className="text-lg mb-3">{attractName}</p>
           <div className="mb-3">
-            <CustomStar rating={4} />
+            <CustomStar rating={rating} />
           </div>
           <div className="flex space-x-2 mb-7">
             <TypeTag type="城市走走"></TypeTag>

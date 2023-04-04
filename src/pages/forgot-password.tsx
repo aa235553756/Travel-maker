@@ -21,7 +21,7 @@ export default function ForgotPwd() {
     <div className="container">
       <div className="pt-[44px] pb-[100px] md:flex md:justify-center lg:px-6">
         {/* 這是圖片 */}
-        <div className="bg-[#D9D9D9] min-w-[360px] mr-6 hidden lg:w-1/3 md:block">
+        <div className="bg-gray-D9 min-w-[360px] mr-6 hidden lg:w-1/3 md:block">
           我是圖片
         </div>
         <div className="flex-grow-[1] lg:flex-grow-0 lg:w-1/3">
@@ -63,7 +63,7 @@ export default function ForgotPwd() {
             {/* 這是送出按鈕 */}
             <div className="mx-auto mb-6 md:mb-8">
               <button
-                className="text-[20px] px-16 py-2 bg-[#737373] text-white disabled:opacity-50"
+                className="text-[20px] px-16 py-2 bg-gray-73 text-white disabled:opacity-50"
                 disabled={!isDirty || !isValid}
               >
                 送出
@@ -72,7 +72,7 @@ export default function ForgotPwd() {
             <div className="mx-auto">
               <Link
                 href="/"
-                className="inline-block text-[20px] px-16 py-2 border border-[#737373]"
+                className="inline-block text-[20px] px-16 py-2 border border-gray-73"
               >
                 返回
               </Link>
