@@ -1,4 +1,6 @@
-export function getRandomTours(data: any) {
+import { randomTourProp } from "@/util/types"
+
+export function getRandomTours(data: randomTourProp) {
   return fetch(
     'https://travelmaker.rocket-coding.com/api/tours/make',
     {

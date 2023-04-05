@@ -16,44 +16,10 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
   // const [data, setData] = useState([])
 
   const { register, handleSubmit } = useForm<defaultValueProp>()
-  // 這邊打POST，取得隨機行程
   const formId = 'random-tour-form'
   const onSubmit: SubmitHandler<defaultValueProp> = (data) =>
     alert(JSON.stringify(data))
 
-  async function hadlePostTour() {
-    try {
-      // const token = getCookie() 看是要onclick拿,還是一進來就拿(應該一進來)
-      const token =
-        'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJVc2VyR3VpZCI6IjA0MWNhOTEyLWJhMjctNDMzNC1iZmNlLTA3YzMyNjYwZTNhNzc1IiwiQWNjb3VudCI6InVzZXJAZXhhbXBsZS5jb20iLCJVc2VyTmFtZSI6IuWwj-aYjiIsIlByb2ZpbGVQaWN0dXJlIjpudWxsLCJFeHAiOiI0LzQvMjAyMyAzOjU4OjAyIEFNIn0.eCE4R1QKfOzud2c7Sgl_MbXTI8iwJpalxDNWrgKrtsgC8qZdGFb1YlQzlKkZsRaKMl17paXPJYQqH6IzTkMzNA'
-
-      // 用戶輸入行程名稱
-      const TourName = prompt(
-        '即將創建收藏行程，請輸入行程名稱',
-        '未命名的行程'
-      )
-      if (TourName === null || TourName === '') {
-        return //break out of the function early
-      }
-      // 行程id陣列
-      const AttractionId = data.map(
-        (item: { AttractionId: number }) => item.AttractionId
-      )
-
-      const res = await postTours(token, TourName, AttractionId)
-      const resJSON = await res.json()
-      if (res.ok) {
-        alert(res.status)
-        alert(JSON.stringify(resJSON))
-        router.push(`random-tour/${resJSON.TourId}`)
-        return
-      }
-      throw new Error('不知名錯誤')
-    } catch (err) {
-      alert('錯誤')
-      alert(err)
-    }
-  }
   return (
     <div className="container pt-20 pb-[160px]">
       {/* 景點名稱 */}
@@ -87,17 +53,7 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
           <div>
             <button
               className="flex px-2 items-center mb-3 text-xl border border-black rounded-md"
-              onClick={() => {
-                const string = data
-                  .map((item) => {
-                    return `id=${item.AttractionId}`
-                  })
-                  .join('&')
-                // 複製連結
-                navigator.clipboard.writeText(
-                  `http://localhost:3000/random-tour?${string}`
-                )
-              }}
+              onClick={handleLink}
             >
               <BsLink45Deg className="mr-2 text-2xl" />
               複製連結
@@ -139,6 +95,53 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
       <MoreJourney />
     </div>
   )
+
+  async function handleLink() {
+    const idParams = data
+      .map((item) => {
+        return `id=${item.AttractionId}`
+      })
+      .join('&')
+    // 複製連結
+    navigator.clipboard.writeText(
+      `http://localhost:3000/random-tour?${idParams}`
+    )
+  }
+
+  async function hadlePostTour() {
+    try {
+      // const token = getCookie() 看是要onclick再拿,還是一進來就拿(應該一進來)
+      const token =
+        'eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJVc2VyR3VpZCI6IjA0MWNhOTEyLWJhMjctNDMzNC1iZmNlLTA3YzMyNjYwZTNhNzc1IiwiQWNjb3VudCI6InVzZXJAZXhhbXBsZS5jb20iLCJVc2VyTmFtZSI6IuWwj-aYjiIsIlByb2ZpbGVQaWN0dXJlIjpudWxsLCJFeHAiOiI0LzQvMjAyMyAzOjU4OjAyIEFNIn0.eCE4R1QKfOzud2c7Sgl_MbXTI8iwJpalxDNWrgKrtsgC8qZdGFb1YlQzlKkZsRaKMl17paXPJYQqH6IzTkMzNA'
+
+      // 用戶輸入行程名稱
+      const TourName = prompt(
+        '即將創建收藏行程，請輸入行程名稱',
+        '未命名的行程'
+      )
+      if (TourName === null || TourName === '') {
+        return //break out of the function early
+      }
+      // 行程id陣列
+      const AttractionId = data.map(
+        (item: { AttractionId: number }) => item.AttractionId
+      )
+
+      const res = await postTours(token, TourName, AttractionId)
+      const resJSON = await res.json()
+      if (res.ok) {
+        alert(res.status)
+        alert(JSON.stringify(resJSON))
+        router.push(`random-tour/${resJSON.TourId}`)
+        return
+      }
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      // 請登入
+      alert('錯誤')
+      alert(err)
+    }
+  }
 }
 
 export async function getServerSideProps(context: {

@@ -1,3 +1,4 @@
+import { randomTourProp } from '@/util/types'
 import Image from 'next/image'
 import React, { useState } from 'react'
 import { ReactSortable } from 'react-sortablejs'
@@ -8,7 +9,7 @@ interface ItemType {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function Sortable({ data }) {
+export default function Sortable({ data }: { data: randomTourProp[] }) {
   const [state, setState] = useState<ItemType[]>([
     { id: 1, name: '1' },
     { id: 2, name: '2' },
