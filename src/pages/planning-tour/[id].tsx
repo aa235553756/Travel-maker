@@ -36,7 +36,7 @@ export default function PlanningTour() {
             <button
               type="submit"
               form={formId}
-              className="py-4 w-full bg-[#737373] text-white"
+              className="py-4 w-full bg-gray-73 text-white"
             >
               隨機產生行程
             </button>
@@ -72,7 +72,7 @@ export default function PlanningTour() {
             </ul>
             {/* 拖拉2，備用景點 & 地圖 */}
             {tabPos === '備用景點' ? (
-              <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] scrollbar-style overflow-y-scroll bg-[#D9D9D9]">
+              <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] scrollbar-style overflow-y-scroll bg-gray-D9">
                 {Array(15)
                   .fill('')
                   .map((item, index) => {
@@ -91,11 +91,9 @@ export default function PlanningTour() {
                   })}
               </div>
             ) : (
-              <div className="w-full h-full mb-12 bg-[#D9D9D9]">
-                我是地圖爹斯
-              </div>
+              <div className="w-full h-full mb-12 bg-gray-D9">我是地圖爹斯</div>
             )}
-            <button className="inline-flex justify-center ml-auto px-10 py-4 items-center bg-[#D9D9D9]">
+            <button className="inline-flex justify-center ml-auto px-10 py-4 items-center bg-gray-D9">
               <MdSave className="text-lg mr-2" />
               儲存
             </button>

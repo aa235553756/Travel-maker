@@ -14,7 +14,7 @@ export default function FollowUserCard({
   followers: number
 }) {
   return (
-    <div className="w-full border rounded-md lg:w-[calc(50%-12px)] lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
+    <div className="border rounded-md">
       <div className="bg-[#ccc] h-[240px] rounded-t-md">
         <div className="p-10">
           <div className="flex flex-col items-center space-y-9">
@@ -30,7 +30,7 @@ export default function FollowUserCard({
             </div>
             <FollowBtn />
           </div>
-        </div>
+        </div> 
       </div>
       <div className="py-10">
         <ul className="flex justify-center">

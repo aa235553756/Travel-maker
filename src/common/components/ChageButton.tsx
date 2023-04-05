@@ -6,12 +6,15 @@ export default function ChageButton({ lg_display }: { lg_display?: boolean }) {
   ${lg_display ? 'hidden lg:flex' : 'flex lg:hidden'}
   active:contrast-50
   text-[#FFFFFF]
-  bg-[#737373] 
+  bg-primary 
   items-center 
-  py-2 
-  px-5   
+  py-3 
+  px-6   
   mx-auto 
+  md:mr-0
   lg:ml-0
+  rounded-md
+  lg:text-2xl
   `
 
   return (

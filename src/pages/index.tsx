@@ -1,9 +1,9 @@
 import Head from 'next/head'
-import SeeOthers from '@/modules/HomePage/SeeOthers'
-import HotAttract from '@/modules/HomePage/HotAttract'
-import WhereIGO from '@/modules/HomePage/WhereIGO'
-import Explore from '@/modules/HomePage/Explore'
-import Feature from '@/modules/HomePage/Feature'
+import SeeOthers from '@/modules/SeeOthers'
+import HotAttract from '@/modules/HotAttract'
+import WhereIGO from '@/modules/WhereIGO'
+import Explore from '@/modules/Explore'
+import Feature from '@/modules/Feature'
 import Banner from '@/modules/Banner'
 
 export default function Home() {
@@ -20,7 +20,7 @@ export default function Home() {
         <WhereIGO />
         <Feature />
         <Explore />
-        <SeeOthers />
+        <SeeOthers TourName={''} CategoryId={0} Like={0} ImageUrl={''} />
         <HotAttract />
       </div>
     </>
