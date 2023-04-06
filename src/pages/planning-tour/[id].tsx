@@ -11,7 +11,8 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 
 export default function PlanningTour() {
   const [tabPos, setTabPos] = useState('備用景點')
-  const { register, handleSubmit } = useForm<defaultValueProp>()
+  const { register, handleSubmit, setValue, watch } =
+    useForm<defaultValueProp>()
   // 這邊打POST取得隨機行程
   const formId = 'planning-tour-form'
   const onSubmit: SubmitHandler<defaultValueProp> = (data) => console.log(data)
@@ -32,6 +33,8 @@ export default function PlanningTour() {
               handleSubmit={handleSubmit}
               register={register}
               onSubmit={onSubmit}
+              setValue={setValue}
+              watch={watch}
             />
             <button
               type="submit"
