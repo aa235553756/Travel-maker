@@ -2,23 +2,33 @@ import LazySortable from '@/common/components/LazySortable'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
 import { defaultValueProp, randomTourProp } from '@/util/types'
-import React from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import React, { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { BsLink45Deg, BsHeart, BsPlusLg } from 'react-icons/bs'
 import { getRandomTours, getShareTours, postTours } from '@/util/tourApi'
 import { useRouter } from 'next/router'
+import { defaultValues } from '@/util/selectData'
 
-export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
+export default function RandomTourIndex({
+  data: originData,
+}: {
+  data: randomTourProp[]
+}) {
   const router = useRouter()
   console.log(router)
 
-  console.log(data)
-  // const [data, setData] = useState([])
+  console.log(originData)
+  const [data, setData] = useState(originData)
+  const [loading, setLoading] = useState(false)
 
-  const { register, handleSubmit } = useForm<defaultValueProp>()
+  const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
+    { defaultValues: defaultValues }
+  )
   const formId = 'random-tour-form'
-  const onSubmit: SubmitHandler<defaultValueProp> = (data) =>
-    alert(JSON.stringify(data))
+
+  useEffect(() => {
+    // alert('每次setData,重整google地圖')
+  }, [data])
 
   return (
     <div className="container pt-20 pb-[160px]">
@@ -26,9 +36,9 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
       <div>
         {/* 這個可以做成modal */}
         {data.length === 0 ? <h1>沒有匹配到景點資料，請重新整理</h1> : null}
-        {data?.map((item: { AttractionName: string }, index: number) => {
+        {/* {data?.map((item: { AttractionName: string }, index: number) => {
           return <h1 key={index}>{item.AttractionName}</h1>
-        })}
+        })} */}
       </div>
 
       <div className="flex mb-[180px]">
@@ -39,6 +49,8 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
             register={register}
+            setValue={setValue}
+            watch={watch}
           />
           <button
             form={formId}
@@ -65,8 +77,14 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
             行程名稱：美食吃透透
           </h2> */}
           {/* 拖拉 */}
-          <div className="mb-6 max-lg:max-w-[396px] max-lg:overflow-x-scroll max-lg:mb-4">
-            <LazySortable data={data} />
+          <div className="mb-6 max-lg:overflow-x-scroll max-lg:mb-4">
+            {loading ? (
+              <div className="w-[840px] h-[180px] text-center text-2xl">
+                正在幫您安排行程
+              </div>
+            ) : (
+              <LazySortable data={data} />
+            )}
           </div>
           {/* 地圖 */}
           <div className="mb-12 h-full bg-[#D7D7D7]">
@@ -95,6 +113,41 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
       <MoreJourney />
     </div>
   )
+
+  async function onSubmit(data: defaultValueProp) {
+    try {
+      setLoading(true)
+      // 缺geo,故先判斷鄰近值,在做函式返回newData
+      const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
+      alert(JSON.stringify(newData))
+      const res = await getRandomTours(newData)
+      if (res.ok) {
+        const resJSON = await res.json()
+        alert(JSON.stringify(resJSON))
+        setData(resJSON)
+        setLoading(false)
+        return
+      }
+      throw new Error('錯誤,or沒找到景點')
+    } catch (err) {
+      setLoading(false)
+      alert(err)
+    }
+
+    function handleNearBy(bool: boolean) {
+      let newData
+      // 目前只有false狀態，尚缺true狀態
+      if (!bool) {
+        // 取得google定位，設定經緯度
+        newData = { Nlat: 0, Elong: 0, ...data }
+        // 取得鎖點(懶人頁較簡易）
+        newData.AttractionId = Array(4).fill(0)
+        //刪除鄰近
+        delete newData.nearBy
+      }
+      return newData
+    }
+  }
 
   async function handleLink() {
     const idParams = data
@@ -128,9 +181,12 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
       )
 
       const res = await postTours(token, TourName, AttractionId)
-      const resJSON = await res.json()
+      console.log(res.status)
+
       if (res.ok) {
-        alert(res.status)
+        //200
+        const resJSON = await res.json()
+        alert(res.status) //200
         alert(JSON.stringify(resJSON))
         router.push(`random-tour/${resJSON.TourId}`)
         return
@@ -140,6 +196,7 @@ export default function RandomTourIndex({ data }: { data: randomTourProp[] }) {
       // 請登入
       alert('錯誤')
       alert(err)
+      router.push('/login')
     }
   }
 }
@@ -190,10 +247,12 @@ export async function getServerSideProps(context: {
 
 // todo 依照用戶這頁可以點擊的順序，來補全
 // 切換至其他頁 並回原頁面，要儲存Redux (體驗,重要)
-//
-//
-// typeScript加減用
+// 手機版
+// header
+// 其他? 好像有點空??
+// 房間版懶人行程
 
+// ?其他
 // ServerSideProp 錯誤後如何處理?? (錯誤,體驗,重要)
 // 並且 表單紀錄也要儲存redux (體驗,最後)
 // 沒有匹配到景點資料，請重新整理 可以做成彈窗(錯誤,體驗,最後)

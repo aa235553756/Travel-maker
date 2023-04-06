@@ -55,4 +55,8 @@
   .custom-shadow {
     box-shadow: 1px 2px 10px 0px #00000040;
   }
+
+  .seletSide-shadow {
+    box-shadow: 1px 2px 15px 0px #00000026;
+  }
 }

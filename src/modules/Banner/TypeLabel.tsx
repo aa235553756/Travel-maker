@@ -39,21 +39,6 @@ export default function TypeLabel({
     <>
       {CategoryId.map((item, index) => {
         const CategoryId = { ...register('CategoryId') }
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-          const setCurrentValue = (bool: boolean) => {
-            CategoryId.onChange(e)
-            const data = watch(`CategoryId`)
-            // 篩選data，設定表單
-            setValue(
-              'CategoryId',
-              data.filter((item: string) => {
-                return bool ? item !== '1' : item === '1'
-              })
-            )
-          }
-          // 判斷是否為'1',隨心所欲，執行不同參數函式
-          item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
-        }
 
         let className =
           'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-glass-45'
@@ -61,6 +46,7 @@ export default function TypeLabel({
         className += watch('CategoryId').includes(item.value)
           ? ' !bg-primary-dark !text-white'
           : ''
+
         return (
           <label key={index} className={className}>
             <div>
@@ -79,6 +65,22 @@ export default function TypeLabel({
             </div>
           </label>
         )
+
+        function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+          const setCurrentValue = (bool: boolean) => {
+            CategoryId.onChange(e)
+            const data = watch(`CategoryId`)
+            // 篩選data，設定表單
+            setValue(
+              'CategoryId',
+              data.filter((item: string) => {
+                return bool ? item !== '1' : item === '1'
+              })
+            )
+          }
+          // 判斷是否為'1',隨心所欲，執行不同參數函式
+          item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
+        }
       })}
     </>
   )

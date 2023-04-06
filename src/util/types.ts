@@ -14,3 +14,15 @@ export interface randomTourProp {
   "Lock": boolean
   "ImageUrl": string
 }
+
+
+export interface geoDefaultValueProp {
+  CategoryId: string[];
+  AttrCounts: string;
+  Transports: string;
+  nearBy?: boolean | undefined;
+  DistrictName: string[];
+  AttractionId?: number[] | undefined;
+  Nlat: number;
+  Elong: number;
+}

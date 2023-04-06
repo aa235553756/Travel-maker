@@ -1,6 +1,6 @@
-import { randomTourProp } from "@/util/types"
+import { geoDefaultValueProp } from "@/util/types"
 
-export function getRandomTours(data: randomTourProp) {
+export function getRandomTours(data: geoDefaultValueProp | undefined) {
   return fetch(
     'https://travelmaker.rocket-coding.com/api/tours/make',
     {
