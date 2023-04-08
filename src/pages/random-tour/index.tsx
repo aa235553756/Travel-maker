@@ -1,13 +1,17 @@
-import LazySortable from '@/common/components/LazySortable'
+import Slider from 'react-slick'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
 import { defaultValueProp, randomTourProp } from '@/util/types'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { BsLink45Deg, BsHeart, BsPlusLg } from 'react-icons/bs'
+import { BsLink45Deg, BsHeart, BsPlusLg, BsListCheck } from 'react-icons/bs'
 import { getRandomTours, getShareTours, postTours } from '@/util/tourApi'
 import { useRouter } from 'next/router'
 import { defaultValues } from '@/util/selectData'
+import TypeLabel from '@/modules/Banner/TypeLabel'
+import OpenFormBtn from '@/common/components/OpenFormBtn'
+import Image from 'next/image'
+import BannerSelectorMobile from '@/modules/Banner/BannerSelectorMobile'
 
 export default function RandomTourIndex({
   data: originData,
@@ -19,31 +23,138 @@ export default function RandomTourIndex({
 
   console.log(originData)
   const [data, setData] = useState(originData)
+  const [isHidden, setIsHidden] = useState(true)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(false)
 
   const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
     { defaultValues: defaultValues }
   )
+  const {
+    register: register2,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    handleSubmit: handleSubmit2,
+    watch: watch2,
+    setValue: setValue2,
+    formState: { errors: errors2 },
+  } = useForm<defaultValueProp>({
+    defaultValues,
+  })
+  const formIdMobile = 'random-tour-form'
+  const handleErrors2 = (e: { preventDefault: () => void }) => {
+    // 判斷2個都為false時
+    if (!watch('nearBy') && !watch('DistrictName').length) {
+      alert('錯誤，表單填寫不完整 區域')
+      e.preventDefault()
+      return
+    }
+    // 判斷有無沒填寫
+    if (Object.keys(errors2).length) {
+      alert('錯誤，表單填寫不完整 Type')
+    }
+  }
   const formId = 'random-tour-form'
 
+  const settings = {
+    // className: 'center',
+    // centerMode: true,
+    // centerPadding: '60px',
+    // dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 4,
+    // rows: 4,
+  }
+  const settings2 = {
+    // className: 'center',
+    // centerMode: true,
+    // centerPadding: '60px',
+    dots: true,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    rows: 4,
+  }
   useEffect(() => {
+    console.log(data)
     // alert('每次setData,重整google地圖')
   }, [data])
 
+  useEffect(() => {
+    if (isHidden) {
+      document.body.style.overflow = 'auto'
+    }
+  }, [isHidden])
+
   return (
-    <div className="container pt-20 pb-[160px]">
-      {/* 景點名稱 */}
-      <div>
-        {/* 這個可以做成modal */}
-        {data.length === 0 ? <h1>沒有匹配到景點資料，請重新整理</h1> : null}
-        {/* {data?.map((item: { AttractionName: string }, index: number) => {
-          return <h1 key={index}>{item.AttractionName}</h1>
-        })} */}
+    <div className="container lg:pt-20 pt-12 pb-[160px]">
+      {/* 手機版表單 */}
+      <BannerSelectorMobile
+        isHidden={isHidden}
+        setIsHidden={setIsHidden}
+        formIdMobile={formIdMobile}
+        register={register2}
+        watch={watch2}
+        setValue={setValue2}
+        handleErrors={handleErrors2}
+      />
+      {/* 手機版上方介面 */}
+      <div className="lg:hidden mb-14">
+        <div className="mb-5">
+          <TypeLabel register={register} setValue={setValue} watch={watch} />
+        </div>
+        <div className="md:mb-6 mb-5">
+          <OpenFormBtn isHidden={isHidden} setIsHidden={setIsHidden} />
+        </div>
+        <button className="w-full bg-primary text-white py-2 rounded-[10px] mb-6">
+          隨機產生行程
+        </button>
+        <Slider {...settings2}>
+          {data.map((item, i) => {
+            return (
+              <div key={i} className="min-w-[180px] h-[180px] relative">
+                <div className="absolute text-white left-2">{i}</div>
+                <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white ">
+                  {item.AttractionName}
+                </div>
+                <Image
+                  alt=""
+                  src={item.ImageUrl}
+                  width={652}
+                  height={180}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+            )
+          })}
+        </Slider>
       </div>
 
-      <div className="flex mb-[180px]">
-        {/* 篩選器及其按鈕 */}
-        <div className="mr-6 hidden md:block">
+      <div className="flex flex-wrap mb-[60px] lg:mb-[180px]">
+        {/* 排行程及連結 100% */}
+        <div className="hidden lg:flex w-full mb-3 space-x-6 items-center bg-red-100">
+          {/* 排行程文字 */}
+          <div className="lg:w-[264px]">
+            <h2 className="hidden lg:flex items-center text-xl">
+              <BsListCheck className="mr-2 text-2xl" />
+              排行程
+            </h2>
+          </div>
+          {/* 懶人行程連結 */}
+          <div className="flex-grow">
+            <button
+              className="flex px-2 items-center text-xl border border-black rounded-md"
+              onClick={handleLink}
+            >
+              <BsLink45Deg className="mr-2 text-2xl" />
+              複製連結
+            </button>
+          </div>
+        </div>
+        {/* 篩選器及其按鈕 3/12 */}
+        <div className="mr-6 hidden lg:block">
           <SelectSide
             formId={formId}
             handleSubmit={handleSubmit}
@@ -59,43 +170,44 @@ export default function RandomTourIndex({
             隨機產生行程
           </button>
         </div>
-        {/* 拖拉 */}
-        <div className="flex flex-col">
-          {/* 懶人行程連結 */}
-          <div>
-            <button
-              className="flex px-2 items-center mb-3 text-xl border border-black rounded-md"
-              onClick={handleLink}
-            >
-              <BsLink45Deg className="mr-2 text-2xl" />
-              複製連結
-            </button>
-          </div>
-          {/* 房間行程連結，應該兩邊都一樣 */}
-          {/* <h2 className="flex items-center mb-3 text-xl font-bold">
-            <BsLink45Deg className="mr-2 text-lg border w-[28px] h-[28px] rounded-md" />
-            行程名稱：美食吃透透
-          </h2> */}
-          {/* 拖拉 */}
-          <div className="mb-6 max-lg:overflow-x-scroll max-lg:mb-4">
-            {loading ? (
-              <div className="w-[840px] h-[180px] text-center text-2xl">
-                正在幫您安排行程
-              </div>
-            ) : (
-              <LazySortable data={data} />
-            )}
+        <div className="flex-grow">
+          {/* Swiper圖片 */}
+          <div className="hidden lg:block max-w-[840px] max-h-[180px] w-full mb-8 ">
+            <Slider {...settings}>
+              {data.map((item, i) => {
+                return (
+                  <div
+                    key={i}
+                    className="min-w-[180px] h-[180px] relative cursor-grab"
+                  >
+                    <div className="absolute left-2 text-white ">{i + 1}</div>
+
+                    <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 ">
+                      {item.AttractionName}
+                    </div>
+                    <Image
+                      alt=""
+                      src={item.ImageUrl}
+                      width={652}
+                      height={180}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                )
+              })}
+            </Slider>
           </div>
           {/* 地圖 */}
-          <div className="mb-12 h-full bg-[#D7D7D7]">
+          <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d14459.774055448219!2d121.49936893054726!3d25.035990943540952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x3442a94a4ed4888b%3A0x7880a95f29f4878e!2z5Zyw5bmz57ea5Z-65Zyw!3m2!1d25.0239646!2d121.5094846!4m5!1s0x3442a90e8737b2f7%3A0x6b6ee112e9e7c58b!2z5bCP5ZCz54mb6IKJ6bq1IDEwOOWPsOWMl-W4guiQrOiPr-WNgOa0m-mZveihlzQ1LTEx6Jmf!3m2!1d25.047628399999997!2d121.508326!5e0!3m2!1szh-TW!2stw!4v1680440395475!5m2!1szh-TW!2stw"
-              className="w-full h-full"
+              className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
             ></iframe>
           </div>
-          <div className="ml-auto">
+          {/* 邀請收藏按鈕 */}
+          <div className="flex justify-end">
             <button className="inline-flex bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white">
               <BsPlusLg className="text-lg mr-2" />
               邀請
@@ -246,13 +358,13 @@ export async function getServerSideProps(context: {
 }
 
 // todo 依照用戶這頁可以點擊的順序，來補全
-// 切換至其他頁 並回原頁面，要儲存Redux (體驗,重要)
-// 手機版
-// header
-// 其他? 好像有點空??
-// 房間版懶人行程
+// 先拆嗎??
+// 手機版表單
+// 電腦版表單修復
+// id版懶人頁
 
 // ?其他
-// ServerSideProp 錯誤後如何處理?? (錯誤,體驗,重要)
+// ServerSideProp 錯誤後如何處理?? (錯誤,體驗,重要) --目前先回傳空陣列
+// 切換至其他頁 並回原頁面，要儲存Redux (體驗,重要)
 // 並且 表單紀錄也要儲存redux (體驗,最後)
 // 沒有匹配到景點資料，請重新整理 可以做成彈窗(錯誤,體驗,最後)

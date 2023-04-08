@@ -1,0 +1,28 @@
+.slick-list {
+  margin: 0 -20px !important;
+}
+
+.slick-slide>div {
+  padding: 0 20px !important;
+}
+
+.slick-next {
+  /* left: 0; */
+  width: 40px !important;
+  right: 0 !important;
+}
+
+.slick-prev {
+  left: 0 !important;
+  z-index: 1 !important;
+  width: 40px !important;
+}
+
+
+.slick-prev:before {
+  font-size: 40px !important;
+}
+
+.slick-next:before {
+  font-size: 40px !important;
+}

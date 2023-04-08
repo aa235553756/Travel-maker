@@ -5,7 +5,7 @@ import {
   DistrictName,
   AttrCounts,
 } from '@/util/selectData'
-import { BsListCheck } from 'react-icons/bs'
+
 import {
   UseFormRegister,
   UseFormHandleSubmit,
@@ -36,10 +36,6 @@ export default function SelectSide({
   return (
     <>
       <div>
-        <h2 className="flex items-center mb-3 text-xl">
-          <BsListCheck className="mr-2 text-2xl" />
-          排行程
-        </h2>
         <form
           id={formId}
           onSubmit={handleSubmit(onSubmit)}

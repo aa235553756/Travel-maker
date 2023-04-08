@@ -10,10 +10,33 @@ export default function MoreJourney() {
         <span className="font-bold text-xl">更多隨心所欲行程</span>
       </h2>
       <div className="flex flex-col space-y-5 mb-[100px] md:flex-row md:space-y-0 md:space-x-6 md:mb-[160px]">
-        <TourCard tourName="好瘋狂熱血少年" countAttr={4} likes={100} showLike={true} creator={''} showCreator={false} />
-        <TourCard tourName="好瘋狂熱血少年" countAttr={4} likes={100} showLike={true} creator={''} showCreator={false} />
-        <TourCard tourName="好瘋狂熱血少年" countAttr={4} likes={100} showLike={true} creator={''} showCreator={false} />
+        <TourCard
+          tourName="好瘋狂熱血少年"
+          countAttr={4}
+          likes={100}
+          showLike={true}
+          creator={''}
+          showCreator={false}
+        />
+        <TourCard
+          tourName="好瘋狂熱血少年"
+          countAttr={4}
+          likes={100}
+          showLike={true}
+          creator={''}
+          showCreator={false}
+        />
+        <div className="hidden lg:block">
+          <TourCard
+            tourName="好瘋狂熱血少年"
+            countAttr={4}
+            likes={100}
+            showLike={true}
+            creator={''}
+            showCreator={false}
+          />
+        </div>
       </div>
     </div>
   )
-} 
+}

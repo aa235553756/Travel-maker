@@ -31,7 +31,7 @@ export default function Sortable({ data }: { data: randomTourProp[] }) {
       {state.map((item, index) => (
         <div
           key={item.id}
-          className="min-w-[180px] w-[calc(25%-30px)] cursor-pointer duration-150 relative"
+          className="min-w-[180px] min-h-[180px] w-[calc(25%-30px)] cursor-pointer duration-150 relative"
         >
           <div className="absolute bottom-2 left-1/2 translate-x-[-50%]  whitespace-nowrap text-white custohadow text-lg">
             {data[index]?.AttractionName}

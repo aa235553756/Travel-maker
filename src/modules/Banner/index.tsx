@@ -113,19 +113,17 @@ export default function Banner() {
   }, [isHidden])
 
   return (
-    <div className="bg-banner pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
+    <div className="bg-banner md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
       <div className="container">
-        <div className="w-full lg:w-2/3 mx-auto pt-14 md:pt-8 xl:pt-20 pb-16 md:pb-36">
+        <div className="w-full lg:w-2/3 mx-auto pt-16 xl:pt-20 pb-16 md:pb-36">
           <BannerTitle />
           {/* 電腦版行程類別 */}
-          <form onSubmit={handleSubmit(onSubmit)} id={formId}>
-            <div className="hidden md:flex md:space-x-4 lg:space-x-6 mb-4 overflow-scroll md:overflow-auto">
-              <TypeLabel
-                register={register}
-                watch={watch}
-                setValue={setValue}
-              />
-            </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            id={formId}
+            className="hidden md:block mb-4"
+          >
+            <TypeLabel register={register} watch={watch} setValue={setValue} />
           </form>
 
           {/* 手機版行程類別 */}
@@ -171,7 +169,9 @@ export default function Banner() {
             </button>
           </div>
           {/* 手機版toggle篩選表單 */}
-          <OpenFormBtn setIsHidden={setIsHidden} isHidden={isHidden} />
+          <div className="md:mb-6 mb-4 md:hidden">
+            <OpenFormBtn setIsHidden={setIsHidden} isHidden={isHidden} />
+          </div>
           {/* 手機版開始規劃按鈕 */}
           <button
             form={formIdMobile}

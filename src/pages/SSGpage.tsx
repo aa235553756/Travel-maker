@@ -4,12 +4,18 @@ import React from 'react'
 // const token =
 //   'Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzNzYyIiwic2NwIjoidXNlciIsImF1ZCI6bnVsbCwiaWF0IjoxNjgwMDUwNDI3LCJleHAiOjE2ODEzNDY0MjcsImp0aSI6ImVjYTkzN2Q5LTVjMTMtNGNjOS05MzIwLWQyMmYyZDA2NTllNiJ9.fMloEbzi4W3RxIFoZZ1Az4XNH1kSunDMC3Cw_L-7bvQ'
 
-export async function getStaticProps({ req, res }) {
+export async function getStaticProps({
+  req,
+  res,
+}: {
+  req: undefined
+  res: undefined
+}) {
   const token = getCookie('auth', { req, res })
   // const { id } = params
   const response = await fetch(`https://todoo.5xcamp.us/todos`, {
     headers: {
-      Authorization: token,
+      Authorization: `${token ?? undefined}`,
     },
   })
   const data = await response.json()
@@ -18,7 +24,7 @@ export async function getStaticProps({ req, res }) {
   }
 }
 
-export default function SSRPage({ data }) {
+export default function SSRPage({ data }: { data: undefined }) {
   return (
     <>
       <p>
