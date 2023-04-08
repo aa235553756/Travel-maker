@@ -6,7 +6,8 @@ import Explore from '@/modules/Explore'
 import Feature from '@/modules/Feature'
 import Banner from '@/modules/Banner'
 
-export default function Home() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function Home({ data }: { data: undefined }) {
   return (
     <>
       <Head>
@@ -25,4 +26,9 @@ export default function Home() {
       </div>
     </>
   )
+}
+export async function getStaticProps() {
+  return {
+    props: { data: '' },
+  }
 }
