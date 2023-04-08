@@ -12,8 +12,10 @@ import BannerSelectorMobile from '@/modules/Banner/BannerSelectorMobile'
 import BannerTitle from '@/modules/Banner/BannerTitle'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
 import { defaultValueProp } from '@/util/types'
+import { useRouter } from 'next/router'
 
 export default function Banner() {
+  const router = useRouter()
   // 這邊是ReactHookForm，有分電腦版,手機版
   const {
     register,
@@ -36,7 +38,32 @@ export default function Banner() {
   const formId = 'banner-form'
   const formIdMobile = 'banner-form-mobile'
   // 這邊打POST,取得隨機行程 (鄰近為true要處理經緯度)
-  const onSubmit = (data: defaultValueProp) => alert(JSON.stringify(data))
+  const onSubmit = async (data: defaultValueProp) => {
+    // 缺geo,故先判斷鄰近值,在做函式返回newData
+    const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
+    alert(JSON.stringify(newData))
+
+    function handleNearBy(bool: boolean) {
+      let newData
+      // 目前只有false狀態
+      if (!bool) {
+        // 取得google定位，設定經緯度
+        newData = { Nlat: 0, Elong: 0, ...data }
+        // 取得鎖點(懶人頁較簡易）
+        newData.AttractionId = Array(4).fill(0)
+        //刪除鄰近
+        delete newData.nearBy
+      }
+      return newData
+    }
+
+    router.push({
+      pathname: '/random-tour',
+      query: {
+        data: JSON.stringify(newData),
+      },
+    })
+  }
 
   // state
   const [isHidden, setIsHidden] = useState(true)
@@ -86,19 +113,17 @@ export default function Banner() {
   }, [isHidden])
 
   return (
-    <div className="bg-banner pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
+    <div className="bg-banner md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
       <div className="container">
-        <div className="w-full lg:w-2/3 mx-auto pt-14 md:pt-8 xl:pt-20 pb-16 md:pb-36">
+        <div className="w-full lg:w-2/3 mx-auto pt-16 xl:pt-20 pb-16 md:pb-36">
           <BannerTitle />
           {/* 電腦版行程類別 */}
-          <form onSubmit={handleSubmit(onSubmit)} id={formId}>
-            <div className="hidden md:flex md:space-x-4 lg:space-x-6 mb-4 overflow-scroll md:overflow-auto">
-              <TypeLabel
-                register={register}
-                watch={watch}
-                setValue={setValue}
-              />
-            </div>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            id={formId}
+            className="hidden md:block mb-4"
+          >
+            <TypeLabel register={register} watch={watch} setValue={setValue} />
           </form>
 
           {/* 手機版行程類別 */}
@@ -144,7 +169,9 @@ export default function Banner() {
             </button>
           </div>
           {/* 手機版toggle篩選表單 */}
-          <OpenFormBtn setIsHidden={setIsHidden} isHidden={isHidden} />
+          <div className="md:mb-6 mb-4 md:hidden">
+            <OpenFormBtn setIsHidden={setIsHidden} isHidden={isHidden} />
+          </div>
           {/* 手機版開始規劃按鈕 */}
           <button
             form={formIdMobile}
@@ -330,15 +357,29 @@ export default function Banner() {
 
 //todo
 // ?重要
-// SSG是否與RHF衝突
-// *手機版表單...
-// *表單錯誤判斷alert，手機版按鈕添加
+// 任務拆分
+// 寫出geo Promise，按下鄰近按鈕時取得or送出時
+// 測試 假資料 & 真資料版本
+// 重設selectData
+// 優化程式碼成 function (目的是newData後 送出表單)
+// 送出後跳轉至規劃並呈現三張圖 (首先確定路由)
 
 // ?次要
-// 做樣式
 // 限制最多三個選項
-// 電腦手機表單能否同步 很難
-// *案不限區域時，其他區域關閉(其他區域時，不限關閉)
-// *區域多行樣式ok
-// *思考表單分開為什麼吃得到... (因為只要button雖只綁定一個表單，但只要觸發handle，所有register都有效)
 // 按下ok或下一個後，把字印回下拉選單中 (使用者體驗，晚做)
+
+// !geoPromise
+// const geoPromise = new Promise<void>((reslove, reject) => {
+//   navigator.geolocation.getCurrentPosition(
+//     (data) => {
+//       const latitude = data.coords.latitude
+//       const longitude = data.coords.longitude
+//       console.log('緯度：', latitude)
+//       console.log('經度：', longitude)
+//       reslove()
+//     },
+//     () => {
+//       reject()
+//     }
+//   )
+// })

@@ -5,11 +5,13 @@ import {
   DistrictName,
   AttrCounts,
 } from '@/util/selectData'
-import { BsListCheck } from 'react-icons/bs'
+
 import {
   UseFormRegister,
   UseFormHandleSubmit,
   SubmitHandler,
+  UseFormSetValue,
+  UseFormWatch,
 } from 'react-hook-form'
 import { defaultValueProp } from '@/util/types'
 
@@ -18,6 +20,8 @@ interface SelectSideProp {
   register: UseFormRegister<defaultValueProp>
   handleSubmit: UseFormHandleSubmit<defaultValueProp>
   onSubmit: SubmitHandler<defaultValueProp>
+  setValue: UseFormSetValue<defaultValueProp>
+  watch: UseFormWatch<defaultValueProp>
 }
 
 export default function SelectSide({
@@ -25,29 +29,28 @@ export default function SelectSide({
   handleSubmit,
   register,
   onSubmit,
+  setValue,
+  watch,
 }: SelectSideProp) {
   // 這邊會有兩頁共用此元件,故RHF往外擺
   return (
     <>
       <div>
-        <h2 className="flex items-center mb-3 text-xl">
-          <BsListCheck className="mr-2 text-2xl" />
-          排行程
-        </h2>
         <form
           id={formId}
           onSubmit={handleSubmit(onSubmit)}
-          className="mb-12 md:w-[218px] lg:w-[264px] bg-gray-D9"
+          className="mb-12 md:w-[218px] lg:w-[264px] bg-white seletSide-shadow rounded-md"
         >
           <h3 className="py-2 px-4">篩選內容</h3>
           <div className="py-1 px-4 bg-[#C4C4C4]">選擇行程（必選）</div>
+          {/* 這些Label元件都寫在下面 */}
           <LabelRadio register={register} />
           <div className="py-1 px-4 bg-[#C4C4C4]">選擇類型（複選）</div>
-          <LableType />
+          <LableType register={register} setValue={setValue} watch={watch} />
           <div className="py-1 px-4 bg-[#C4C4C4]">選擇交通工具</div>
-          <LableTransport />
+          <LableTransport register={register} />
           <div className="py-1 px-4 bg-[#C4C4C4]">選擇地區（複選）</div>
-          <LableArea />
+          <LableArea register={register} setValue={setValue} watch={watch} />
         </form>
       </div>
     </>
@@ -65,12 +68,11 @@ function LabelRadio({
         return (
           <label
             key={index}
-            className="w-[85px] ml-4 odd:!ml-0 flex items-center [&:nth-child(2)]:!mt-0"
+            className="w-[85px] ml-4 odd:!ml-0 flex items-center [&:nth-child(2)]:!mt-0 cursor-pointer"
           >
             <input
-              {...register('CategoryId')}
+              {...register('AttrCounts')}
               type="radio"
-              defaultChecked={index === 0 ? true : false}
               value={item.value}
               className="mr-2"
             />
@@ -82,21 +84,46 @@ function LabelRadio({
   )
 }
 
-function LableType() {
+function LableType({
+  register,
+  setValue,
+  watch,
+}: {
+  register: UseFormRegister<defaultValueProp>
+  setValue: UseFormSetValue<defaultValueProp>
+  watch: UseFormWatch<defaultValueProp>
+}) {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-3">
-      {/* CategoryId map */}
       {CategoryId.map((item, index) => {
+        const CategoryId = { ...register('CategoryId') }
+        const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+          const setCurrentValue = (bool: boolean) => {
+            CategoryId.onChange(e)
+            const data = watch(`CategoryId`)
+            // 篩選data，設定表單
+            setValue(
+              'CategoryId',
+              data.filter((item: string) => {
+                return bool ? item !== '1' : item === '1'
+              })
+            )
+          }
+          // 判斷是否為'1',隨心所欲，執行不同參數函式
+          item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
+        }
+
         return (
           <label
             key={index}
-            className="ml-4 odd:!ml-0 [&:nth-child(1)]:w-[85px] [&:nth-child(2)]:!mt-0"
+            className="ml-4 odd:!ml-0 [&:nth-child(1)]:w-[85px] [&:nth-child(2)]:!mt-0 cursor-pointer"
           >
             <input
-              name="AttrCounts"
               type="checkbox"
-              value={index}
+              {...register('CategoryId', { required: true })}
+              value={item.value}
               className="mr-2"
+              onChange={handleChange}
             />
             {item.name}
           </label>
@@ -106,17 +133,21 @@ function LableType() {
   )
 }
 
-function LableTransport({}) {
+function LableTransport({
+  register,
+}: {
+  register: UseFormRegister<defaultValueProp>
+}) {
   return (
     <div className="flex flex-wrap px-4 py-3 pb-5 space-y-3">
       {Transports.map((item, index) => {
         return (
           <label
             key={index}
-            className="w-[85px] ml-4 odd:!ml-0 [&:nth-child(2)]:!mt-0"
+            className="w-[85px] ml-4 odd:!ml-0 [&:nth-child(2)]:!mt-0 cursor-pointer"
           >
             <input
-              name="Transports"
+              {...register('Transports', { required: true })}
               type="radio"
               value={item.name}
               className="mr-2"
@@ -129,40 +160,86 @@ function LableTransport({}) {
   )
 }
 
-function LableArea({}) {
+function LableArea({
+  register,
+  setValue,
+  watch,
+}: {
+  register: UseFormRegister<defaultValueProp>
+  setValue: UseFormSetValue<defaultValueProp>
+  watch: UseFormWatch<defaultValueProp>
+}) {
   return (
     <div className="flex flex-wrap px-4 pt-2 pb-5 space-y-3">
       {DistrictName.map((item, index) => {
-        if (index === 0 || index === 1) {
+        const DistrictName = { ...register('DistrictName') }
+        if (index === 0) {
           return (
-            <label
-              key={index}
-              className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0"
-            >
-              <input
-                name="AttrCounts"
-                type="radio"
-                value={2}
-                className="mr-2"
-              />
-            </label>
+            <>
+              {/* 不限 */}
+              <label
+                key={index}
+                className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0 cursor-pointer"
+              >
+                <input
+                  {...register('DistrictName')}
+                  type="checkbox"
+                  value={item}
+                  className="mr-2"
+                  onChange={handleOnChange}
+                />
+                {item}
+              </label>
+              {/* 鄰近 */}
+              <label
+                key={index}
+                className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0 cursor-pointer"
+              >
+                <input
+                  type="checkbox"
+                  {...register('nearBy')}
+                  className="mr-2"
+                  onClick={() => {
+                    setValue('DistrictName', [])
+                  }}
+                />
+                鄰近
+              </label>
+            </>
           )
         }
 
         return (
           <label
             key={index}
-            className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0"
+            className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0 cursor-pointer"
           >
             <input
-              name="DistrictName"
+              {...register('DistrictName')}
               type="checkbox"
-              value={2}
+              value={item}
               className="mr-2"
+              onChange={handleOnChange}
             />
             {item}
           </label>
         )
+        function handleOnChange(e: React.ChangeEvent<HTMLInputElement>) {
+          function setCurrentValue(bool: boolean) {
+            DistrictName.onChange(e)
+            const data = watch('DistrictName')
+            setValue('nearBy', false)
+            // 篩選data，設定表單
+            setValue(
+              'DistrictName',
+              data.filter((item) => {
+                return bool ? item !== '不限' : item === '不限'
+              })
+            )
+          }
+          // 判斷是否為'不限'，執行不同參數函式
+          item !== '不限' ? setCurrentValue(true) : setCurrentValue(false)
+        }
       })}
     </div>
   )

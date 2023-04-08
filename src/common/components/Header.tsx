@@ -19,6 +19,7 @@ import {
   MdOutlineCancel,
 } from 'react-icons/md'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export default function Header() {
   // 漢堡條
@@ -51,9 +52,9 @@ export default function Header() {
   }, [isHam])
 
   return (
-    <div className="md:mt-[120px]">
+    <div className="xxxmt-[64px] xxxlg:mt-[120px]">
       {/* 電腦版 */}
-      <div className="fixed z-10 top-0 w-full hidden lg:flex  md:h-[120px] md:bg-glass-45 md:items-center md:justify-between">
+      <div className="xxxfixed z-10 top-0 w-full hidden lg:flex  md:h-[120px] md:bg-glass-45 md:items-center md:justify-between  shadow">
         <div className="container">
           <div className="flex items-center justify-between">
             {/* logo+名稱 */}
@@ -61,29 +62,32 @@ export default function Header() {
               href="/"
               className="flex items-center md:space-x-2 lg:space-x-6 flex-shrink-0"
             >
-              <div className="md:w-[60px] md:h-[60px] lg:w-[102px] lg:h-[102px] bg-[#ccc] rounded-full"></div>
+              {/* <div className="md:w-[60px] md:h-[60px] lg:w-[102px] lg:h-[102px] bg-[#ccc] rounded-full"></div> */}
 
-              <h1 className="text-xl">名稱名稱</h1>
+              <h1 className="text-xl">
+                {' '}
+                <Image src="/Group 324.png" alt="" width={200} height={100} />
+              </h1>
             </Link>
-            <div className="flex space-x-5">
+            <div className="flex space-x-5 items-center">
               {/* 搜尋bar */}
-              <div className="relative max-w-full w-[228px] h-10">
+              <div className="relative max-w-full w-[228px] h-10 group">
                 <input
-                  className="absolute border placeholder-[#ccc] px-5 py-1 w-full h-full"
+                  className="group-hover:ring-1 absolute border placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass-45 focus-visible:bg-white"
                   placeholder="搜尋"
                 />
                 <div className="absolute top-3 right-5">
-                  <BsSearch />
+                  <BsSearch className="opacity-50 group-hover:opacity-100" />
                 </div>
               </div>
               {/* 功能 */}
               <ul className="flex flex-shrink-0 space-x-5">
                 <li className="flex space-x-2 items-center">
                   <Link
-                    href="/planning-tour/1"
+                    href="/random-tour"
                     className="flex space-x-2 items-center"
                   >
-                    <IoLocationSharp className="text-lg" />
+                    <IoLocationSharp className="text-lg text-primary" />
                     <span className="text-xl">規劃行程</span>
                   </Link>
                 </li>
@@ -92,7 +96,7 @@ export default function Header() {
                     href="/hot-topics/attractions"
                     className="flex space-x-2 items-center"
                   >
-                    <BsFillFlagFill className="text-lg" />
+                    <BsFillFlagFill className="text-lg text-primary" />
                     <span className="text-xl">熱門話題</span>
                   </Link>
                 </li>
@@ -104,7 +108,7 @@ export default function Header() {
                       showMemberState()
                     }}
                   >
-                    <IoLocationSharp className="text-lg" />
+                    <IoLocationSharp className="text-lg text-primary" />
                     <span className="text-xl">會員中心</span>
                   </button>
                   {showMember ? (
@@ -159,7 +163,7 @@ export default function Header() {
         </div>
       </div>
       {/* 手機版 */}
-      <div className="fixed top-0 w-full z-10 block bg-white lg:hidden">
+      <div className="xxxfixed top-0 w-full z-10 block bg-white lg:hidden">
         <div className="container">
           {isSearching ? (
             <div className="flex justify-between items-center h-16">
@@ -193,7 +197,10 @@ export default function Header() {
                   hamState()
                 }}
               />
-              <h1 className="text-xl">名稱名稱</h1>
+              <h1 className="text-xl">
+                名稱名稱
+                {/* <Image src="/Group 324.png" alt="" width={100} height={100} /> */}
+              </h1>
               <BsSearch
                 className="text-2xl"
                 onClick={() => {

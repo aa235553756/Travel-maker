@@ -10,7 +10,7 @@ export default function OpenFormBtn({
   return (
     <button
       type="button"
-      className="bg-glass-45 bg-gray w-full px-5 py-4 md:mb-6 mb-4 flex items-center justify-between md:hidden rounded-xl"
+      className="bg-[#F5F5F5] bg-gray w-full px-5 py-4 flex items-center justify-between rounded-xl openFormBtn-shadow"
       onClick={() => {
         setIsHidden(!isHidden)
         document.body.style.overflow = 'hidden'

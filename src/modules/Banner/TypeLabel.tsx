@@ -37,49 +37,53 @@ export default function TypeLabel({
 }: TypeLabelProp) {
   return (
     <>
-      {CategoryId.map((item, index) => {
-        const CategoryId = { ...register('CategoryId') }
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-          const setCurrentValue = (bool: boolean) => {
-            CategoryId.onChange(e)
-            const data = watch(`CategoryId`)
-            // 篩選data，設定表單
-            setValue(
-              'CategoryId',
-              data.filter((item: string) => {
-                return bool ? item !== '1' : item === '1'
-              })
-            )
-          }
-          // 判斷是否為'1',隨心所欲，執行不同參數函式
-          item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
-        }
+      <div className="flex space-x-4 lg:space-x-6 overflow-scroll md:overflow-auto pb-1 px-1">
+        {CategoryId.map((item, index) => {
+          const CategoryId = { ...register('CategoryId') }
 
-        let className =
-          'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-glass-45'
-        // 取決表單內是否有該值，賦予樣式
-        className += watch('CategoryId').includes(item.value)
-          ? ' !bg-primary-dark !text-white'
-          : ''
-        return (
-          <label key={index} className={className}>
-            <div>
-              {/* icon */}
-              <div className="mb-2 mx-auto text-2xl w-[24px]">
-                {iconArray[index]}
+          let className =
+            'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-glass-45 typeLabel-shadow'
+          // 取決表單內是否有該值，賦予樣式
+          className += watch('CategoryId').includes(item.value)
+            ? ' !bg-primary-dark !text-white'
+            : ''
+
+          return (
+            <label key={index} className={className}>
+              <div>
+                {/* icon */}
+                <div className="mb-2 mx-auto text-2xl w-[24px]">
+                  {iconArray[index]}
+                </div>
+                <input
+                  type="checkbox"
+                  {...register('CategoryId', { required: true })}
+                  value={item.value}
+                  className="hidden"
+                  onChange={handleChange}
+                />
+                <p className="text-sm">{item.name}</p>
               </div>
-              <input
-                type="checkbox"
-                {...register('CategoryId', { required: true })}
-                value={item.value}
-                className="hidden"
-                onChange={handleChange}
-              />
-              <p className="text-sm">{item.name}</p>
-            </div>
-          </label>
-        )
-      })}
+            </label>
+          )
+
+          function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
+            const setCurrentValue = (bool: boolean) => {
+              CategoryId.onChange(e)
+              const data = watch(`CategoryId`)
+              // 篩選data，設定表單
+              setValue(
+                'CategoryId',
+                data.filter((item: string) => {
+                  return bool ? item !== '1' : item === '1'
+                })
+              )
+            }
+            // 判斷是否為'1',隨心所欲，執行不同參數函式
+            item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
+          }
+        })}
+      </div>
     </>
   )
 }
