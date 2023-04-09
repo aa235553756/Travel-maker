@@ -76,7 +76,7 @@ export default function Header() {
               {/* 搜尋bar */}
               <div className="relative max-w-full w-[228px] h-10 group">
                 <input
-                  className="group-hover:ring-1 absolute border placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass focus-visible:bg-white"
+                  className="group-hover:ring-1 absolute border-b placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass focus-visible:bg-white"
                   placeholder="搜尋"
                 />
                 <div className="absolute top-3 right-5">
