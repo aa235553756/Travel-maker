@@ -33,6 +33,7 @@
     "react-modal": "^3.16.1",
     "react-paginate": "^8.1.4",
     "react-redux": "^8.0.5",
+    "react-responsive": "^9.0.2",
     "react-select": "^5.7.0",
     "react-slick": "^0.29.0",
     "react-sortablejs": "^6.1.4",
