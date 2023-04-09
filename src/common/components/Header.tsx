@@ -198,7 +198,7 @@ export default function Header() {
               } absolute right-0 opacity-0 max-w-full w-[228px] h-10 duration-150`}
             >
               <input
-                className="overflow-hidden absolute border placeholder-[#ccc] px-5 py-1 w-full h-full duration-300 focus-visible:outline-secondary"
+                className="-z-10 overflow-hidden absolute border placeholder-[#ccc] px-5 py-1 w-full h-full duration-300 focus-visible:outline-secondary"
                 placeholder="搜尋"
                 ref={inputRef}
               />
