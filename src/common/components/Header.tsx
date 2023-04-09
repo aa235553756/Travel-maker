@@ -201,6 +201,12 @@ export default function Header() {
                 className="-z-10 overflow-hidden absolute border placeholder-[#ccc] px-5 py-1 w-full h-full duration-300 focus-visible:outline-secondary"
                 placeholder="搜尋"
                 ref={inputRef}
+                onClick={(e) => {
+                  if (isSearching) {
+                    return
+                  }
+                  e.preventDefault()
+                }}
               />
               <div className="absolute top-3 right-5">
                 <BsSearch />
