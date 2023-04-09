@@ -36,7 +36,7 @@ module.exports = {
     },
     extend: {
       backgroundImage: {
-        banner: "url('/bannerBg.png')",
+        banner: "url('/bannerBg.jpg')",
         'footer-texture': "url('/img/footer-texture.png')",
       },
       colors: {

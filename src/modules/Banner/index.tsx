@@ -117,7 +117,8 @@ export default function Banner() {
   }, [isHidden])
 
   return (
-    <div className="bg-banner md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-cover bg-center bg-no-repeat">
+    // bg圖片待討論，給設計看2560px
+    <div className="bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-right bg-no-repeat">
       {/* loading動畫示範 */}
       {screen && (
         <div className="bg-glass-45 top-0 fixed w-screen h-screen z-50">
