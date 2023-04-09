@@ -197,16 +197,13 @@ export default function Header() {
                 isSearching ? 'left-1/2 translate-x-[-50%] opacity-100' : null
               } absolute right-0 opacity-0 max-w-full w-[228px] h-10 duration-150`}
             >
+              {isSearching ? null : (
+                <div className="absolute w-full h-full bg-transparent"></div>
+              )}
               <input
                 className="-z-10 overflow-hidden absolute border placeholder-[#ccc] px-5 py-1 w-full h-full duration-300 focus-visible:outline-secondary"
                 placeholder="搜尋"
                 ref={inputRef}
-                onClick={(e) => {
-                  if (isSearching) {
-                    return
-                  }
-                  e.preventDefault()
-                }}
               />
               <div className="absolute top-3 right-5">
                 <BsSearch />
