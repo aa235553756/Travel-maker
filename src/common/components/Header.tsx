@@ -197,6 +197,7 @@ export default function Header() {
                 isSearching ? 'left-1/2 translate-x-[-50%] opacity-100' : null
               } absolute right-0 opacity-0 max-w-full w-[228px] h-10 duration-150`}
             >
+              {/* 不要刪除這個，防止手機版誤觸input搜尋bar */}
               {isSearching ? null : (
                 <div className="absolute w-full h-full bg-transparent"></div>
               )}
