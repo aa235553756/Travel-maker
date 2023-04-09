@@ -42,7 +42,7 @@ export default function TypeLabel({
           const CategoryId = { ...register('CategoryId') }
 
           let className =
-            'group py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-white typeLabel-shadow hover:scale-110 '
+            'group py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-white typeLabel-shadow md:hover:scale-110 '
           // 取決表單內是否有該值，賦予樣式
           className += watch('CategoryId').includes(item.value)
             ? ' !bg-primary-dark !text-white'

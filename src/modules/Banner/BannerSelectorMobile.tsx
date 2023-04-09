@@ -27,7 +27,7 @@ export default function BannerSelectorMobile({
 }: BannerSelectorMobileProp) {
   return (
     <>
-      <form className={isHidden ? 'hidden' : ''}>
+      <form className={isHidden ? 'hidden' : 'fixed z-10'}>
         <Div100vh>
           <div className="fixed px-10 py-8 top-0 right-0 w-screen h-screen z-[10]">
             {isHidden ? null : (
