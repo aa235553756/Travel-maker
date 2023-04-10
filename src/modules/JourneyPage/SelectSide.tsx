@@ -42,14 +42,14 @@ export default function SelectSide({
           className="mb-12 md:w-[218px] lg:w-[264px] bg-white seletSide-shadow rounded-md"
         >
           <h3 className="py-2 px-4">篩選內容</h3>
-          <div className="py-1 px-4 bg-[#C4C4C4]">選擇行程（必選）</div>
+          <div className="py-1 px-4 bg-gray-F3">選擇行程（必選）</div>
           {/* 這些Label元件都寫在下面 */}
           <LabelRadio register={register} />
-          <div className="py-1 px-4 bg-[#C4C4C4]">選擇類型（複選）</div>
+          <div className="py-1 px-4 bg-gray-F3">選擇類型（複選）</div>
           <LableType register={register} setValue={setValue} watch={watch} />
-          <div className="py-1 px-4 bg-[#C4C4C4]">選擇交通工具</div>
+          <div className="py-1 px-4 bg-gray-F3">選擇交通工具</div>
           <LableTransport register={register} />
-          <div className="py-1 px-4 bg-[#C4C4C4]">選擇地區（複選）</div>
+          <div className="py-1 px-4 bg-gray-F3">選擇地區（複選）</div>
           <LableArea register={register} setValue={setValue} watch={watch} />
         </form>
       </div>

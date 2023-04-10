@@ -154,10 +154,16 @@ export default function Banner() {
           </form>
 
           {/* 電腦版toggle下拉-按鈕 */}
-          <div className="hidden w-full rounded-xl md:h-[86px] md:bg-glass-45 md:flex md:p-4">
+          <div
+            className={`${
+              isToggle || areaToggle ? 'rounded-t-xl' : 'rounded-xl'
+            } hidden w-full md:h-[86px] md:bg-glass-45 md:flex md:p-4`}
+          >
             <a
               href="#bannerTitle"
-              className="bg-white text-[#9F9F9F] rounded-xl w-2/5 px-5 py-4 flex items-center justify-between md:text-xl"
+              className={`${
+                isToggle ? 'bg-primary text-white' : 'bg-white'
+              } text-[#9F9F9F] rounded-xl w-2/5 px-5 py-4 flex items-center justify-between md:text-xl`}
               onClick={() => {
                 toggleState()
               }}
@@ -167,7 +173,9 @@ export default function Banner() {
             </a>
             <a
               href="#bannerTitle"
-              className="bg-white text-[#9F9F9F] ml-5 rounded-xl w-2/5 px-5 py-4 flex items-center justify-between md:text-xl"
+              className={`${
+                areaToggle ? 'bg-primary text-white' : 'bg-white'
+              }  text-[#9F9F9F] ml-5 rounded-xl w-2/5 px-5 py-4 flex items-center justify-between md:text-xl`}
               onClick={() => {
                 areaToggleState()
               }}
@@ -201,7 +209,7 @@ export default function Banner() {
             <form
               className={
                 isToggle
-                  ? 'absolute z-10 px-5 py-6 bg-[#d7d7d7] hidden md:block'
+                  ? 'absolute w-full z-10 px-5 py-6 bg-white hidden md:block rounded-b-md shadow'
                   : 'hidden'
               }
             >
@@ -211,9 +219,12 @@ export default function Banner() {
               </p>
               <div className="flex space-x-5 mb-5">
                 {AttrCounts.map((item, index) => {
-                  let className = 'w-20 py-1 border text-center'
+                  let className =
+                    'w-20 py-1 border text-gray-A8 border-gray-A8 text-center rounded-md hover:border-primary hover:text-primary cursor-pointer duration-100'
                   className +=
-                    watch('AttrCounts') === item.value ? ' border-red-600' : ''
+                    watch('AttrCounts') === item.value
+                      ? '  !border-primary !text-primary'
+                      : ''
                   return (
                     <label key={index} className={className}>
                       <input
@@ -232,10 +243,13 @@ export default function Banner() {
               <p className="text-xl mb-2 font-bold">選擇交通工具</p>
               <div className="flex space-x-5 mb-6">
                 {Transports.map((item, index) => {
-                  let className = 'w-20 py-1 border text-center'
+                  let className =
+                    'w-20 py-1 border border-primary-tint text-center rounded-md hover:bg-primary-tint hover:text-white cursor-pointer duration-100'
                   // 判斷表單是否有相同值，加上對應className
                   className +=
-                    watch('Transports') === item.value ? ' border-red-600' : ''
+                    watch('Transports') === item.value
+                      ? ' bg-primary-tint text-white'
+                      : ''
                   return (
                     <label key={index} className={className}>
                       <input
@@ -253,7 +267,7 @@ export default function Banner() {
               <hr className="mb-6" />
               <button
                 type="button"
-                className="px-7 py-3 bg-[#ccc] block ml-auto"
+                className="px-7 py-3 bg-primary text-white block ml-auto rounded-md"
                 onClick={() => {
                   areaToggleState()
                 }}
@@ -269,7 +283,7 @@ export default function Banner() {
             <form
               className={
                 areaToggle
-                  ? 'absolute z-10 px-5 py-6 bg-[#d7d7d7] hidden md:block'
+                  ? 'absolute z-10 px-5 py-6 bg-white hidden md:block shadow'
                   : 'hidden'
               }
             >
@@ -280,9 +294,12 @@ export default function Banner() {
               {/* 鄰近Label */}
               {/* 這邊為了做判斷，而一定要使用陣列回傳  */}
               {[''].map((index) => {
-                let className = 'block w-20 py-1 mb-5 border text-center'
+                let className =
+                  'block w-20 py-1 mb-5 border border-gray-A8 text-gray-A8 text-center rounded-md'
                 // 判斷表單值，賦予對應className
-                className += watch('nearBy') ? ' border-red-600' : ''
+                className += watch('nearBy')
+                  ? ' !border-primary !text-primary'
+                  : ''
                 return (
                   <label key={index} className={className}>
                     <input
@@ -303,9 +320,10 @@ export default function Banner() {
               <div className="flex flex-wrap mb-1">
                 {DistrictName.map((item, index) => {
                   const DistrictName = { ...register('DistrictName') }
-                  let className = 'w-20 py-1 border text-center mr-5 mb-5'
+                  let className =
+                    'w-20 py-1 border text-center mr-5 mb-5 text-gray-A8 border-gray-A8 rounded-md hover:border-primary hover:text-primary cursor-pointer duration-100'
                   className += watch('DistrictName').includes(item)
-                    ? ' border-red-600'
+                    ? ' !border-primary !text-primary'
                     : ''
                   const handleOnChange = (
                     e: React.ChangeEvent<HTMLInputElement>
@@ -344,11 +362,9 @@ export default function Banner() {
               <hr className="mb-6" />
               {/* OK按鈕 */}
               <button
-                className="px-7 py-3 bg-[#ccc] block ml-auto"
-                type="button"
-                onClick={() => {
-                  areaToggleState()
-                }}
+                className="px-7 py-3 bg-primary text-white block ml-auto rounded-md"
+                form={formId}
+                onClick={handleErrors}
               >
                 OK！開始規劃
               </button>
