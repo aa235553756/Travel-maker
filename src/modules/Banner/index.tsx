@@ -13,7 +13,6 @@ import BannerTitle from '@/modules/Banner/BannerTitle'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
 import { defaultValueProp } from '@/util/types'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 
 export default function Banner() {
   const router = useRouter()
@@ -160,7 +159,7 @@ export default function Banner() {
               isToggle || areaToggle ? 'rounded-t-xl' : 'rounded-xl'
             } hidden w-full md:h-[86px] md:bg-glass-45 md:flex md:p-4`}
           >
-            <Link
+            <a
               href="#bannerTitle"
               className={`${
                 isToggle ? 'bg-primary text-white' : 'bg-white'
@@ -171,8 +170,8 @@ export default function Banner() {
             >
               行程/距離
               <BsChevronDown />
-            </Link>
-            <Link
+            </a>
+            <a
               href="#bannerTitle"
               className={`${
                 areaToggle ? 'bg-primary text-white' : 'bg-white'
@@ -183,7 +182,7 @@ export default function Banner() {
             >
               請選擇區域
               <BsChevronDown />
-            </Link>
+            </a>
             {/* 電腦版開始規劃按鈕 */}
             <button
               form={formId}

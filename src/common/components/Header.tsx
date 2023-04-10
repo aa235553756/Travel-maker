@@ -56,7 +56,7 @@ export default function Header() {
   }, [isHam])
 
   return (
-    <div className="xxxmt-[64px] xxxlg:mt-[120px] z-10 relative overflow-hidden">
+    <div className="xxxmt-[64px] xxxlg:mt-[120px] z-10 relative overflow-hidden lg:overflow-visible">
       {/* 電腦版 */}
       <div className="xxxfixed z-10 top-0 w-full hidden lg:flex  md:h-[120px] md:bg-glass-45 md:items-center md:justify-between shadow">
         <div className="container">
