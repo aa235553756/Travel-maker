@@ -79,7 +79,7 @@ export default function Login() {
       <div className="container">
         <div className="md:w-full lg:w-2/3 md:mx-auto">
           {/* 這是 Tab 按鈕 */}
-          <div className="hidden md:flex md:justify-around md:bg-primary md:w-full md:py-5 md:mt-20 shadow">
+          <div className="hidden md:flex md:justify-around md:bg-primary md:w-full md:py-5 md:mt-20">
             <button
               className={`w-1/2 font-bold border-r-[1px] border-white ${
                 activeTab === 1 ? 'text-white' : 'text-primary-dark'
