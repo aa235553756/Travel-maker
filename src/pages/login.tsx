@@ -1,10 +1,13 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { getCookie, setCookie } from 'cookies-next'
 import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { FaStarOfLife } from 'react-icons/fa'
+import Link from 'next/link'
+import Image from 'next/image'
 
 // 準備實作登入
-export default function LoginAndSignUp() {
+export default function login() {
   const {
     register,
     handleSubmit,
@@ -76,11 +79,12 @@ export default function LoginAndSignUp() {
         auth
       </button>
       <div className="container">
-        <div>
-          <div className="hidden md:flex md:justify-around md:bg-[#ccc] md:w-full md:py-5 mb-20">
+        <div className="md:w-full lg:w-2/3 md:mx-auto">
+          {/* 這是 Tab 按鈕 */}
+          <div className="hidden md:flex md:justify-around md:bg-primary md:w-full md:py-5 md:mt-20">
             <button
-              className={`font-bold ${
-                activeTab === 1 ? 'text-black-500' : 'text-gray-200'
+              className={`w-1/2 font-bold border-r-[1px] border-white ${
+                activeTab === 1 ? 'text-white' : 'text-primary-dark'
               }`}
               onClick={() => {
                 loginState(true)
@@ -89,10 +93,9 @@ export default function LoginAndSignUp() {
             >
               登入會員
             </button>
-            <span>|</span>
             <button
-              className={`font-bold ${
-                activeTab === 2 ? 'text-black-500' : 'text-gray-200'
+              className={`w-1/2 font-bold ${
+                activeTab === 2 ? 'text-white' : 'text-primary-dark'
               }`}
               onClick={() => {
                 loginState(false)
@@ -102,20 +105,25 @@ export default function LoginAndSignUp() {
               註冊會員
             </button>
           </div>
-          <div className="flex w-full space-x-0 md:space-x-6">
-            <div className="hidden md:block md:w-1/2 min-w-[360px] md:bg-[#ccc]">
-              這是圖片
-            </div>
-            {/* 登入&註冊表單 */}
-            {isLogin ? (
+          {/* 登入&註冊表單 */}
+          {isLogin ? (
+            <div className="flex space-x-0 md:space-x-6 mb-[100px] md:mb-[160px]">
+              <Image
+                width={360}
+                height={472}
+                src="/signIn.png"
+                alt="圖片"
+                className="hidden md:block md:w-1/2 md:min-w-[360px] md:h-full md:mt-[60px]"
+              />
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="w-full md:w-1/2"
+                className="w-full md:w-1/2 md:mt-[80px]"
               >
                 <h2 className="text-[26px] font-bold md:text-[32px] mb-12 md:mb-10">
-                  登入 <span className="font-normal ml-3 md:ml-2">Sign In</span>
+                  登入
+                  <span className="font-normal ml-2 text-gray-A8">Sign In</span>
                 </h2>
-                <p className="text-[22px] mb-[42px] md:text-2xl md:mb-10 font-bold">
+                <p className="text-[22px] mb-10 md:text-2xl">
                   隨機產生您的專屬行程
                 </p>
 
@@ -125,7 +133,7 @@ export default function LoginAndSignUp() {
                   </label>
                   <input
                     value="user@example.com"
-                    className="border px-3 py-4"
+                    className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="emailLogin"
                     type="email"
                     placeholder="請輸入 Email"
@@ -137,7 +145,7 @@ export default function LoginAndSignUp() {
                       },
                     })}
                   />
-                  <span className="text-red-900 !mt-2">
+                  <span className="text-highlight !mt-2">
                     {errors.Account?.message}
                   </span>
                 </div>
@@ -148,7 +156,7 @@ export default function LoginAndSignUp() {
                   </label>
                   <input
                     value="string"
-                    className="border px-3 py-4"
+                    className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="passwordLogin"
                     type="password"
                     placeholder="請輸入密碼"
@@ -158,22 +166,24 @@ export default function LoginAndSignUp() {
                       // minLength: { value: 8, message: '密碼至少為 8 碼' },
                     })}
                   />
-                  <span className="text-red-900 !mt-2">
+                  <span className="text-highlight !mt-2">
                     {errors.Password?.message}
                   </span>
                 </div>
 
-                <a href="#" className="underline text-sm mb-11 block md:mb-10">
-                  忘記密碼?
-                </a>
+                <Link href="/forgot-password">
+                  <p className="underline text-sm mb-9 block transition duration-500 hover:text-gray-64 md:mb-10">
+                    忘記密碼?
+                  </p>
+                </Link>
 
                 <input
                   type="submit"
                   value="登入"
-                  className="bg-[#ccc] px-16 py-2 block cursor-pointer mx-auto mb-6"
+                  className="bg-primary text-white px-9 py-3 rounded-md !text-xl block cursor-pointer mx-auto mb-6 transition duration-500 ease-in-out hover:bg-primary-tint hover:-translate-y-1 hover:scale-110 md:mb-0"
                 />
                 <button
-                  className="underline mx-auto block md:hidden"
+                  className="underline mx-auto block transition duration-500 hover:text-gray-64 md:hidden"
                   onClick={() => {
                     loginState(false)
                   }}
@@ -181,26 +191,37 @@ export default function LoginAndSignUp() {
                   註冊會員
                 </button>
               </form>
-            ) : (
+            </div>
+          ) : (
+            <div className="flex w-full space-x-0 md:space-x-6 mb-[100px] md:mb-[160px]">
+              <Image
+                width={360}
+                height={472}
+                src="/signUp.png"
+                alt="圖片"
+                className="hidden md:block md:w-1/2 md:min-w-[360px] md:h-full md:mt-[172px]"
+              />
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="w-full md:w-2/3"
+                className="w-full md:w-1/2 md:mt-[80px]"
               >
                 <h2 className="text-[26px] font-bold md:text-[32px] mb-12 md:mb-10">
                   會員註冊
-                  <span className="font-normal ml-3 md:ml-2">Sign Up</span>
+                  <span className="font-normal text-gray-A8 ml-3 md:ml-2">
+                    Sign Up
+                  </span>
                 </h2>
 
-                <div className="flex flex-col space-y-6 md:space-y-5 mb-10 md:mb-6">
+                <div className="flex flex-col space-y-6 md:space-y-5 mb-8 md:mb-6">
                   <label
                     htmlFor="email"
                     className="font-bold text-lg flex items-center space-x-1"
                   >
                     <span>帳號</span>
-                    <FaStarOfLife className="text-[8px]" />
+                    <FaStarOfLife className="text-[8px] text-highlight" />
                   </label>
                   <input
-                    className="border px-3 py-4"
+                    className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="email"
                     type="email"
                     placeholder="請輸入 Email"
@@ -212,21 +233,21 @@ export default function LoginAndSignUp() {
                       },
                     })}
                   />
-                  <span className="text-red-900 !mt-2">
+                  <span className="text-highlight !mt-2">
                     {errors.Account?.message}
                   </span>
                 </div>
 
-                <div className="flex flex-col space-y-6 md:space-y-5 mb-10 md:mb-6">
+                <div className="flex flex-col space-y-6 md:space-y-5 mb-8 md:mb-6">
                   <label
                     htmlFor="nickname"
                     className="font-bold text-lg flex items-center space-x-1"
                   >
                     <span>您的暱稱</span>
-                    <FaStarOfLife className="text-[8px]" />
+                    <FaStarOfLife className="text-[8px] text-highlight" />
                   </label>
                   <input
-                    className="border px-3 py-4"
+                    className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="nickname"
                     type="text"
                     placeholder="請輸入您的暱稱（最多8字）"
@@ -238,21 +259,21 @@ export default function LoginAndSignUp() {
                       },
                     })}
                   />
-                  <span className="text-red-900 !mt-2">
+                  <span className="text-highlight !mt-2">
                     {errors.nickname?.message}
                   </span>
                 </div>
 
-                <div className="flex flex-col space-y-6 md:space-y-5 mb-10 md:mb-6">
+                <div className="flex flex-col space-y-6 md:space-y-5 mb-8 md:mb-6">
                   <label
                     htmlFor="password"
                     className="font-bold text-lg flex items-center space-x-1"
                   >
                     <span>密碼</span>
-                    <FaStarOfLife className="text-[8px]" />
+                    <FaStarOfLife className="text-[8px] text-highlight" />
                   </label>
                   <input
-                    className="border px-3 py-4"
+                    className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="password"
                     type="password"
                     placeholder="請輸入密碼"
@@ -261,21 +282,21 @@ export default function LoginAndSignUp() {
                       minLength: { value: 8, message: '密碼至少為 8 碼' },
                     })}
                   />
-                  <span className="text-red-900 !mt-2">
+                  <span className="text-highlight !mt-2">
                     {errors.Password?.message}
                   </span>
                 </div>
 
-                <div className="flex flex-col space-y-6 md:space-y-5 mb-10">
+                <div className="flex flex-col space-y-6 md:space-y-5 mb-12">
                   <label
                     htmlFor="passwordRepeat"
                     className="font-bold text-lg flex items-center space-x-1"
                   >
                     <span>再次輸入密碼</span>
-                    <FaStarOfLife className="text-[8px]" />
+                    <FaStarOfLife className="text-[8px] text-highlight" />
                   </label>
                   <input
-                    className="border px-3 py-4"
+                    className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="passwordRepeat"
                     type="password"
                     placeholder="請再次輸入密碼"
@@ -288,7 +309,7 @@ export default function LoginAndSignUp() {
                       },
                     })}
                   />
-                  <span className="text-red-900 !mt-2">
+                  <span className="text-highlight !mt-2">
                     {errors.passwordRepeat?.message}
                   </span>
                 </div>
@@ -296,10 +317,10 @@ export default function LoginAndSignUp() {
                 <input
                   type="submit"
                   value="註冊"
-                  className="bg-[#ccc] px-16 py-2 block cursor-pointer mx-auto mb-6"
+                  className="bg-primary text-white px-9 py-3 rounded-md !text-xl block cursor-pointer mx-auto mb-6 transition duration-500 ease-in-out hover:bg-primary-tint hover:-translate-y-1 hover:scale-110 md:mb-0"
                 />
                 <button
-                  className="underline mx-auto block md:hidden"
+                  className="underline mx-auto block transition duration-500 hover:text-gray-64 md:hidden"
                   onClick={() => {
                     loginState(true)
                   }}
@@ -307,8 +328,8 @@ export default function LoginAndSignUp() {
                   登入會員
                 </button>
               </form>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
