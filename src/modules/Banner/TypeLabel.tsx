@@ -37,12 +37,12 @@ export default function TypeLabel({
 }: TypeLabelProp) {
   return (
     <>
-      <div className="flex space-x-4 lg:space-x-6 overflow-scroll md:overflow-auto pb-1 px-1">
+      <div className="flex space-x-4 lg:space-x-6 overflow-scroll pb-1 px-1 md:overflow-visible">
         {CategoryId.map((item, index) => {
           const CategoryId = { ...register('CategoryId') }
 
           let className =
-            'py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-glass-45 typeLabel-shadow'
+            'group py-4 cursor-pointer text-[#797979] text-center border-2 border-white bg-glass w-[calc((100%-112px)/8)] min-w-[72px] rounded-xl  md:min-w-0 duration-200 hover:bg-white typeLabel-shadow md:hover:scale-110 '
           // 取決表單內是否有該值，賦予樣式
           className += watch('CategoryId').includes(item.value)
             ? ' !bg-primary-dark !text-white'
@@ -50,7 +50,7 @@ export default function TypeLabel({
 
           return (
             <label key={index} className={className}>
-              <div>
+              <div className="group-hover:scale-110 duration-300">
                 {/* icon */}
                 <div className="mb-2 mx-auto text-2xl w-[24px]">
                   {iconArray[index]}
@@ -68,19 +68,20 @@ export default function TypeLabel({
           )
 
           function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
-            const setCurrentValue = (bool: boolean) => {
+            // 判斷是否為'1',隨心所欲，執行不同參數函式
+            item.value !== '0' ? setCurrentValue(true) : setCurrentValue(false)
+
+            function setCurrentValue(bool: boolean) {
               CategoryId.onChange(e)
               const data = watch(`CategoryId`)
               // 篩選data，設定表單
               setValue(
                 'CategoryId',
                 data.filter((item: string) => {
-                  return bool ? item !== '1' : item === '1'
+                  return bool ? item !== '0' : item === '0'
                 })
               )
             }
-            // 判斷是否為'1',隨心所欲，執行不同參數函式
-            item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
           }
         })}
       </div>

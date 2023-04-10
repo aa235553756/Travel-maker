@@ -17,6 +17,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'travelmaker.rocket-coding.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'fakeimg.pl',
+      },
     ],
   },
 }

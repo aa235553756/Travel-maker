@@ -75,7 +75,7 @@ export default function RandomTourIndex({
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
-    rows: 4,
+    rows: 2,
   }
   useEffect(() => {
     console.log(data)
@@ -114,8 +114,11 @@ export default function RandomTourIndex({
         <Slider {...settings2}>
           {data.map((item, i) => {
             return (
-              <div key={i} className="min-w-[180px] h-[180px] relative">
-                <div className="absolute text-white left-2">{i}</div>
+              <div key={i} className="min-w-[180px] h-[180px] relative shadow">
+                <div className="absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
+                <div className="absolute text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
+                  {i + 1}
+                </div>
                 <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white ">
                   {item.AttractionName}
                 </div>
@@ -134,7 +137,7 @@ export default function RandomTourIndex({
 
       <div className="flex flex-wrap mb-[60px] lg:mb-[180px]">
         {/* 排行程及連結 100% */}
-        <div className="hidden lg:flex w-full mb-3 space-x-6 items-center bg-red-100">
+        <div className="hidden lg:flex w-full mb-3 space-x-6 items-center">
           {/* 排行程文字 */}
           <div className="lg:w-[264px]">
             <h2 className="hidden lg:flex items-center text-xl">
@@ -145,80 +148,86 @@ export default function RandomTourIndex({
           {/* 懶人行程連結 */}
           <div className="flex-grow">
             <button
-              className="flex px-2 items-center text-xl border border-black rounded-md"
+              className="flex px-2 items-center text-gray-73 text-xl border border-black rounded-md"
               onClick={handleLink}
             >
-              <BsLink45Deg className="mr-2 text-2xl" />
+              <BsLink45Deg className="mr-2 text-2xl text-black" />
               複製連結
             </button>
           </div>
         </div>
         {/* 篩選器及其按鈕 3/12 */}
-        <div className="mr-6 hidden lg:block">
-          <SelectSide
-            formId={formId}
-            handleSubmit={handleSubmit}
-            onSubmit={onSubmit}
-            register={register}
-            setValue={setValue}
-            watch={watch}
-          />
-          <button
-            form={formId}
-            className="text-lg lg:text-xl py-2 lg:py-3 w-full bg-primary text-white rounded-md"
-          >
-            隨機產生行程
-          </button>
-        </div>
-        <div className="flex-grow">
-          {/* Swiper圖片 */}
-          <div className="hidden lg:block max-w-[840px] max-h-[180px] w-full mb-8 ">
-            <Slider {...settings}>
-              {data.map((item, i) => {
-                return (
-                  <div
-                    key={i}
-                    className="min-w-[180px] h-[180px] relative cursor-grab"
-                  >
-                    <div className="absolute left-2 text-white ">{i + 1}</div>
-
-                    <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 ">
-                      {item.AttractionName}
-                    </div>
-                    <Image
-                      alt=""
-                      src={item.ImageUrl}
-                      width={652}
-                      height={180}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                )
-              })}
-            </Slider>
-          </div>
-          {/* 地圖 */}
-          <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d14459.774055448219!2d121.49936893054726!3d25.035990943540952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x3442a94a4ed4888b%3A0x7880a95f29f4878e!2z5Zyw5bmz57ea5Z-65Zyw!3m2!1d25.0239646!2d121.5094846!4m5!1s0x3442a90e8737b2f7%3A0x6b6ee112e9e7c58b!2z5bCP5ZCz54mb6IKJ6bq1IDEwOOWPsOWMl-W4guiQrOiPr-WNgOa0m-mZveihlzQ1LTEx6Jmf!3m2!1d25.047628399999997!2d121.508326!5e0!3m2!1szh-TW!2stw!4v1680440395475!5m2!1szh-TW!2stw"
-              className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
-          </div>
-          {/* 邀請收藏按鈕 */}
-          <div className="flex justify-end">
-            <button className="inline-flex bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white">
-              <BsPlusLg className="text-lg mr-2" />
-              邀請
-            </button>
+        <div className="flex justify-between w-full">
+          <div className="mr-6 hidden lg:block">
+            <SelectSide
+              formId={formId}
+              handleSubmit={handleSubmit}
+              onSubmit={onSubmit}
+              register={register}
+              setValue={setValue}
+              watch={watch}
+            />
             <button
-              className="inline-flex bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-center items-center rounded-md text-white"
-              onClick={hadlePostTour}
+              form={formId}
+              className="text-lg font-bold lg:text-xl py-2 lg:py-3 w-full bg-primary text-white rounded-md"
             >
-              <BsHeart className="text-lg mr-2" />
-              收藏
+              隨機產生行程
             </button>
+          </div>
+          <div className="flex-grow">
+            {/* Swiper圖片 */}
+            <div className="hidden lg:block max-h-[180px] mb-8">
+              <Slider {...settings}>
+                {data.map((item, i) => {
+                  return (
+                    <div
+                      key={i}
+                      className="min-w-[180px] h-[180px] relative cursor-grab shadow"
+                    >
+                      <div className="absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
+
+                      <div className="absolute text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
+                        {i + 1}
+                      </div>
+
+                      <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 ">
+                        {item.AttractionName}
+                      </div>
+                      <Image
+                        alt=""
+                        src={item.ImageUrl}
+                        width={652}
+                        height={180}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  )
+                })}
+              </Slider>
+            </div>
+            {/* 地圖 */}
+            <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d14459.774055448219!2d121.49936893054726!3d25.035990943540952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x3442a94a4ed4888b%3A0x7880a95f29f4878e!2z5Zyw5bmz57ea5Z-65Zyw!3m2!1d25.0239646!2d121.5094846!4m5!1s0x3442a90e8737b2f7%3A0x6b6ee112e9e7c58b!2z5bCP5ZCz54mb6IKJ6bq1IDEwOOWPsOWMl-W4guiQrOiPr-WNgOa0m-mZveihlzQ1LTEx6Jmf!3m2!1d25.047628399999997!2d121.508326!5e0!3m2!1szh-TW!2stw!4v1680440395475!5m2!1szh-TW!2stw"
+                className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
+            {/* 邀請收藏按鈕 */}
+            <div className="flex justify-end">
+              <button className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white">
+                <BsPlusLg className="text-lg mr-2" />
+                邀請
+              </button>
+              <button
+                className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-center items-center rounded-md text-white"
+                onClick={hadlePostTour}
+              >
+                <BsHeart className="text-lg mr-2" />
+                收藏
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -351,7 +360,15 @@ export async function getServerSideProps(context: {
   } catch (err) {
     return {
       props: {
-        data: [],
+        data: Array(8)
+          .fill('')
+          .map(() => {
+            return {
+              ImageUrl:
+                'https://fakeimg.pl/200x100/?retina=1&text=示範圖&font=noto',
+              AttractionName: '景點名稱',
+            }
+          }),
       },
     }
   }

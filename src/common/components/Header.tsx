@@ -56,7 +56,7 @@ export default function Header() {
   }, [isHam])
 
   return (
-    <div className="z-10 relative overflow-hidden">
+    <div className="z-10 relative overflow-hidden lg:overflow-visible">
       {/* 電腦版 */}
       <div className="z-10 top-0 w-full hidden shadow border-b-[1px] border-gray-E7 md:h-[120px] md:bg-glass-45 md:items-center md:justify-between lg:flex">
         <div className="container">
@@ -76,7 +76,7 @@ export default function Header() {
               {/* 搜尋bar */}
               <div className="relative max-w-full w-[228px] h-10 group">
                 <input
-                  className="group-hover:ring-1 absolute border placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass focus-visible:bg-white"
+                  className="group-hover:ring-1 absolute border-b placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass focus-visible:bg-white"
                   placeholder="搜尋"
                 />
                 <div className="absolute top-3 right-5">
@@ -243,7 +243,7 @@ export default function Header() {
           className={`${
             isHam ? null : 'left-[-256px]'
             // 前面className都是新增的
-          } -z-10 min-w-[256px] left-0 top-0 pt-[74px] duration-700 p-5 !h-full h-[calc(100vh-64px)] text-center overflow-auto text-gray-73 fixed bg-white`}
+          } -z-10 min-w-[256px] left-0 top-0 pt-[74px] duration-700 p-5 h-full text-center overflow-auto text-gray-73 fixed bg-white`}
         >
           <ul className="inline-flex flex-col ">
             <li className="flex space-x-3 py-4 items-center">
