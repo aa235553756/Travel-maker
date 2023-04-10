@@ -56,9 +56,9 @@ export default function Header() {
   }, [isHam])
 
   return (
-    <div className="xxxmt-[64px] xxxlg:mt-[120px] z-10 relative overflow-hidden lg:overflow-visible">
+    <div className="z-10 relative overflow-hidden lg:overflow-visible">
       {/* 電腦版 */}
-      <div className="xxxfixed z-10 top-0 w-full hidden lg:flex  md:h-[120px] md:bg-glass-45 md:items-center md:justify-between shadow">
+      <div className="z-10 top-0 w-full hidden shadow border-b-[1px] border-gray-E7 md:h-[120px] md:bg-glass-45 md:items-center md:justify-between lg:flex">
         <div className="container">
           <div className="flex items-center justify-between">
             {/* logo+名稱 */}
@@ -177,16 +177,16 @@ export default function Header() {
       <div
         className={`${
           isHam || isSearching ? 'bg-white' : null
-        } xxxfixed top-0 w-full z-10 block bg-glass-45 lg:hidden duration-300`}
+        } top-0 w-full z-10 block bg-glass-45 lg:hidden duration-300`}
       >
         <div className="container">
           <div className="flex justify-between items-center h-16">
             <FcMenu
-              className="text-2xl"
+              className="text-2xl cursor-pointer"
               onClick={() => {
                 hamState()
               }}
-            />{' '}
+            />
             <Link href="/" className={isSearching ? 'hidden' : ''}>
               <h1 className="text-xl">
                 <Image src="/Group 324.png" alt="" width={150} height={60} />
@@ -243,7 +243,7 @@ export default function Header() {
           className={`${
             isHam ? null : 'left-[-256px]'
             // 前面className都是新增的
-          } -z-10 min-w-[256px] left-0 top-0 pt-[74px] duration-700 p-5 !h-full h-[calc(100vh-64px)] text-center overflow-auto text-gray-73 fixed bg-white`}
+          } -z-10 min-w-[256px] left-0 top-0 pt-[74px] duration-700 p-5 h-full text-center overflow-auto text-gray-73 fixed bg-white`}
         >
           <ul className="inline-flex flex-col ">
             <li className="flex space-x-3 py-4 items-center">
@@ -402,10 +402,7 @@ export default function Header() {
           <hr />
           <ul className="inline-flex flex-col w-[122px]">
             <li className="flex space-x-3 py-4 items-center">
-              <Link
-                href="/LoginAndSignUp"
-                className="flex space-x-2 items-center"
-              >
+              <Link href="/login" className="flex space-x-2 items-center">
                 <BiLogOut className="text-lg" />
                 <span>登出</span>
               </Link>
