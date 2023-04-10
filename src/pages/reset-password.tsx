@@ -1,5 +1,6 @@
 import React from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import Image from 'next/image'
 
 type Inputs = {
   pwd: string
@@ -20,11 +21,16 @@ export default function ForgotPwd() {
 
   return (
     <div className="container">
-      <div className="pt-[44px] pb-[100px] md:flex md:justify-center lg:px-6">
+      <div className="pt-[44px] pb-[100px] md:pt-[118px] md:pb-[160px] md:flex md:justify-center lg:px-6">
         {/* 這是圖片 */}
-        <div className="bg-gray-D9 min-w-[360px] mr-6 hidden lg:w-1/3 md:block">
-          我是圖片
-        </div>
+        <Image
+          width={360}
+          height={502}
+          src="/reset-password.png"
+          alt="圖片"
+          className="hidden md:block md:w-1/2 md:min-w-[360px] md:h-full md:mr-10 lg:w-1/3"
+        />
+
         <div className="flex-grow-[1] lg:flex-grow-0 lg:w-1/3">
           <h2 className="text-[26px] md:text-[32px] mb-12 font-bold md:mb-10">
             重新設定密碼
@@ -37,8 +43,8 @@ export default function ForgotPwd() {
             {/* 這是input欄位 */}
             <div className="relative mb-[60px]  md:mb-10">
               <input
-                type="text"
-                className="w-full px-3 py-4 bg-[#FAFAFA]  focus-visible:outline-red-600"
+                type="password"
+                className="w-full input-style focus:outline-none focus:bg-white focus:border-secondary"
                 placeholder="請再次輸入密碼"
                 {...register('pwd', {
                   required: true,
@@ -48,12 +54,12 @@ export default function ForgotPwd() {
               <br />
               <span>
                 {errors.pwd && errors.pwd.type === 'required' && (
-                  <span className="absolute text-red-400 top-[calc(100%+4px)] left-1">
+                  <span className="absolute text-highlight top-[calc(100%+4px)] left-1">
                     此欄位必填寫
                   </span>
                 )}
                 {errors.pwd && errors.pwd.type === 'minLength' && (
-                  <span className="absolute text-red-400 top-[calc(100%+4px)] left-1">
+                  <span className="absolute text-highlight top-[calc(100%+4px)] left-1">
                     密碼至少為八碼
                   </span>
                 )}
@@ -65,8 +71,8 @@ export default function ForgotPwd() {
             {/* 這是input欄位 */}
             <div className="relative mb-[68px]">
               <input
-                type="text"
-                className="w-full px-3 py-4 bg-[#FAFAFA]  focus-visible:outline-red-600"
+                type="password"
+                className="w-full input-style focus:outline-none focus:bg-white focus:border-secondary"
                 placeholder="請輸入Email"
                 {...register('pwdTwice', {
                   required: true,
@@ -80,12 +86,12 @@ export default function ForgotPwd() {
               <br />
               <span>
                 {errors.pwdTwice && errors.pwdTwice.type === 'required' && (
-                  <span className="absolute text-red-400 top-[calc(100%+4px)] left-1">
+                  <span className="absolute text-highlight top-[calc(100%+4px)] left-1">
                     此欄位必填寫
                   </span>
                 )}
                 {errors.pwdTwice && errors.pwdTwice.type === 'validate' && (
-                  <span className="absolute text-red-400 top-[calc(100%+4px)] left-1">
+                  <span className="absolute text-highlight top-[calc(100%+4px)] left-1">
                     密碼填寫不一致
                   </span>
                 )}
@@ -94,7 +100,7 @@ export default function ForgotPwd() {
             {/* 這是儲存按鈕 */}
             <div className="mx-auto">
               <button
-                className="text-[20px] px-16 py-2 bg-gray-73 text-white disabled:opacity-50"
+                className="bg-primary text-white px-9 py-3 rounded-md !text-xl block cursor-pointer mx-auto transition duration-500 ease-in-out hover:bg-primary-tint hover:-translate-y-1 hover:scale-110"
                 disabled={!isDirty || !isValid}
               >
                 儲存
