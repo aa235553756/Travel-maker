@@ -1,4 +1,4 @@
-import { getCookie, setCookie } from 'cookies-next'
+import { getCookie, getCookies, setCookie } from 'cookies-next'
 import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { FaStarOfLife } from 'react-icons/fa'
@@ -19,39 +19,36 @@ export default function LoginAndSignUp() {
     passwordRepeat: string
   }
 
-  const onSubmit: SubmitHandler<FormValues> = (data: FormValues) => {
-    alert(JSON.stringify(data))
-    // 五倍login
-    fetch('https://todoo.5xcamp.us/users/sign_in', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        user: {
-          email: 'user01@gmail.com',
-          password: 'string',
-        },
-      }),
-    })
-      .then((res) => {
-        console.log(res.headers.get('authorization'))
-        setCookie('auth', res.headers.get('authorization'))
-        return res
-      })
-      .then((res) => res.json())
-      .then(console.log)
-    // travel_meet login
-    fetch('https://travelmaker.rocket-coding.com/api/users/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    })
-      .then((res) => {
-        return res
-      })
-      .then((res) => res.json())
-      .then(console.log)
+  const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
+    try {
+      alert(JSON.stringify(data))
+      // travel_maker login
+      const res = await fetch(
+        'https://travelmaker.rocket-coding.com/api/users/login',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        }
+      )
+
+      if (res.ok) {
+        const resJSON = await res.json()
+        setCookie('auth', 'Bearer ' + resJSON.JwtToken, {
+          maxAge: 60 * 60 * 24 * 7,
+        })
+        setCookie('user', JSON.stringify(resJSON), { maxAge: 60 * 60 * 24 * 7 })
+        return
+      }
+
+      if (res.status === 400) {
+        alert('登入失敗')
+      }
+    } catch (err) {
+      alert('網路連線異常' + err)
+    }
   }
 
   // 登入註冊內容切換
@@ -71,6 +68,8 @@ export default function LoginAndSignUp() {
       <button
         onClick={() => {
           console.log(getCookie('auth'))
+          console.log(JSON.parse(String(getCookie('user'))))
+          console.log(getCookies())
         }}
       >
         auth
