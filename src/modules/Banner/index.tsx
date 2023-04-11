@@ -13,6 +13,7 @@ import BannerTitle from '@/modules/Banner/BannerTitle'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
 import { defaultValueProp } from '@/util/types'
 import { useRouter } from 'next/router'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
 
 export default function Banner() {
   const router = useRouter()
@@ -42,7 +43,7 @@ export default function Banner() {
     // 缺geo,故先判斷鄰近值,在做函式返回newData
     const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
     // alert(JSON.stringify(newData))
-    setScreen(!screen)
+    setIsLoading(!isLoading)
 
     function handleNearBy(bool: boolean) {
       let newData
@@ -108,7 +109,7 @@ export default function Banner() {
     }
   }
 
-  const [screen, setScreen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     if (isHidden) {
@@ -120,15 +121,7 @@ export default function Banner() {
     // bg圖片待討論，給設計看2560px
     <div className="bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-right bg-no-repeat">
       {/* loading動畫示範 */}
-      {screen && (
-        <div className="bg-glass-45 top-0 fixed w-screen h-screen z-50">
-          <div className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] rounded-full h-[200px] w-[200px] bg-primary text-xl animate-pulse">
-            <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] text-white">
-              loading
-            </span>
-          </div>
-        </div>
-      )}
+      {isLoading && <LoadingAnimate isLoading={isLoading} />}
 
       <div className="container">
         <div className="w-full lg:w-2/3 mx-auto pt-16 xl:pt-20 pb-16 md:pb-36">

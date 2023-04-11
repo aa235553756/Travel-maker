@@ -71,7 +71,10 @@
   .input-style {
     background-color: #fafafa;
     border: #f5f5f5 1px solid;
-    color: #9f9f9f;
     padding: 16px 12px;
+  }
+
+  .input-style::placeholder {
+    color: #9f9f9f;
   }
 }

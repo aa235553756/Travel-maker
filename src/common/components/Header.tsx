@@ -69,7 +69,7 @@ export default function Header() {
               {/* <div className="md:w-[60px] md:h-[60px] lg:w-[102px] lg:h-[102px] bg-[#ccc] rounded-full"></div> */}
 
               <h1 className="text-xl">
-                <Image src="/Group 324.png" alt="" width={200} height={100} />
+                <Image src="/Group 329.png" alt="" width={200} height={100} />
               </h1>
             </Link>
             <div className="flex space-x-5 items-center">
@@ -189,7 +189,7 @@ export default function Header() {
             />
             <Link href="/" className={isSearching ? 'hidden' : ''}>
               <h1 className="text-xl">
-                <Image src="/Group 324.png" alt="" width={150} height={60} />
+                <Image src="/Group 329.png" alt="" width={150} height={60} />
               </h1>
             </Link>
             <div
