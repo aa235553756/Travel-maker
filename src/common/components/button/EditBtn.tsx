@@ -5,10 +5,10 @@ export default function EditBtn({ onClick }: { onClick?: () => void }) {
   return (
     <button
       type="button"
-      className="border border-black rounded-full p-2 w-[34px] h-[34px]"
+      className="text-primary border border-primary rounded-full p-2 w-[36px] h-[36px]"
       onClick={onClick}
     >
-      <MdModeEdit />
+      <MdModeEdit className='text-xl' />
     </button>
   )
 }

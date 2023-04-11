@@ -271,7 +271,7 @@ export default function Header() {
               </Link>
             </li>
             <li
-              className="flex space-x-3 py-4 items-center"
+              className="flex space-x-3 py-4 items-center cursor-pointer"
               onClick={() => {
                 memberState()
               }}

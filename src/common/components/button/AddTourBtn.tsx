@@ -5,9 +5,9 @@ export default function AddTourBtn() {
   return (
     <button
       type="button"
-      className="border border-black rounded-full p-2 w-[34px] h-[34px]"
+      className="bg-glass text-primary rounded-full p-2 w-[36px] h-[36px]"
     >
-      <MdAdd />
+      <MdAdd className='text-xl' />
     </button>
   )
 }

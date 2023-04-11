@@ -16,14 +16,14 @@ export default function MemberLayout({ children, path }: Props) {
     <div>
       <div className="container">
         {/* 電腦版 */}
-        <div className="hidden md:flex md:space-x-6 md:mt-[200px] md:mb-[156px]">
+        <div className="hidden md:flex md:space-x-6 md:mt-[80px] md:mb-[160px]">
           <div className="md:w-1/3 md:flex md:flex-col md:space-y-7">
             {/* 個人資訊區 */}
-            <div className="md:bg-[#d7d7d7] md:px-7 md:py-12 md:flex md:flex-col md:space-y-4">
-              <div className="md:bg-[#ccc] rounded-full md:w-[164px] md:h-[164px] md:flex md:flex-col md:items-center md:justify-center md:space-y-2 md:mb-0 md:mx-auto">
-                <p>頭貼</p>
+            <div className="md:member-shadow md:rounded-md md:px-7 md:py-12 md:flex md:flex-col md:space-y-4">
+              <div className="md:bg-gray-D9 rounded-full md:w-[164px] md:h-[164px] md:flex md:flex-col md:items-center md:justify-center md:space-y-2 md:mb-0 md:mx-auto">
+                <p className='md:text-gray-73 md:text-2xl'>頭貼</p>
                 <div className="md:border md:border-[#fff] md:rounded-full md:bg-[#fff] md:p-2">
-                  <BsFillCameraFill />
+                  <BsFillCameraFill className='md:text-gray-73' />
                 </div>
               </div>
               <div className="md:flex md:flex-col md:space-y-4 md:text-center">
@@ -32,32 +32,28 @@ export default function MemberLayout({ children, path }: Props) {
               </div>
             </div>
             {/* 會員中心分類 */}
-            <div className="md:text-center md:bg-[#d7d7d7]">
+            <div className="md:text-center md:member-shadow md:rounded-md">
               <ul className="md:py-8 md:inline-flex md:flex-col md:cursor-pointer">
                 <li>
                   <Link
                     href="/member-center"
-                    className="md:flex md:space-x-3 md:py-4 md:items-center"
+                    className={`flex space-x-3 py-4 items-center text-${
+                      path === '/' ? 'primary' : 'gray-73'
+                    }`}
                   >
                     <SlSettings className="md:text-lg" />
-                    <span
-                      className={`md:font-${path === '/' ? 'bold' : 'normal'}`}
-                    >
-                      帳號設定
-                    </span>
+                    <span>帳號設定</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/tour"
-                    className="md:flex md:space-x-3 md:py-4 md:items-center"
+                     className={`flex space-x-3 py-4 items-center text-${
+                      path === 'Journey' ? 'primary' : 'gray-73'
+                    }`}
                   >
                     <AiOutlineHeart className="md:text-lg" />
-                    <span
-                      className={`md:font-${
-                        path === 'Journey' ? 'bold' : 'normal'
-                      }`}
-                    >
+                    <span>
                       我的收藏行程(6)
                     </span>
                   </Link>
@@ -65,14 +61,12 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center/attraction"
-                    className="md:flex md:space-x-3 md:py-4 md:items-center"
+                     className={`flex space-x-3 py-4 items-center text-${
+                      path === 'Attract' ? 'primary' : 'gray-73'
+                    }`}
                   >
                     <GrLocation className="md:text-lg" />
-                    <span
-                      className={`md:font-${
-                        path === 'Attract' ? 'bold' : 'normal'
-                      }`}
-                    >
+                    <span>
                       我的收藏景點(5)
                     </span>
                   </Link>
@@ -80,14 +74,12 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center/blog"
-                    className="md:flex md:space-x-3 md:py-4 md:items-center"
+                     className={`flex space-x-3 py-4 items-center text-${
+                      path === 'Blog' ? 'primary' : 'gray-73'
+                    }`}
                   >
                     <BsPencil className="md:text-lg" />
-                    <span
-                      className={`md:font-${
-                        path === 'Blog' ? 'bold' : 'normal'
-                      }`}
-                    >
+                    <span>
                       我的遊記(6)
                     </span>
                   </Link>
@@ -95,14 +87,12 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center/follow"
-                    className="md:flex md:space-x-3 md:py-4 md:items-center"
+                     className={`flex space-x-3 py-4 items-center text-${
+                      path === 'Track' ? 'primary' : 'gray-73'
+                    }`}
                   >
                     <BsBookmarkHeart className="md:text-lg" />
-                    <span
-                      className={`md:font-${
-                        path === 'Track' ? 'bold' : 'normal'
-                      }`}
-                    >
+                    <span>
                       我的追蹤(3)
                     </span>
                   </Link>
@@ -110,14 +100,12 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center/comment"
-                    className="md:flex md:space-x-3 md:py-4 md:items-center"
+                     className={`flex space-x-3 py-4 items-center text-${
+                      path === 'Comment' ? 'primary' : 'gray-73'
+                    }`}
                   >
                     <FaRegCommentDots className="md:text-lg" />
-                    <span
-                      className={`md:font-${
-                        path === 'Comment' ? 'bold' : 'normal'
-                      }`}
-                    >
+                    <span>
                       我的評論(9)
                     </span>
                   </Link>
