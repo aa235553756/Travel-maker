@@ -34,7 +34,7 @@ export default function AttractCard({
       <Link href="/hot-topics/attractions/1">
         {/* 景點圖片 */}
         <div className="relative w-full">
-        <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl z-20"></div>
+        <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
           <Image
             src="https://www.travel.taipei/content/images/attractions/222058/1024x768_attractions-image-hbt3wz-7l0yeewd968btkw.jpg"
             alt="圖片"

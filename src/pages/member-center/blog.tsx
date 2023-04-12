@@ -8,9 +8,6 @@ import SeeMore from '@/common/components/SeeMore'
 export default function Blog() {
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
-  const tabState = (tabIndex: number): void => {
-    setActiveTab(tabIndex)
-  }
 
   return (
     <div>
@@ -33,7 +30,7 @@ export default function Blog() {
                   activeTab === 1 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-7`}
                 onClick={() => {
-                  tabState(1)
+                  setActiveTab(1)
                 }}
               >
                 收藏遊記(3)
@@ -44,7 +41,7 @@ export default function Blog() {
                   activeTab === 2 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
                 } p-3 mb-7`}
                 onClick={() => {
-                  tabState(2)
+                  setActiveTab(2)
                 }}
               >
                 草稿遊記(1)
@@ -114,7 +111,7 @@ export default function Blog() {
                   activeTab === 1 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
-                  tabState(1)
+                  setActiveTab(1)
                 }}
               >
                 收藏遊記(1)
@@ -125,7 +122,7 @@ export default function Blog() {
                   activeTab === 2 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
-                  tabState(2)
+                  setActiveTab(2)
                 }}
               >
                 草稿遊記(1)

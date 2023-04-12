@@ -23,7 +23,7 @@ export default function TourCard({
   return (
     <div className="shadow-[1px_2px_12px_1px_rgba(0,0,0,0.25)] rounded-xl relative">
       {/* 刪除行程 */}
-      <div className="absolute top-5 md:top-8 right-5 md:right-8 z-30">
+      <div className="absolute top-5 md:top-8 right-5 md:right-8 z-10">
         <DeleteBtn
           onClick={() => {
             alert('確定要刪除，刪除後將無法復原?')
@@ -31,7 +31,7 @@ export default function TourCard({
         />
       </div>
 
-      <div className='absolute bottom-3 md:bottom-7 right-5 z-30'>
+      <div className='absolute bottom-3 md:bottom-7 right-5 z-10'>
         {showLike && (
           <>
             <LikeBtn /> <span>{likes}</span>
@@ -43,7 +43,7 @@ export default function TourCard({
         <div className="flex flex-wrap w-full p-0 md:p-3">
           {/* 第一張圖片 */}
           <div className="relative w-full">
-            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl z-20"></div>
+            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
             <Image
               src="https://www.travel.taipei/content/images/tours/178997/1024x768_tours-image-rbohiozkb0gqzidrctcozg.jpg"
               alt="圖片"

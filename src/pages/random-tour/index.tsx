@@ -128,6 +128,9 @@ export default function RandomTourIndex({
                   width={652}
                   height={180}
                   className="object-cover w-full h-full"
+                  priority
+                  blurDataURL="/Group 329.png"
+                  placeholder="blur"
                 />
               </div>
             )

@@ -4,7 +4,7 @@ import { BsPencil, BsBookmarkHeart, BsFillCameraFill } from 'react-icons/bs'
 import { FaRegCommentDots } from 'react-icons/fa'
 import { SlSettings } from 'react-icons/sl'
 import { AiOutlineHeart } from 'react-icons/ai'
-import { GrLocation } from 'react-icons/gr'
+import { IoLocationOutline } from 'react-icons/io5'
 
 type Props = {
   children: ReactNode
@@ -21,9 +21,9 @@ export default function MemberLayout({ children, path }: Props) {
             {/* 個人資訊區 */}
             <div className="md:member-shadow md:rounded-md md:px-7 md:py-12 md:flex md:flex-col md:space-y-4">
               <div className="md:bg-gray-D9 rounded-full md:w-[164px] md:h-[164px] md:flex md:flex-col md:items-center md:justify-center md:space-y-2 md:mb-0 md:mx-auto">
-                <p className='md:text-gray-73 md:text-2xl'>頭貼</p>
+                <p className="md:text-gray-73 md:text-2xl">頭貼</p>
                 <div className="md:border md:border-[#fff] md:rounded-full md:bg-[#fff] md:p-2">
-                  <BsFillCameraFill className='md:text-gray-73' />
+                  <BsFillCameraFill className="md:text-gray-73" />
                 </div>
               </div>
               <div className="md:flex md:flex-col md:space-y-4 md:text-center">
@@ -37,8 +37,8 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center"
-                    className={`flex space-x-3 py-4 items-center text-${
-                      path === '/' ? 'primary' : 'gray-73'
+                    className={`flex space-x-3 py-4 items-center ${
+                      path === '/' ? 'text-primary font-bold' : 'text-gray-73'
                     }`}
                   >
                     <SlSettings className="md:text-lg" />
@@ -48,66 +48,66 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center/tour"
-                     className={`flex space-x-3 py-4 items-center text-${
-                      path === 'Journey' ? 'primary' : 'gray-73'
+                    className={`flex space-x-3 py-4 items-center ${
+                      path === 'Journey'
+                        ? 'text-primary font-bold'
+                        : 'text-gray-73'
                     }`}
                   >
                     <AiOutlineHeart className="md:text-lg" />
-                    <span>
-                      我的收藏行程(6)
-                    </span>
+                    <span>我的收藏行程(6)</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/attraction"
-                     className={`flex space-x-3 py-4 items-center text-${
-                      path === 'Attract' ? 'primary' : 'gray-73'
+                    className={`flex space-x-3 py-4 items-center ${
+                      path === 'Attract'
+                        ? 'text-primary font-bold'
+                        : 'text-gray-73'
                     }`}
                   >
-                    <GrLocation className="md:text-lg" />
-                    <span>
-                      我的收藏景點(5)
-                    </span>
+                    <IoLocationOutline className="md:text-lg" />
+                    <span>我的收藏景點(5)</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/blog"
-                     className={`flex space-x-3 py-4 items-center text-${
-                      path === 'Blog' ? 'primary' : 'gray-73'
+                    className={`flex space-x-3 py-4 items-center ${
+                      path === 'Blog'
+                        ? 'text-primary font-bold'
+                        : 'text-gray-73'
                     }`}
                   >
                     <BsPencil className="md:text-lg" />
-                    <span>
-                      我的遊記(6)
-                    </span>
+                    <span>我的遊記(6)</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/follow"
-                     className={`flex space-x-3 py-4 items-center text-${
-                      path === 'Track' ? 'primary' : 'gray-73'
+                    className={`flex space-x-3 py-4 items-center ${
+                      path === 'Track'
+                        ? 'text-primary font-bold'
+                        : 'text-gray-73'
                     }`}
                   >
                     <BsBookmarkHeart className="md:text-lg" />
-                    <span>
-                      我的追蹤(3)
-                    </span>
+                    <span>我的追蹤(3)</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/comment"
-                     className={`flex space-x-3 py-4 items-center text-${
-                      path === 'Comment' ? 'primary' : 'gray-73'
+                    className={`flex space-x-3 py-4 items-center ${
+                      path === 'Comment'
+                        ? 'text-primary font-bold'
+                        : 'text-gray-73'
                     }`}
                   >
                     <FaRegCommentDots className="md:text-lg" />
-                    <span>
-                      我的評論(9)
-                    </span>
+                    <span>我的評論(9)</span>
                   </Link>
                 </li>
               </ul>

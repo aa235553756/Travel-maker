@@ -1,80 +1,94 @@
 import { getCookie, getCookies, setCookie } from 'cookies-next'
-import React, { useState } from 'react'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import React, { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { FaStarOfLife } from 'react-icons/fa'
 import Link from 'next/link'
 import Image from 'next/image'
+import { loginApi } from '@/util/userApi'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
+import { CustomModal } from '@/common/components/CustomModal'
 
-// 準備實作登入
+export interface LoginFormProp {
+  Account: string
+  Password: string
+}
+
+export interface RegisterFormProp {
+  Account: string
+  UserName?: string
+  Password: string
+  passwordRepeat?: string
+}
+
 export default function Login() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
-  } = useForm<FormValues>()
+  } = useForm<LoginFormProp>()
 
-  interface FormValues {
-    Account: string
-    nickname: string
-    Password: string
-    passwordRepeat: string
-  }
+  const {
+    register: register2,
+    handleSubmit: handleSubmit2,
+    watch: watch2,
+    formState: { errors: errors2 },
+  } = useForm<RegisterFormProp>()
 
-  const onSubmit: SubmitHandler<FormValues> = async (data: FormValues) => {
-    try {
-      alert(JSON.stringify(data))
-      // travel_maker login
-      const res = await fetch(
-        'https://travelmaker.rocket-coding.com/api/users/login',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        }
-      )
+  const { ref, ...rest } = register('Account', {
+    required: { value: true, message: '此欄位必填寫' },
+    pattern: {
+      value: /^\S+@\S+$/i,
+      message: '請填寫正確 Email 格式',
+    },
+  })
 
-      if (res.ok) {
-        const resJSON = await res.json()
-        setCookie('auth', 'Bearer ' + resJSON.JwtToken, {
-          maxAge: 60 * 60 * 24 * 7,
-        })
-        setCookie('user', JSON.stringify(resJSON), { maxAge: 60 * 60 * 24 * 7 })
-        return
-      }
-
-      if (res.status === 400) {
-        alert('登入失敗')
-      }
-    } catch (err) {
-      alert('網路連線異常' + err)
-    }
-  }
+  const { ref: ref2, ...rest2 } = register2('Account', {
+    required: { value: true, message: '此欄位必填寫' },
+    pattern: {
+      value: /^\S+@\S+$/i,
+      message: '請填寫正確 Email 格式',
+    },
+  })
 
   // 登入註冊內容切換
   const [isLogin, setIsLogin] = useState(true)
-  const loginState = (boolean: boolean) => {
-    setIsLogin(boolean)
-  }
 
   // 登入註冊class切換
   const [activeTab, setActiveTab] = useState(1)
-  const tabState = (tabIndex: number): void => {
-    setActiveTab(tabIndex)
-  }
+
+  const [isLoading, setIsLoading] = useState(false)
+
+  const loginAccountRef = useRef<HTMLInputElement | null>(null)
+  const registerAccountRef = useRef<HTMLInputElement | null>(null)
+
+  const [modal, setModal] = useState(false)
+
+  useEffect(() => {
+    loginAccountRef?.current?.focus()
+    registerAccountRef?.current?.focus()
+  }, [isLogin])
 
   return (
     <div>
       <button
         onClick={() => {
-          console.log('auth的', getCookie('auth'))
-          console.log('user的', JSON.parse(String(getCookie('user'))))
-          console.log('全部的', getCookies())
+          setModal(!modal)
         }}
       >
-        auth
+        modal按鈕
+      </button>
+
+      <CustomModal modal={modal} setModal={setModal} />
+
+      {isLoading ? <LoadingAnimate isLoading={isLoading} /> : null}
+      <button
+        onClick={() => {
+          console.log('auth的', getCookie('auth'))
+          console.log('user的', JSON.parse(String(getCookie('user'))))
+          console.log('取得全部的(會包含亂碼)', getCookies())
+        }}
+      >
+        auth確認按鈕
       </button>
       <div className="container">
         <div className="md:w-full lg:w-2/3 md:mx-auto">
@@ -85,8 +99,8 @@ export default function Login() {
                 activeTab === 1 ? 'text-white' : 'text-primary-dark'
               }`}
               onClick={() => {
-                loginState(true)
-                tabState(1)
+                setIsLogin(true)
+                setActiveTab(1)
               }}
             >
               登入會員
@@ -96,8 +110,8 @@ export default function Login() {
                 activeTab === 2 ? 'text-white' : 'text-primary-dark'
               }`}
               onClick={() => {
-                loginState(false)
-                tabState(2)
+                setIsLogin(false)
+                setActiveTab(2)
               }}
             >
               註冊會員
@@ -112,10 +126,11 @@ export default function Login() {
                 src="/signIn.png"
                 alt="圖片"
                 className="hidden md:block md:w-1/2 md:min-w-[360px] md:h-full md:mt-[60px]"
+                priority
               />
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="w-full md:w-1/2 md:mt-[80px]"
+                className="w-full md:w-1/2 mt-12 md:mt-[80px]"
               >
                 <h2 className="text-[26px] font-bold md:text-[32px] mb-12 md:mb-10">
                   登入
@@ -130,18 +145,16 @@ export default function Login() {
                     帳號
                   </label>
                   <input
-                    value="user@example.com"
                     className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="emailLogin"
                     type="email"
                     placeholder="請輸入 Email"
-                    {...register('Account', {
-                      required: { value: true, message: '此欄位必填寫' },
-                      pattern: {
-                        value: /^\S+@\S+$/i,
-                        message: '請填寫正確 Email 格式',
-                      },
-                    })}
+                    key={1}
+                    {...rest}
+                    ref={(e) => {
+                      ref(e)
+                      loginAccountRef.current = e
+                    }}
                   />
                   <span className="text-highlight !mt-2">
                     {errors.Account?.message}
@@ -153,15 +166,13 @@ export default function Login() {
                     密碼
                   </label>
                   <input
-                    value="string"
                     className="input-style focus:outline-none focus:bg-white focus:border-secondary"
                     id="passwordLogin"
                     type="password"
                     placeholder="請輸入密碼"
+                    key={2}
                     {...register('Password', {
                       required: { value: true, message: '此欄位必填寫' },
-                      minLength: { value: 6, message: '密碼至少為 6 碼' },
-                      // minLength: { value: 8, message: '密碼至少為 8 碼' },
                     })}
                   />
                   <span className="text-highlight !mt-2">
@@ -183,7 +194,7 @@ export default function Login() {
                 <button
                   className="underline mx-auto block transition duration-500 hover:text-gray-64 md:hidden"
                   onClick={() => {
-                    loginState(false)
+                    setIsLogin(false)
                   }}
                 >
                   註冊會員
@@ -200,8 +211,8 @@ export default function Login() {
                 className="hidden md:block md:w-1/2 md:min-w-[360px] md:h-full md:mt-[172px]"
               />
               <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="w-full md:w-1/2 md:mt-[80px]"
+                onSubmit={handleSubmit2(onSubmit2)}
+                className="w-full md:w-1/2 mt-12 md:mt-[80px]"
               >
                 <h2 className="text-[26px] font-bold md:text-[32px] mb-12 md:mb-10">
                   會員註冊
@@ -223,22 +234,27 @@ export default function Login() {
                     id="email"
                     type="email"
                     placeholder="請輸入 Email"
-                    {...register('Account', {
-                      required: { value: true, message: '此欄位必填寫' },
-                      pattern: {
-                        value: /^\S+@\S+$/i,
-                        message: '請填寫正確 Email 格式',
-                      },
-                    })}
+                    {...rest2}
+                    ref={(e) => {
+                      ref2(e)
+                      registerAccountRef.current = e
+                    }}
+                    // {...register2('Account', {
+                    //   required: { value: true, message: '此欄位必填寫' },
+                    //   pattern: {
+                    //     value: /^\S+@\S+$/i,
+                    //     message: '請填寫正確 Email 格式',
+                    //   },
+                    // })}
                   />
                   <span className="text-highlight !mt-2">
-                    {errors.Account?.message}
+                    {errors2.Account?.message}
                   </span>
                 </div>
 
                 <div className="flex flex-col space-y-6 md:space-y-5 mb-8 md:mb-6">
                   <label
-                    htmlFor="nickname"
+                    htmlFor="UserName"
                     className="font-bold text-lg flex items-center space-x-1"
                   >
                     <span>您的暱稱</span>
@@ -246,19 +262,19 @@ export default function Login() {
                   </label>
                   <input
                     className="input-style focus:outline-none focus:bg-white focus:border-secondary"
-                    id="nickname"
+                    id="UserName"
                     type="text"
                     placeholder="請輸入您的暱稱（最多8字）"
-                    {...register('nickname', {
+                    {...register2('UserName', {
                       required: { value: true, message: '此欄位必填寫' },
                       pattern: {
-                        value: /^[A-Za-z]+$/i,
+                        value: /^([\u4E00-\u9FFF]|\w){2,8}$/,
                         message: '請填寫正確暱稱',
                       },
                     })}
                   />
                   <span className="text-highlight !mt-2">
-                    {errors.nickname?.message}
+                    {errors2.UserName?.message}
                   </span>
                 </div>
 
@@ -275,13 +291,13 @@ export default function Login() {
                     id="password"
                     type="password"
                     placeholder="請輸入密碼"
-                    {...register('Password', {
+                    {...register2('Password', {
                       required: { value: true, message: '此欄位必填寫' },
                       minLength: { value: 8, message: '密碼至少為 8 碼' },
                     })}
                   />
                   <span className="text-highlight !mt-2">
-                    {errors.Password?.message}
+                    {errors2.Password?.message}
                   </span>
                 </div>
 
@@ -298,17 +314,17 @@ export default function Login() {
                     id="passwordRepeat"
                     type="password"
                     placeholder="請再次輸入密碼"
-                    {...register('passwordRepeat', {
+                    {...register2('passwordRepeat', {
                       required: { value: true, message: '此欄位必填寫' },
                       validate: (val) => {
-                        if (watch('Password') !== val) {
+                        if (watch2('Password') !== val) {
                           return '密碼不一致'
                         }
                       },
                     })}
                   />
                   <span className="text-highlight !mt-2">
-                    {errors.passwordRepeat?.message}
+                    {errors2.passwordRepeat?.message}
                   </span>
                 </div>
 
@@ -318,9 +334,10 @@ export default function Login() {
                   className="bg-primary text-white px-9 py-3 rounded-md !text-xl block cursor-pointer mx-auto mb-6 transition duration-500 ease-in-out hover:bg-primary-tint hover:-translate-y-1 hover:scale-110 md:mb-0"
                 />
                 <button
+                  type="button"
                   className="underline mx-auto block transition duration-500 hover:text-gray-64 md:hidden"
                   onClick={() => {
-                    loginState(true)
+                    setIsLogin(true)
                   }}
                 >
                   登入會員
@@ -332,8 +349,92 @@ export default function Login() {
       </div>
     </div>
   )
-}
 
-//todo
-// setCookies
-// 把用戶資訊存到redux
+  // 登入
+  async function onSubmit(data: LoginFormProp) {
+    try {
+      alert(JSON.stringify(data))
+      setIsLoading(true)
+      // travel_maker login
+      const res = await loginApi(data)
+      const resJSON = await res.json()
+
+      // 登入成功,user data,設cookies
+      if (res.ok) {
+        alert(JSON.stringify(resJSON))
+        setCookie('auth', 'Bearer ' + resJSON.JwtToken, {
+          maxAge: 60 * 60 * 24 * 7,
+        })
+        setCookie('user', JSON.stringify(resJSON), { maxAge: 60 * 60 * 24 * 7 })
+        setIsLoading(false)
+        return
+      }
+
+      // {"Message":"帳號或密碼有誤"} {"Message":"此帳號為被註冊"}
+      if (res.status === 400) {
+        alert(JSON.stringify(resJSON))
+        setIsLoading(false)
+        loginAccountRef?.current?.focus()
+        return
+      }
+
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      alert('網路連線異常' + err)
+      setIsLoading(false)
+    }
+  }
+  // 註冊
+  async function onSubmit2(data: RegisterFormProp) {
+    try {
+      // RHF data
+      alert(JSON.stringify(data))
+      setIsLoading(true)
+      const newData = {
+        Account: data.Account,
+        Password: data.Password,
+        UserName: data.UserName,
+      }
+      // RHF去除passwordRepeat
+      alert(JSON.stringify(newData))
+      // travel_maker login
+      const res = await fetch(
+        'https://travelmaker.rocket-coding.com/api/users/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newData),
+        }
+      )
+      const resJSON = await res.json()
+
+      // 註冊成功,切換到登入頁面,提醒重新登入
+      if (res.ok) {
+        // 回傳資料
+        alert(JSON.stringify(resJSON))
+        // 重新登入
+        alert('請重新登入')
+        setIsLogin(true)
+        setActiveTab(1)
+        setIsLoading(false)
+        loginAccountRef?.current?.focus()
+        return
+      }
+
+      // {"Message":"此帳號已註冊"}
+      if (res.status === 400) {
+        alert(JSON.stringify(resJSON))
+        setIsLoading(false)
+        registerAccountRef?.current?.focus()
+        return
+      }
+
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      alert('網路連線異常' + err)
+      setIsLoading(false)
+    }
+  }
+}

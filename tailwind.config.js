@@ -59,11 +59,20 @@ module.exports = {
           'E2': '#E2E2E2',
           'E9': '#E9E9E9',
           'FA': '#FAFAFA',
-        }
+        },
         // 這裡搜集著所有重複的未知顏色...
         // 首頁 請選擇行程 9F9F9F
         // TypeLabel城市走走 797979
         // 首頁 放鬆療癒 4B673B
+      },
+      keyframes: {
+        fade: {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+      },
+      animation: {
+        fade: 'fade 150ms ease-in-out',
       },
     },
   },

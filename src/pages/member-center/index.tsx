@@ -23,7 +23,7 @@ export default function MemberCenter() {
               height="56"
               src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
               alt="圖片"
-              className="md:h-[56px] lg:h-[100px] rounded-full"
+              className="h-[56px] rounded-full"
             ></Image>
           </div>
           {/* 編輯暱稱 */}
@@ -88,7 +88,13 @@ export default function MemberCenter() {
           <div className="md:member-shadow md:rounded-md md:flex md:flex-col md:space-y-12 md:px-10 md:py-16">
             <div className="md:flex md:items-center">
               <div className="md:w-[100px] lg:w-[200px]">頭像</div>
-              <div className="md:w-[56px] md:h-[56px] md:bg-[#ccc] md:rounded-full"></div>
+              <Image
+                width="100"
+                height="100"
+                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+                alt="圖片"
+                className="h-[100px] rounded-full"
+              ></Image>
             </div>
             {/* 編輯暱稱 */}
             {editNickname ? (
