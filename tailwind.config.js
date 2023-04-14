@@ -63,13 +63,24 @@ module.exports = {
         // 首頁 放鬆療癒 4B673B
       },
       keyframes: {
-        fade: {
+        'fade': {
           '0%': { opacity: 0 },
           '100%': { opacity: 1 },
         },
+        'fade-out': {
+          '0%': { opacity: 1 },
+          '100%': { opacity: 0 },
+        },
+        'fade-in-out': {
+          '0%': { opacity: 0 },
+          '50%': { opacity: 1 },
+          '100%': { opacity: 0 },
+        }
       },
       animation: {
-        fade: 'fade 150ms ease-in-out',
+        'fade': 'fade 150ms ease-in-out',
+        'fade-in-out': 'fade-out 500ms ease-in-out',
+        'fade-out': 'fade-out 150ms ease-in-out'
       },
     },
   },

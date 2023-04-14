@@ -22,9 +22,6 @@ export default function AttractCard({
   rating: number
 }) {
   return (
-    // 幹...這邊同一張卡片首頁是328,會員是360,
-    // 我原本想下max-w-[328]在卡片上,改下在外面一層
-    // omgosh,然後會員手機版是396 偶的天 (首頁手機328)
     <div className="rounded-md relative shadow-xl">
       <div className="absolute top-5 right-5 flex space-x-2">
         {showCollect && <CollectBtn />}

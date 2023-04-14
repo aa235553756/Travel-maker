@@ -25,7 +25,7 @@ export function postTours(token: string, TourName: string, AttractionId: number[
     {
       method: 'POST',
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': token,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -36,3 +36,24 @@ export function postTours(token: string, TourName: string, AttractionId: number[
   )
 }
 
+export function postModifyTour(
+  TourId: number,
+  token: string,
+  TourName: string,
+  AttractionId: number[]
+) {
+  return fetch(
+    `https://travelmaker.rocket-coding.com/api/tours/${TourId}/modify`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: token,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        TourName,
+        AttractionId,
+      }),
+    }
+  )
+}
