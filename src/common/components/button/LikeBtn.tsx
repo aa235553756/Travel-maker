@@ -3,17 +3,16 @@ import { AiFillHeart, AiOutlineHeart } from 'react-icons/ai'
 
 export default function LikeBtn() {
   // like css 狀態
-  const [isLike, setIsLike] = useState(false)
-  const likeState = () => {
-    setIsLike(!isLike)
-  }
+  const [isLike, setIsLike] = useState(true)
+  
   return (
-    <button type="button"
+    <button
+      type="button"
       onClick={() => {
-        likeState()
+        setIsLike(!isLike)
       }}
     >
-      {isLike ? <AiFillHeart className="text-black" /> : <AiOutlineHeart />}
+      {isLike ? <AiFillHeart className="text-highlight" /> : <AiOutlineHeart />}
     </button>
   )
 }

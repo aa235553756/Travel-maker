@@ -8,19 +8,17 @@ import SeeMore from '@/common/components/SeeMore'
 export default function Blog() {
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
-  const tabState = (tabIndex: number): void => {
-    setActiveTab(tabIndex)
-  }
 
   return (
     <div>
       {/* 手機版 */}
       <div className="container">
-        <div className="md:hidden mt-24 mb-[100px] ">
-          {' '}
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-bold mt-8 mb-4 ">我的遊記</h2>
-            <button className="border px-5 py-2">新增遊記</button>
+        <div className="md:hidden mt-8 mb-[100px]">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-lg font-bold">我的遊記(2)</h2>
+            <button className="border border-gray-73 px-4 py-2 rounded-md text-gray-73">
+              新增遊記
+            </button>
           </div>
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
@@ -29,10 +27,10 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
-                } p-4 mb-10`}
+                  activeTab === 1 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
+                } p-4 mb-7`}
                 onClick={() => {
-                  tabState(1)
+                  setActiveTab(1)
                 }}
               >
                 收藏遊記(3)
@@ -40,10 +38,10 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
-                } p-3 mb-10`}
+                  activeTab === 2 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
+                } p-3 mb-7`}
                 onClick={() => {
-                  tabState(2)
+                  setActiveTab(2)
                 }}
               >
                 草稿遊記(1)
@@ -68,7 +66,7 @@ export default function Blog() {
               </div>
             )}
             {activeTab === 2 && (
-              <div className="flex flex-col space-y-6">
+              <div className="flex flex-col space-y-10">
                 {Array(20)
                   .fill('')
                   .map((item, index) => {
@@ -84,44 +82,23 @@ export default function Blog() {
                   })}
               </div>
             )}
-
-            {/* <div>
-              <div className="flex flex-col space-y-6">
-                <BlogCard
-                  showCollect={true}
-                  blogName="好瘋狂熱血少年"
-                  poster="老頭阿迪"
-                  time="2023-03-01 18:00"
-                />
-                <BlogCard
-                  showCollect={true}
-                  blogName="好瘋狂熱血少年"
-                  poster="老頭阿迪"
-                  time="2023-03-01 18:00"
-                />
-                <BlogDraftCard
-                  showDelete={true}
-                  blogName="好瘋狂熱血少年"
-                  poster="老頭阿迪"
-                  time="2023-03-01 18:00"
-                />
-              </div>
-            </div> */}
           </div>
         </div>
       </div>
       {/* 電腦版 */}
       <MemberLayout path="Blog">
-        <div className="md:flex md:flex-col md:space-y-7 md:w-2/3">
+        <div className="md:flex md:flex-col md:space-y-10 md:w-2/3">
           {/* 分類資訊區 */}
-          <div className="md:bg-[#d7d7d7]">
+          <div className="md:member-shadow md:rounded-md">
             <div className="md:flex md:justify-between md:items-center md:px-10 md:py-8">
-              <h2 className="md:text-xl md:font-bold">我的遊記</h2>
+              <h2 className="md:text-xl">我的遊記</h2>
               <Link href="../blog/post-blog">
-                <button className="md:border md:px-5 md:py-2">新增遊記</button>
+                <button className="md:border md:border-gray-73 md:px-4 md:py-2 md:rounded-md md:text-gray-73">
+                  新增遊記
+                </button>
               </Link>
             </div>
-            <hr className="md:w-full" />
+            <hr className="md:w-full md:border-gray-E2" />
             <div className="md:px-10 md:py-6">共有6則遊記</div>
           </div>
           {/* 詳細資訊區 */}
@@ -131,10 +108,10 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
-                  activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
+                  activeTab === 1 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
-                  tabState(1)
+                  setActiveTab(1)
                 }}
               >
                 收藏遊記(1)
@@ -142,10 +119,10 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
-                  activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
+                  activeTab === 2 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
-                  tabState(2)
+                  setActiveTab(2)
                 }}
               >
                 草稿遊記(1)

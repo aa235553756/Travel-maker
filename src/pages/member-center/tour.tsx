@@ -6,16 +6,13 @@ import SeeMore from '@/common/components/SeeMore'
 export default function Journey() {
   // tab class 切換
   const [activeTab, setActiveTab] = useState(1)
-  const tabState = (tabIndex: number): void => {
-    setActiveTab(tabIndex)
-  }
 
   return (
     <div>
       {/* 手機版 */}
       <div className="container">
-        <div className="md:hidden mt-24 mb-[100px] ">
-          <h2 className="text-lg font-bold mb-4">我的收藏行程</h2>
+        <div className="md:hidden mt-8 mb-[100px]">
+          <h2 className="text-lg font-bold mb-4">我的收藏行程(2)</h2>
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
             {/* tab 按鈕 */}
@@ -23,10 +20,12 @@ export default function Journey() {
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
-                } p-4 mb-10`}
+                  activeTab === 1
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
+                } p-4 mb-7`}
                 onClick={() => {
-                  tabState(1)
+                  setActiveTab(1)
                 }}
               >
                 一般模式(3)
@@ -34,10 +33,12 @@ export default function Journey() {
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
-                } p-4 mb-10`}
+                  activeTab === 2
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
+                } p-4 mb-7`}
                 onClick={() => {
-                  tabState(2)
+                  setActiveTab(2)
                 }}
               >
                 房間模式(3)
@@ -64,7 +65,7 @@ export default function Journey() {
               </div>
             )}
             {activeTab === 2 && (
-              <div className="flex flex-col space-y-6">
+              <div className="flex flex-col space-y-10">
                 {Array(20)
                   .fill('')
                   .map((item, index) => {
@@ -88,13 +89,13 @@ export default function Journey() {
 
       {/* 電腦版 */}
       <MemberLayout path="Journey">
-        <div className="md:flex md:flex-col md:space-y-7 md:w-2/3">
+        <div className="md:flex md:flex-col md:space-y-10 md:w-2/3">
           {/* 分類資訊區 */}
-          <div className="md:bg-[#d7d7d7]">
+          <div className="md:member-shadow md:rounded-md">
             <h2 className="md:text-xl md:font-bold md:px-10 md:py-8">
               我的收藏行程
             </h2>
-            <hr className="md:w-full" />
+            <hr className="md:w-full md:border-gray-E2" />
             <div className="md:px-10 md:py-6">共有6個收藏行程</div>
           </div>
           {/* 詳細資訊區 */}
@@ -104,10 +105,12 @@ export default function Journey() {
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
-                  activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
+                  activeTab === 1
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
-                  tabState(1)
+                  setActiveTab(1)
                 }}
               >
                 一般模式(3)
@@ -115,10 +118,12 @@ export default function Journey() {
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
-                  activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
+                  activeTab === 2
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
-                  tabState(2)
+                  setActiveTab(2)
                 }}
               >
                 房間模式(3)
@@ -126,7 +131,7 @@ export default function Journey() {
             </div>
             {/* tab 內容 */}
             {activeTab === 1 && (
-              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+              <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
                 {Array(20)
                   .fill('')
                   .map((item, index) => {
@@ -146,7 +151,7 @@ export default function Journey() {
               </div>
             )}
             {activeTab === 2 && (
-              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+              <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
                 {Array(20)
                   .fill('')
                   .map((item, index) => {
