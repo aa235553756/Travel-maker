@@ -7,12 +7,12 @@ export interface defaultValueProp {
   AttractionId?: number[]
 }
 export interface randomTourProp {
-  "AttractionId": number
-  "AttractionName": string
-  "Elong": number
-  "Nlat": number
-  "Lock": boolean
-  "ImageUrl": string
+  AttractionId: number
+  AttractionName: string
+  Elong: number
+  Nlat: number
+  Lock?: boolean
+  ImageUrl: string
 }
 
 

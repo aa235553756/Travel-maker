@@ -22,9 +22,6 @@ export default function AttractCard({
   rating: number
 }) {
   return (
-    // 幹...這邊同一張卡片首頁是328,會員是360,
-    // 我原本想下max-w-[328]在卡片上,改下在外面一層
-    // omgosh,然後會員手機版是396 偶的天 (首頁手機328)
     <div className="shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] rounded-md relative">
       {/* 收藏 & 加入行程 */}
       <div className="absolute top-5 right-5 flex space-x-3 z-30">
@@ -34,7 +31,7 @@ export default function AttractCard({
       <Link href="/hot-topics/attractions/1">
         {/* 景點圖片 */}
         <div className="relative w-full">
-        <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
+          <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
           <Image
             src="https://www.travel.taipei/content/images/attractions/222058/1024x768_attractions-image-hbt3wz-7l0yeewd968btkw.jpg"
             alt="圖片"

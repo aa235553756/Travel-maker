@@ -1,4 +1,33 @@
+import RandomTourLayout from '@/modules/RandomTourLayout'
+import { randomTourProp } from '@/util/types'
 import React from 'react'
+
+export interface randomTourIdProp {
+  Attractions: randomTourProp[]
+  TourId: number
+  TourName: string
+  UserGuid: string
+}
+
+export default function randomTourId({ data }: { data: randomTourIdProp }) {
+  // data
+  console.log(data)
+
+  // 同random-index
+  return (
+    <div>
+      {!data.TourId ? '！錯誤，沒有此行程' : null}
+
+      <RandomTourLayout
+        data={data.Attractions}
+        IsTourId
+        TourName={data.TourName}
+        TourId={data.TourId}
+        UserGuid={data.UserGuid}
+      />
+    </div>
+  )
+}
 
 export async function getServerSideProps(context: { query: { id: number } }) {
   try {
@@ -22,22 +51,6 @@ export async function getServerSideProps(context: { query: { id: number } }) {
       },
     }
   }
-}
-
-export default function randomTour({ data }: { data: { TourId: number } }) {
-  console.log(data)
-
-  // 同random-index
-  return (
-    <div>
-      {!data.TourId ? '！錯誤，沒有此id號行程' : null}
-      <li>安安這裡是第{data.TourId}號id 收藏行程頁面</li>
-      <br />
-      <li>這邊要判斷`目前token`是否為創建者</li>
-      <br />
-      <li> randomTour{JSON.stringify(data)}</li>
-    </div>
-  )
 }
 
 // todo
