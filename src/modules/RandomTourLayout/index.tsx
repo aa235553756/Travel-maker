@@ -1,4 +1,8 @@
-import { BsExclamationCircle, BsFillBookmarkPlusFill } from 'react-icons/bs'
+import {
+  BsExclamationCircle,
+  BsFillBookmarkPlusFill,
+  BsFillPeopleFill,
+} from 'react-icons/bs'
 import Slider from 'react-slick'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
@@ -6,7 +10,12 @@ import { defaultValueProp, randomTourProp } from '@/util/types'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BsLink45Deg, BsPlusLg, BsListCheck } from 'react-icons/bs'
-import { getRandomTours, postModifyTour, postTours } from '@/util/tourApi'
+import {
+  getRandomTours,
+  postModifyTour,
+  postRoomApi,
+  postTours,
+} from '@/util/tourApi'
 import { useRouter } from 'next/router'
 import { defaultValues } from '@/util/selectData'
 import TypeLabel from '@/modules/Banner/TypeLabel'
@@ -46,20 +55,26 @@ export default function RandamTourLayout({
   const [isHidden, setIsHidden] = useState(true)
   const [isLoading, setIsLoading] = useState(false)
   const [isChangeTourName, setIsChangeTourName] = useState(false)
+
   const [tourName, setTourName] = useState(originTourName)
   const [modal, setModal] = useState(false)
+
   const [postConfirm, setPostConfirm] = useState(false)
   const [modifyConfirm, setModifyConfirm] = useState(false)
   const [getRandomConfirm, setGetRandomConfirm] = useState(false)
   const [changeNameConfirm, setChangeNameConfirm] = useState(false)
+  const [loginConflirm, setLoginConflirm] = useState(false)
+
   const [collectModal, setCollectModal] = useState(false)
   const [anotherRandom, setAnotherRandom] = useState(false)
+  const [joinModal, setJoinModal] = useState(false)
+
   const [linkEffect, setLinkEffect] = useState(false)
-  const [loginConflirm, setLoginConflirm] = useState(false)
 
   const newCollectTourNameInputRef = useRef<HTMLInputElement>(null)
   const newTourNameInputRef = useRef<HTMLInputElement>(null)
   const TourNameInputRef = useRef<HTMLInputElement>(null)
+  const roomNameInputRef = useRef<HTMLInputElement>(null)
 
   const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
     { defaultValues: defaultValues }
@@ -263,6 +278,50 @@ export default function RandamTourLayout({
               onClick={hadlePostTour}
             >
               新建
+            </button>
+          </div>
+        </div>
+      </CustomModal>
+      <CustomModal modal={joinModal} setModal={setJoinModal} wrapper>
+        <div className="w-[552px] h-[392px] pt-7 bg-white rounded-xl flex flex-col ">
+          {/* 標頭 */}
+          <div className="flex flex-col items-center mb-12">
+            <div className="flex justify-center items-center mb-6">
+              <BsFillPeopleFill className="text-[50px] text-primary mr-4" />
+              邀請朋友
+            </div>
+
+            <h4>
+              親愛的用戶您好，
+              <br />
+              歡迎來到Travel Maker，想要揪團一同來編輯行程嗎？
+            </h4>
+          </div>
+          {/* 行程名稱input */}
+          <div className="flex mb-12 justify-center items-center text-xl">
+            <p> 行程名稱：</p>
+            <input
+              ref={roomNameInputRef}
+              type="text"
+              placeholder="例如:台北一日遊"
+              className="input-style !max-h-[56px] rounded-md"
+            />
+          </div>
+          <div className="flex justify-center text-xl space-x-12">
+            <button
+              className="text-primary border border-primary py-3 px-9 rounded-md flex items-center"
+              onClick={() => {
+                setJoinModal(false)
+              }}
+            >
+              {/* <BsExclamationCircle className="text-[16px] text-highlight mr-2" /> */}
+              取消
+            </button>
+            <button
+              className="text-white bg-primary py-3 px-9 rounded-md"
+              onClick={handlePostRoom}
+            >
+              創建房間
             </button>
           </div>
         </div>
@@ -498,7 +557,21 @@ export default function RandamTourLayout({
             </div>
             {/* 邀請收藏按鈕 */}
             <div className="flex justify-end">
-              <button className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white hover:bg-primary-tint duration-100">
+              <button
+                disabled={data[0].AttractionId ? false : true}
+                className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white hover:bg-primary-tint duration-100 disabled:bg-primary/25"
+                onClick={async () => {
+                  if (token === undefined) {
+                    setLoginConflirm(true)
+                    //請先登入
+                    setTimeout(() => {
+                      router.push('/login')
+                    }, 2000)
+                    return
+                  }
+                  setJoinModal(true)
+                }}
+              >
                 <BsPlusLg className="text-lg mr-2" />
                 邀請
               </button>
@@ -717,6 +790,42 @@ export default function RandamTourLayout({
         return
       }
 
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      alert(err)
+      setIsLoading(false)
+    }
+  }
+  async function handlePostRoom() {
+    try {
+      if (
+        roomNameInputRef.current?.value === '' ||
+        roomNameInputRef.current?.value === null
+      ) {
+        return
+      }
+      setIsLoading(true)
+      const RoomName = roomNameInputRef.current?.value
+      const Attractions = data.map(
+        (item: { AttractionId: number }) => item.AttractionId
+      )
+      const res = await postRoomApi(
+        String(token),
+        String(RoomName),
+        Attractions
+      )
+      if (res.ok) {
+        const resJSON = await res.json()
+        setIsLoading(false)
+        setJoinModal(false)
+        setPostConfirm(true)
+        setTimeout(async () => {
+          setIsLoading(true)
+          await router.push(`/planning-tour/${resJSON.RoomGuid}`)
+          setIsLoading(false)
+        }, 1500)
+        return
+      }
       throw new Error('不知名錯誤')
     } catch (err) {
       alert(err)
