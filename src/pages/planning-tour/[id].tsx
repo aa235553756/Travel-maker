@@ -12,7 +12,6 @@ import { MdSave } from 'react-icons/md'
 import { defaultValueProp, RoomAttractionsProp } from '@/util/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { defaultValues } from '@/util/selectData'
-
 // import { getCookie } from 'cookies-next'
 
 interface paramsProp {
