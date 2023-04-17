@@ -1,10 +1,12 @@
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import LikeBtn from '@/common/components/button/LikeBtn'
 import DeleteBtn from '@/common/components/button/DeleteBtn'
 import { RiUser3Fill } from 'react-icons/ri'
 
 export default function TourCard({
+  id,
   tourName,
   countAttr,
   likes,
@@ -12,8 +14,11 @@ export default function TourCard({
   creator,
   showCreator,
   imagesUrl,
+  room,
+  roomId,
   onClick,
 }: {
+  id?: number
   tourName: string
   countAttr: number
   likes: number
@@ -21,12 +26,37 @@ export default function TourCard({
   creator: string
   showCreator: boolean
   imagesUrl: string[]
+  room?: boolean
+  roomId?: number
   onClick?: () => void
+  onClickTour?: () => void
+  onClickRoom?: () => void
 }) {
+  const router = useRouter()
+
   return (
     <div className="shadow-[1px_2px_12px_1px_rgba(0,0,0,0.25)] rounded-xl relative z-0">
+      {room && (
+        <a
+          onClick={(e) => {
+            e.preventDefault()
+            router.push(`/planning-tour/${roomId}`)
+          }}
+          className="absolute w-full h-full z-10"
+        ></a>
+      )}
+      {!room && (
+        <a
+          onClick={(e) => {
+            e.preventDefault()
+            router.push(`/random-tour/${id}`)
+          }}
+          className="absolute w-full h-full z-10"
+        ></a>
+      )}
+
       {/* 刪除行程 */}
-      <div className="absolute top-5 md:top-8 right-5 md:right-8 z-[5]">
+      <div className="absolute top-5 md:top-8 right-5 md:right-8 z-30">
         <DeleteBtn onClick={onClick} />
       </div>
 

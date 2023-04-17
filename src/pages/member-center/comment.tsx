@@ -3,7 +3,7 @@ import { getCookie } from 'cookies-next'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import CommentCard from '@/modules/MemberCenterPage/components/CommentCard'
 import SeeMore from '@/common/components/SeeMore'
-import { CommentDataProps, MemberCountProps } from '@/pages/member-center/types'
+import { CommentDataProps, MemberCountProps } from '@/util/memberTypes'
 import { BsExclamationCircle } from 'react-icons/bs'
 import { CustomModal } from '@/common/components/CustomModal'
 
@@ -92,7 +92,7 @@ export default function Comment({
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
             <div className="flex flex-col space-y-6 md:space-y-10">
-              {commentData?.CommentData.map((item) => {
+              {commentData?.CommentData?.map((item) => {
                 return (
                   <CommentCard
                     key={item.AttractionCommentId}
@@ -152,7 +152,7 @@ export default function Comment({
           {/* 詳細資訊區 */}
           <div>
             <div className="md:flex md:flex-col md:space-y-10  md:mb-[60px] lg:flex-row lg:flex-wrap">
-              {commentData?.CommentData.map((item) => {
+              {commentData?.CommentData?.map((item) => {
                 return (
                   <CommentCard
                     key={item.AttractionCommentId}

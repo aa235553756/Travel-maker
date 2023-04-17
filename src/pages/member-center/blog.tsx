@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
-import { useRouter } from 'next/router'
 import Link from 'next/link'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import BlogCard from '@/common/components/card/BlogCard'
 import BlogDraftCard from '@/modules/MemberCenterPage/components/BlogDraftCard'
-import SeeMore from '@/common/components/SeeMore'
-import { BlogDataProps, MemberCountProps } from '@/pages/member-center/types'
+import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
+import { CustomModal } from '@/common/components/CustomModal'
+import { BsXCircle } from 'react-icons/bs'
+import { MdKeyboardArrowUp } from 'react-icons/md'
 
 export async function getServerSideProps({
   req,
@@ -67,8 +68,67 @@ export default function Blog({
     setCountData(countData)
   }, [countData])
 
-  // 卡片連結
-  const router = useRouter()
+  // 獲取更多資料
+  const token = getCookie('auth')
+  const [moreBlogData, setMoreBlogData] = useState(blogData.BlogData)
+  const [page, setPage] = useState(2)
+  const [isLoading, setIsLoading] = useState(false)
+  const [noData, setNoData] = useState(false)
+  const [toTop, setToTop] = useState(false)
+
+  const getMoreBlogData = async (page: number) => {
+    const res = await fetch(
+      `https://travelmaker.rocket-coding.com/api/users/tours/${page}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const newBlogs = await res.json()
+
+    if (newBlogs.BlogData) {
+      setMoreBlogData((prevBlogs) => [...prevBlogs, ...newBlogs.BlogData])
+      setPage((prevPage) => prevPage + 1)
+      setIsLoading(true)
+    }
+
+    if (newBlogs.Message === '已無我的行程') {
+      setIsLoading(false)
+      setNoData(true)
+    }
+  }
+
+  useEffect(() => {
+    function handleScroll() {
+      const body = document.body
+      const html = document.documentElement
+      const documentHeight = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      )
+      if (window.innerHeight + window.pageYOffset >= documentHeight) {
+        getMoreBlogData(page)
+      }
+
+      if (window.pageYOffset > 1000) {
+        setToTop(true)
+      } else {
+        setToTop(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [moreBlogData])
 
   return (
     <div>
@@ -119,15 +179,9 @@ export default function Blog({
               <div className="flex flex-col space-y-6">
                 {blogData?.BlogData.map((item) => {
                   return (
-                    <a
-                      key={item.BlogGuid}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        router.push(`/blog/view-blog/${item.BlogGuid}`)
-                      }}
-                    >
+                    <div key={item.BlogGuid}>
                       <BlogCard
-                        key={item.BlogGuid}
+                        id={parseInt(item.BlogGuid)}
                         showCollect={true}
                         blogName={item.Title}
                         poster={item.UserName}
@@ -138,7 +192,7 @@ export default function Blog({
                         like={item.Likes}
                         comment={item.Comments}
                       />
-                    </a>
+                    </div>
                   )
                 })}
               </div>
@@ -164,6 +218,16 @@ export default function Blog({
         </div>
       </div>
       {/* 電腦版 */}
+      {/* 無行程提醒 */}
+      <CustomModal modal={noData} setModal={setNoData} wrapper>
+        <div className="w-[300px] p-7 bg-white rounded-xl">
+          <div className="flex flex-col items-center space-y-4">
+            <BsXCircle className="text-5xl text-highlight" />
+            <span className="text-2xl">已無行程</span>
+          </div>
+        </div>
+      </CustomModal>
+
       <MemberLayout
         path="Blog"
         countData={countData}
@@ -219,17 +283,14 @@ export default function Blog({
             {/* tab 內容 */}
             {activeTab === 1 && (
               <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
-                {blogData?.BlogData.map((item) => {
+                {moreBlogData.map((item) => {
                   return (
-                    <a
+                    <div
                       key={item.BlogGuid}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        router.push(`/blog/view-blog/${item.BlogGuid}`)
-                      }}
                       className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer hover:opacity-80 hover:duration-500 hover:-translate-y-1"
                     >
                       <BlogCard
+                        id={parseInt(item.BlogGuid)}
                         showCollect={true}
                         blogName={item.Title}
                         poster={item.UserName}
@@ -240,9 +301,24 @@ export default function Blog({
                         like={item.Likes}
                         comment={item.Comments}
                       />
-                    </a>
+                    </div>
                   )
                 })}
+                {/* GoToTop */}
+                {toTop && (
+                  <button
+                    type="button"
+                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                      })
+                    }}
+                  >
+                    <MdKeyboardArrowUp className="text-3xl mx-auto" />
+                  </button>
+                )}
               </div>
             )}
             {activeTab === 2 && (
@@ -263,7 +339,7 @@ export default function Blog({
                   })}
               </div>
             )}
-            <SeeMore />
+            {isLoading && <p className="text-lg text-center">loading...</p>}
           </div>
         </div>
       </MemberLayout>

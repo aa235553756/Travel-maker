@@ -4,7 +4,7 @@ import Image from 'next/image'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import { BsLightbulb, BsExclamationCircle } from 'react-icons/bs'
 import { useRouter } from 'next/router'
-import { MemberCountProps } from '@/pages/member-center/types'
+import { MemberCountProps } from '@/util/memberTypes'
 import { CustomModal } from '@/common/components/CustomModal'
 import { useForm } from 'react-hook-form'
 
@@ -79,39 +79,46 @@ export default function MemberCenter({
     handleSubmit,
     watch: watch,
     formState: { errors },
+    reset,
   } = useForm<RegisterFormProp>()
 
   async function onSubmit(data: RegisterFormProp) {
-     // RHF data
-     alert(JSON.stringify(data))
-     const newData = {
-       Password: data.Password,
-       NewPassword: data.NewPassword,
-       PasswordRepeat: data.PasswordRepeat,
-     }
-     alert(JSON.stringify(newData))
+    // RHF data
+    alert(JSON.stringify(data))
+    const newData = {
+      Password: data.Password,
+      NewPassword: data.NewPassword,
+      PasswordRepeat: data.PasswordRepeat,
+    }
+    alert(JSON.stringify(newData))
 
-     // 【API】修改密碼(會員中心)
-     const res = await fetch(
-       `https://travelmaker.rocket-coding.com/api/users/changePassword`,
-       {
-         method: 'PUT',
-         headers: {
-           Authorization: `${token}`,
-           'Content-Type': 'application/json',
-         },
-         body: JSON.stringify({
-           NewPassword: newData.NewPassword,
-           OriginalPassword: newData.Password,
-         }),
-       }
-     )
-     const resJSON = await res.json()
+    // 【API】修改密碼(會員中心)
+    const res = await fetch(
+      `https://travelmaker.rocket-coding.com/api/users/changePassword`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          NewPassword: newData.NewPassword,
+          OriginalPassword: newData.Password,
+        }),
+      }
+    )
+    const resJSON = await res.json()
 
-     console.log(data)
-     console.log(res)
-     console.log(resJSON)
+    reset()
+
+    console.log(data)
+    console.log(res)
+    console.log(resJSON)
   }
+
+  useEffect(() => {
+    reset()
+  }, [modal])
 
   return (
     <div>
@@ -249,6 +256,7 @@ export default function MemberCenter({
             {/* 按鈕 */}
             <div className="flex justify-end space-x-9">
               <button
+                type="button"
                 className="border border-primary text-primary text-xl px-9 py-3 font-bold rounded-md hover:border-primary-tint hover:text-primary-tint hover:duration-500"
                 onClick={() => {
                   setModal(!modal)

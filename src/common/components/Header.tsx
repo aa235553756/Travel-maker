@@ -63,7 +63,7 @@ export default function Header() {
 
   // 取得會員頭貼
   const [picture, setPicture] = useState()
-  useEffect(() => setPicture(user.ProfilePicture), [user])
+  useEffect(() => setPicture(user?.ProfilePicture), [user])
 
   return (
     <div className="z-10 relative overflow-hidden lg:overflow-visible">

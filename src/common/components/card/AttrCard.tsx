@@ -1,5 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
+import { useRouter } from 'next/router'
 import CollectBtn from '@/common/components/button/CollectBtn'
 import AddTourBtn from '@/common/components/button/AddTourBtn'
 import TypeTag from '@/common/components/TypeTag'
@@ -7,6 +8,7 @@ import CustomStar from '@/common/components/CustomStar'
 import { BsGeoAltFill } from 'react-icons/bs'
 
 export default function AttractCard({
+  id,
   showSelect,
   showCollect,
   district,
@@ -17,6 +19,7 @@ export default function AttractCard({
   onClick,
   onClick1,
 }: {
+  id?: number
   showSelect?: boolean
   showCollect?: boolean
   showDetail?: boolean
@@ -24,12 +27,21 @@ export default function AttractCard({
   attractName: string
   rating: number
   imagesUrl: string
-  type: string[]
-  onClick?: () => void 
-  onClick1?: () => void 
+  type: string[] 
+  onClick?: () => void
+  onClick1?: () => void
 }) {
+  const router = useRouter()
+
   return (
     <div className="shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] rounded-md relative">
+      <a
+        onClick={(e) => {
+          e.preventDefault()
+          router.push(`/hot-topics/attractions/${id}`)
+        }}
+        className="absolute w-full h-full z-10"
+      ></a>
       {/* 收藏 & 加入行程 */}
       <div className="absolute top-5 right-5 flex space-x-3 z-30">
         {showCollect && <CollectBtn onClick1={onClick1} />}

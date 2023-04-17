@@ -48,7 +48,7 @@ export function CustomModal({
       <div
         className={`${
           modal ? 'scale-x-100 scale-y-100' : null
-        } z-30 fixed top-[40%] left-1/2 translate-x-[-50%] translate-y-[-50%] duration-150 scale-x-0 scale-y-0 `}
+        } z-50 fixed top-[40%] left-1/2 translate-x-[-50%] translate-y-[-50%] duration-150 scale-x-0 scale-y-0 `}
       >
         {children || typeConfirm ? children : <ModalExample />}
         {typeConfirm && (
@@ -75,7 +75,7 @@ function BlackWrapper({ setModal, modal }: CustomModalProp) {
       onClick={() => {
         setModal(!modal)
       }}
-      className={`z-10 fixed w-full h-full bg-[rgba(0,0,0,0.5)] top-0 left-0 duration-150 animate-fade`}
+      className={`z-50 fixed w-full h-full bg-[rgba(0,0,0,0.5)] top-0 left-0 duration-150 animate-fade`}
     ></div>
   )
 }

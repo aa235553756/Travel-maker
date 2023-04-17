@@ -7,18 +7,21 @@ interface CustomStarProp {
   rating: number
   clickable?: boolean
   starDimension?: string
+  setSomething?: React.Dispatch<number>
 }
 
 export default function CustomStar({
   rating,
   clickable,
   starDimension,
+  setSomething,
 }: CustomStarProp) {
   const [newRating, setNewRating] = useState(rating)
 
   const handleRatingChange = (newRating: number) => {
     console.log('New rating:', newRating)
     setNewRating(newRating)
+    setSomething ? setSomething(newRating) : null
   }
 
   return (

@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { getCookie } from 'cookies-next'
-import { useRouter } from 'next/router'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import TourCard from '@/common/components/card/TourCard'
-import SeeMore from '@/common/components/SeeMore'
 import {
   TourDataProps,
   RoomDataProps,
   MemberCountProps,
-} from '@/pages/member-center/types'
-import { BsExclamationCircle } from 'react-icons/bs'
+} from '@/util/memberTypes'
+import { BsExclamationCircle, BsXCircle } from 'react-icons/bs'
+import { MdKeyboardArrowUp } from 'react-icons/md'
+
 import { CustomModal } from '@/common/components/CustomModal'
-import { GetServerSidePropsContext } from 'next'
 
-export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { req, res, params } = context
+export async function getServerSideProps({
+  req,
+  res,
+}: {
+  req: undefined
+  res: undefined
+}) {
   const token = getCookie('auth', { res, req })
-
-  // 取得 query string 的 page 參數
-  const page = params
 
   // 【API】取得我的收藏行程
   const resTourData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/tours/${page}`,
+    `https://travelmaker.rocket-coding.com/api/users/tours/1`,
     {
       method: 'GET',
       headers: {
@@ -67,7 +68,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 }
 
-export default function Journey({
+export default function Tour({
   tourData,
   roomData,
   memberCountData,
@@ -85,32 +86,98 @@ export default function Journey({
     setCountData(countData)
   }, [countData])
 
-  // 卡片連結
-  const router = useRouter()
+  // 刪除提醒
   const [deleteConfirm, setDeleteConfirm] = useState(false)
 
   // 獲取更多資料
-  // const token = getCookie('auth')
-  // const [tours, setTours] = useState(tourData)
-  // const handleLoadMore = async () => {
-  //   console.log(tours)
-  //   // const nextPage = tours.current_page + 1
-  //   const res = await fetch(
-  //     `https://travelmaker.rocket-coding.com/api/users/tours/2`,
-  //     {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: `${token}`,
-  //         'Content-Type': 'application/json',
-  //       },
-  //     }
-  //   )
-  //   const newTours = await res.json()
-  //   setTours((prevTours) => ({
-  //     ...newTours,
-  //     data: [...prevTours.TourData, ...newTours],
-  //   }))
-  // }
+  const token = getCookie('auth')
+  const [moreTourData, setMoreTourData] = useState(tourData.TourData)
+  const [moreRoomData, setMoreRoomData] = useState(roomData.RoomData)
+  const [page, setPage] = useState(2)
+  const [isLoading, setIsLoading] = useState(false)
+  const [noData, setNoData] = useState(false)
+  const [toTop, setToTop] = useState(false)
+
+  const getMoreTourData = async (page: number) => {
+    const res = await fetch(
+      `https://travelmaker.rocket-coding.com/api/users/tours/${page}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const newTours = await res.json()
+
+    if (newTours.TourData) {
+      setMoreTourData((prevTours) => [...prevTours, ...newTours.TourData])
+      setPage((prevPage) => prevPage + 1)
+      setIsLoading(true)
+    }
+
+    if (newTours.Message === '已無我的行程') {
+      setIsLoading(false)
+      setNoData(true)
+    }
+  }
+
+  const getMoreRoomData = async (page: number) => {
+    const res = await fetch(
+      `https://travelmaker.rocket-coding.com/api/users/rooms/${page}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const newRooms = await res.json()
+
+    if (newRooms.RoomData) {
+      setMoreRoomData((prevRooms) => [...prevRooms, ...newRooms.RoomData])
+      setPage((prevPage) => prevPage + 1)
+      setIsLoading(true)
+    }
+
+    if (newRooms.Message === '已無我的行程') {
+      setIsLoading(false)
+      setNoData(true)
+    }
+  }
+
+  useEffect(() => {
+    function handleScroll() {
+      const body = document.body
+      const html = document.documentElement
+      const documentHeight = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      )
+      if (window.innerHeight + window.pageYOffset >= documentHeight) {
+        getMoreTourData(page)
+        getMoreRoomData(page)
+      }
+
+      if (window.pageYOffset > 1000) {
+        setToTop(true)
+      } else {
+        setToTop(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [moreTourData])
 
   return (
     <div>
@@ -154,58 +221,45 @@ export default function Journey({
             {/* tab 內容 */}
             {activeTab === 1 && (
               <div className="flex flex-col space-y-6">
-                {tourData?.TourData?.map((item) => {
+                {moreTourData?.map((item) => {
                   return (
-                    <a
+                    <TourCard
                       key={item.TourId}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        router.push(`/random-tour/${item.TourId}`)
+                      id={item.TourId}
+                      likes={item.Likes}
+                      countAttr={item.AttrCounts}
+                      tourName={item.TourName}
+                      showLike={true}
+                      creator={''}
+                      showCreator={false}
+                      imagesUrl={item.ImageUrl}
+                      onClick={() => {
+                        setDeleteConfirm(!deleteConfirm)
                       }}
-                    >
-                      <TourCard
-                        key={item.TourId}
-                        likes={item.Likes}
-                        countAttr={item.AttrCounts}
-                        tourName={item.TourName}
-                        showLike={true}
-                        creator={''}
-                        showCreator={false}
-                        imagesUrl={item.ImageUrl}
-                        onClick={() => {
-                          setDeleteConfirm(!deleteConfirm)
-                        }}
-                      />
-                    </a>
+                    />
                   )
                 })}
               </div>
             )}
             {activeTab === 2 && (
               <div className="flex flex-col space-y-10">
-                {roomData?.RoomData?.map((item) => {
+                {moreRoomData?.map((item) => {
                   return (
-                    <a
-                      key={item.RoomGuid}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        router.push(`/planning-tour/${item.RoomGuid}`)
+                    <TourCard
+                      key={parseInt(item.RoomGuid)}
+                      likes={0}
+                      tourName={item.RoomName}
+                      countAttr={item.AttrCounts}
+                      showLike={false}
+                      creator={item.CreaterName}
+                      showCreator={true}
+                      imagesUrl={item.ImageUrl}
+                      room={true}
+                      roomId={parseInt(item.RoomGuid)}
+                      onClick={() => {
+                        setDeleteConfirm(!deleteConfirm)
                       }}
-                    >
-                      <TourCard
-                        key={item.RoomGuid}
-                        likes={0}
-                        tourName={item.RoomName}
-                        countAttr={item.AttrCounts}
-                        showLike={false}
-                        creator={item.CreaterName}
-                        showCreator={true}
-                        imagesUrl={item.ImageUrl}
-                        onClick={() => {
-                          setDeleteConfirm(!deleteConfirm)
-                        }}
-                      />
-                    </a>
+                    />
                   )
                 })}
               </div>
@@ -239,6 +293,17 @@ export default function Journey({
           </div>
         </div>
       </CustomModal>
+
+      {/* 無行程提醒 */}
+      <CustomModal modal={noData} setModal={setNoData} wrapper>
+        <div className="w-[300px] p-7 bg-white rounded-xl">
+          <div className="flex flex-col items-center space-y-4">
+            <BsXCircle className="text-5xl text-highlight" />
+            <span className="text-2xl">已無行程</span>
+          </div>
+        </div>
+      </CustomModal>
+
       <MemberLayout
         path="Journey"
         countData={countData}
@@ -289,17 +354,14 @@ export default function Journey({
             {/* tab 內容 */}
             {activeTab === 1 && (
               <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
-                {tourData?.TourData?.map((item) => {
+                {moreTourData?.map((item) => {
                   return (
-                    <a
+                    <div
                       key={item.TourId}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        router.push(`/random-tour/${item.TourId}`)
-                      }}
                       className="w-full py-3 cursor-pointer z-0 lg:w-1/2 lg:px-3 hover:opacity-80 hover:duration-500 hover:-translate-y-1"
                     >
                       <TourCard
+                        id={item.TourId}
                         likes={item.Likes}
                         countAttr={item.AttrCounts}
                         tourName={item.TourName}
@@ -311,21 +373,32 @@ export default function Journey({
                           setDeleteConfirm(!deleteConfirm)
                         }}
                       />
-                    </a>
+                    </div>
                   )
                 })}
+                {/* GoToTop */}
+                {toTop && (
+                  <button
+                    type="button"
+                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                      })
+                    }}
+                  >
+                    <MdKeyboardArrowUp className="text-3xl mx-auto" />
+                  </button>
+                )}
               </div>
             )}
             {activeTab === 2 && (
               <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
-                {roomData?.RoomData?.map((item) => {
+                {moreRoomData?.map((item) => {
                   return (
-                    <a
+                    <div
                       key={item.RoomGuid}
-                      onClick={(e) => {
-                        e.preventDefault()
-                        router.push(`/planning-tour/${item.RoomGuid}`)
-                      }}
                       className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer hover:opacity-80 hover:duration-500 hover:-translate-y-1"
                     >
                       <TourCard
@@ -336,35 +409,33 @@ export default function Journey({
                         creator={item.CreaterName}
                         showCreator={true}
                         imagesUrl={item.ImageUrl}
+                        room={true}
+                        roomId={parseInt(item.RoomGuid)}
                         onClick={() => {
                           setDeleteConfirm(!deleteConfirm)
                         }}
                       />
-                    </a>
+                    </div>
                   )
                 })}
+                {/* GoToTop */}
+                {toTop && (
+                  <button
+                    type="button"
+                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                      })
+                    }}
+                  >
+                    <MdKeyboardArrowUp className="text-3xl mx-auto" />
+                  </button>
+                )}
               </div>
             )}
-
-            {/* {loading && <p>loading</p>}
-
-            {!loading && (
-              <div
-                onClick={() => {
-                  setPage((prevPage) => prevPage + 1)
-                }}
-              >
-                <SeeMore />
-              </div>
-            )} */}
-
-            <div
-              // onClick={() => {
-              //   handleLoadMore()
-              // }}
-            >
-              <SeeMore />
-            </div>
+            {isLoading && <p className="text-lg text-center">loading...</p>}
           </div>
         </div>
       </MemberLayout>

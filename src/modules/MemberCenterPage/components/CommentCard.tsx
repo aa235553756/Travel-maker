@@ -27,7 +27,8 @@ export default function CommentCard({
   const [isEditComment, setIsEditComment] = useState(false)
 
   // 修改 textarea value
-  const [commentValue, setCommentValue] = useState(`${comment}`)
+  const [commentValue, setCommentValue] = useState(comment)
+  const [starValue, setStarValue] = useState(star)
 
   // 修改景點星等
   // const [starValue, setStarValue] = useState(`${star}`)
@@ -35,7 +36,7 @@ export default function CommentCard({
   const token = getCookie('auth')
 
   // 【API】取得我的景點評論
-  fetch(`https://travelmaker.rocket-coding.com/api/users/comments/1`, {
+  fetch(`https://travelmaker.rocket-coding.com/api/users/comments/${id}`, {
     method: 'GET',
     headers: {
       Authorization: `${token}`,
@@ -56,7 +57,7 @@ export default function CommentCard({
         body: JSON.stringify({
           AttractionCommentId: id,
           Comment: commentValue,
-          Score: star,
+          Score: starValue,
         }),
       }
     )
@@ -90,7 +91,7 @@ export default function CommentCard({
               {/* 編輯時，取消星等顯示 */}
               {isEditComment ? null : (
                 <div className="leading-3">
-                  <CustomStar rating={star} />
+                  <CustomStar rating={Number(starValue)} />
                 </div>
               )}
               <p className="text-gray-A8">{time}</p>
@@ -122,7 +123,7 @@ export default function CommentCard({
           {/* 編輯時，取消星等顯示 */}
           {isEditComment ? null : (
             <div className="leading-3">
-              <CustomStar rating={star} />
+              <CustomStar rating={Number(starValue)} />
             </div>
           )}
           <p className="text-gray-A8">{time}</p>
@@ -130,8 +131,12 @@ export default function CommentCard({
         {/* 點擊編輯，進入編輯狀態，出現評價星等.textArea及儲存按鈕 */}
         {isEditComment ? (
           <div>
-            <CustomStar rating={star} clickable={true} starDimension={'30px'} />
-
+            <CustomStar
+              rating={Number(starValue)}
+              clickable={true}
+              starDimension={'30px'}
+              setSomething={setStarValue}
+            />
             <textarea
               id="story"
               name="story"

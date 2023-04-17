@@ -6,7 +6,7 @@ import { FaRegCommentDots } from 'react-icons/fa'
 import { SlSettings } from 'react-icons/sl'
 import { AiOutlineHeart } from 'react-icons/ai'
 import { IoLocationOutline } from 'react-icons/io5'
-import { MemberLayoutProps } from '@/pages/member-center/types'
+import { MemberLayoutProps } from '@/util/memberTypes'
 
 export default function MemberLayout({
   children,
@@ -14,15 +14,12 @@ export default function MemberLayout({
   countData,
 }: MemberLayoutProps): JSX.Element {
   // 判斷有無取得 cookie
-  const user = getCookie('user')
-    ? JSON.parse(String(getCookie('user')))
-    : null
+  const user = getCookie('user') ? JSON.parse(String(getCookie('user'))) : null
 
   // 這邊避免使用三元運算會報出伺服器與本地 HTML 渲染不一致的問題
   // 可參考 https://nextjs.org/docs/messages/react-hydration-error
   const [userName, setUserName] = useState()
   useEffect(() => setUserName(user.UserName), [user])
-
 
   return (
     <div>

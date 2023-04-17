@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
-import { useRouter } from 'next/router'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import AttrCard from '@/common/components/card/AttrCard'
-import SeeMore from '@/common/components/SeeMore'
 import {
   MemberCountProps,
   AttrDataProps,
   RoomDataProps,
-} from '@/pages/member-center/types'
+} from '@/util/memberTypes'
 import { CustomModal } from '@/common/components/CustomModal'
-import { BsBookmarkCheck } from 'react-icons/bs'
+import { BsBookmarkX, BsXCircle } from 'react-icons/bs'
+import { MdKeyboardArrowUp } from 'react-icons/md'
 
 export async function getServerSideProps({
   req,
@@ -84,21 +83,87 @@ export default function Attract({
     setCountData(countData)
   }, [countData])
 
-  console.log(roomData.RoomData)
-
-  // 卡片連結
-  const router = useRouter()
-
   const [modal, setModal] = useState(false)
 
-  // const [addTour, setAddTour] = useState(false)
   const [addTourTagStyle, setAddTourTagStyle] = useState<{
     [index: number]: boolean
   }>({})
+
   const [collectConfirm, setCollectConfirm] = useState(false)
+
+  // 獲取更多資料
+  const token = getCookie('auth')
+  const [moreAttrData, setMoreAttrData] = useState(attrData.AttractionData)
+  const [page, setPage] = useState(2)
+  const [isLoading, setIsLoading] = useState(false)
+  const [noData, setNoData] = useState(false)
+  const [toTop, setToTop] = useState(false)
+
+  const getMoreAttrData = async (page: number) => {
+    const res = await fetch(
+      `https://travelmaker.rocket-coding.com/api/users/rooms/${page}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const newAttrs = await res.json()
+
+    if (newAttrs.TourData) {
+      setMoreAttrData((prevAttrs) => [...prevAttrs, ...newAttrs.TourData])
+      setPage((prevPage) => prevPage + 1)
+      setIsLoading(true)
+    }
+
+    if (newAttrs.Message === '已無我的行程') {
+      setIsLoading(false)
+      setNoData(true)
+    }
+  }
+
+  useEffect(() => {
+    function handleScroll() {
+      const body = document.body
+      const html = document.documentElement
+      const documentHeight = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      )
+      if (window.innerHeight + window.pageYOffset >= documentHeight) {
+        getMoreAttrData(page)
+      }
+
+      if (window.pageYOffset > 1000) {
+        setToTop(true)
+      } else {
+        setToTop(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [moreAttrData])
 
   return (
     <div>
+      <button
+        type="button"
+        onClick={() => {
+          setCollectConfirm(!collectConfirm)
+        }}
+      >
+        按我
+      </button>
+
       {/* 手機版 */}
       <div className="container">
         <div className="md:hidden mt-8 mb-[100px]">
@@ -110,17 +175,12 @@ export default function Attract({
             <div className="flex flex-col space-y-6">
               {attrData?.AttractionData.map((item) => {
                 return (
-                  <a
+                  <div
                     key={item.AttractionId}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      router.push(
-                        `/hot-topics/attractions/${item.AttractionId}`
-                      )
-                    }}
                     className="w-full py-3 lg:w-1/2 lg:px-3"
                   >
                     <AttrCard
+                      id={item.AttractionId}
                       showSelect={true}
                       showCollect={true}
                       attractName={item.AttractionName}
@@ -128,8 +188,14 @@ export default function Attract({
                       rating={item.AverageScore}
                       imagesUrl={item.ImageUrl}
                       type={item.Category}
+                      onClick={() => {
+                        setModal(!modal)
+                      }}
+                      onClick1={() => {
+                        setCollectConfirm(!collectConfirm)
+                      }}
                     />
-                  </a>
+                  </div>
                 )
               })}
             </div>
@@ -170,12 +236,22 @@ export default function Attract({
           </div>
         </div>
       </CustomModal>
+      {/* 無行程提醒 */}
+      <CustomModal modal={noData} setModal={setNoData} wrapper>
+        <div className="w-[300px] p-7 bg-white rounded-xl">
+          <div className="flex flex-col items-center space-y-4">
+            <BsXCircle className="text-5xl text-highlight" />
+            <span className="text-2xl">已無行程</span>
+          </div>
+        </div>
+      </CustomModal>
+
       {/* 收藏提醒 */}
       <CustomModal modal={collectConfirm} setModal={setCollectConfirm} wrapper>
-        <div className="w-[500px] p-7 bg-white rounded-xl">
-          <div className="flex items-center space-x-2">
-            <BsBookmarkCheck className="text-3xl text-secondary" />
-            <span>收藏成功</span>
+        <div className="w-[300px] p-7 bg-white rounded-xl">
+          <div className="flex flex-col items-center space-y-4">
+            <BsBookmarkX className="text-5xl text-secondary" />
+            <span className="text-2xl">取消收藏</span>
           </div>
         </div>
       </CustomModal>
@@ -197,17 +273,14 @@ export default function Attract({
           {/* 詳細資訊區 */}
           <div>
             <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
-              {attrData?.AttractionData.map((item) => {
+              {moreAttrData.map((item) => {
                 return (
                   <div
                     key={item.AttractionId}
-                    // onClick={(e) => {
-                    //   e.preventDefault()
-                    //   router.push(`/hot-topics/attractions/${item.AttractionId}`)
-                    // }}
-                    className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer hover:opacity-80 hover:duration-500 hover:-translate-y-1"
+                    className="w-full py-3 cursor-pointer lg:w-1/2 lg:px-3 hover:opacity-80 hover:duration-500 hover:-translate-y-1"
                   >
                     <AttrCard
+                      id={item.AttractionId}
                       showSelect={true}
                       showCollect={true}
                       attractName={item.AttractionName}
@@ -225,8 +298,23 @@ export default function Attract({
                   </div>
                 )
               })}
+              {/* GoToTop */}
+              {toTop && (
+                <button
+                  type="button"
+                  className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                  onClick={() => {
+                    window.scrollTo({
+                      top: 0,
+                      behavior: 'smooth',
+                    })
+                  }}
+                >
+                  <MdKeyboardArrowUp className="text-3xl mx-auto" />
+                </button>
+              )}
             </div>
-            <SeeMore />
+            {isLoading && <p className="text-lg text-center">loading...</p>}
           </div>
         </div>
       </MemberLayout>

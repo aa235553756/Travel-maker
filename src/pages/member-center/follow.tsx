@@ -3,7 +3,7 @@ import { getCookie } from 'cookies-next'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import FollowUserCard from '@/modules/MemberCenterPage/components/FollowUserCard'
 import SeeMore from '@/common/components/SeeMore'
-import { MemberCountProps } from '@/pages/member-center/types'
+import { MemberCountProps } from '@/util/memberTypes'
 
 export async function getServerSideProps({
   req,
@@ -50,7 +50,9 @@ export default function Track({
       {/* 手機版 */}
       <div className="container">
         <div className="md:hidden mt-8 mb-[100px]">
-          <h2 className="text-lg font-bold mb-7">我的追蹤({memberCountData.FollowCounts})</h2>
+          <h2 className="text-lg font-bold mb-7">
+            我的追蹤({memberCountData.FollowCounts})
+          </h2>
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
             <div className="flex flex-col space-y-6">
@@ -83,7 +85,9 @@ export default function Track({
           <div className="md:member-shadow md:rounded-md">
             <h2 className="md:text-xl md:px-10 md:py-8">我的追蹤</h2>
             <hr className="md:w-full md:border-gray-E2" />
-            <div className="md:px-10 md:py-6">共有{memberCountData.FollowCounts}個追蹤</div>
+            <div className="md:px-10 md:py-6">
+              共有{memberCountData.FollowCounts}個追蹤
+            </div>
           </div>
           {/* 詳細資訊區 */}
           <div className="md:flex md:flex-col">
