@@ -62,7 +62,7 @@ export default function Header() {
     : null
 
   // 取得會員頭貼
-  const [picture, setPicture] = useState()
+  const [picture, setPicture] = useState('')
   useEffect(() => setPicture(user?.ProfilePicture), [user])
 
   return (
