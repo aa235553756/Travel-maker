@@ -140,8 +140,8 @@ export default function CommentCard({
             <textarea
               id="story"
               name="story"
-              rows="10"
-              cols="70"
+              rows={10}
+              cols={70}
               className="input-style resize-none w-full mt-2"
               value={commentValue}
               onChange={(e) => {
