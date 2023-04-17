@@ -57,3 +57,20 @@ export function postModifyTour(
     }
   )
 }
+
+export function postRoomApi(token: string, RoomName: string, Attractions: number[]) {
+  return fetch(
+    'https://travelmaker.rocket-coding.com/api/rooms',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: token,
+      },
+      body: JSON.stringify({
+        RoomName,
+        Attractions
+      }),
+    }
+  )
+}

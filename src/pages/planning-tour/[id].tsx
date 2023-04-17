@@ -1,21 +1,47 @@
+import PlanningTourStoreTours from './../../modules/PlanningTourStoreTours'
+import TourMap from './../../modules/TourMap'
+import PlanningTourTab from './../../modules/PlanningTourTab'
+import PlanningTourTitle from './../../modules/PlanningTourTitle'
 import React, { useState } from 'react'
 import VoteDate from '@/modules/JourneyPage/VoteDate'
 import InvitePeople from '@/modules/JourneyPage/InvitePeople'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
 import Sortable from '@/common/components/Sortable'
-import { BsLink45Deg, BsList } from 'react-icons/bs'
-import { MdSave, MdOutlineCancel } from 'react-icons/md'
-import { defaultValueProp } from '@/util/types'
+import { MdSave } from 'react-icons/md'
+import { defaultValueProp, RoomAttractionsProp } from '@/util/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { defaultValues } from '@/util/selectData'
+// import { getCookie } from 'cookies-next'
 
-export default function PlanningTour() {
+interface paramsProp {
+  id: number
+}
+
+interface PlanningTour {
+  AttrationsData: RoomAttractionsProp
+  RoomName: string
+}
+
+export default function PlanningTour({
+  data: originData,
+}: {
+  data: PlanningTour
+}) {
+  // 這是data
+  console.log(originData)
+  // 所有的order都會在拖拉底下
+  // order包含1,2,3,4,5,6,7,8會在上面
+
+  const [data] = useState(originData)
   const [tabPos, setTabPos] = useState('備用景點')
-  const { register, handleSubmit, setValue, watch } =
-    useForm<defaultValueProp>()
+  const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
+    { defaultValues }
+  )
   // 這邊打POST取得隨機行程
   const formId = 'planning-tour-form'
-  const onSubmit: SubmitHandler<defaultValueProp> = (data) => console.log(data)
+  const onSubmit: SubmitHandler<defaultValueProp> = (data) =>
+    alert(JSON.stringify(data))
 
   return (
     <div>
@@ -25,9 +51,11 @@ export default function PlanningTour() {
           <InvitePeople />
         </div>
         {/* 中間拖拉 & 篩選區塊 */}
-        <div className="flex mb-[200px]">
+        <div className="flex flex-wrap mb-[200px]">
+          {/* 排行程 & 行程名稱 寬100% */}
+          <PlanningTourTitle RoomName={data.RoomName} />
           {/* 篩選器及其按鈕 */}
-          <div className="mr-6 hidden md:block">
+          <div className="mr-6 max-w-[264px] hidden md:block">
             <SelectSide
               formId={formId}
               handleSubmit={handleSubmit}
@@ -37,66 +65,32 @@ export default function PlanningTour() {
               watch={watch}
             />
             <button
-              type="submit"
               form={formId}
-              className="py-4 w-full bg-gray-73 text-white"
+              className="text-lg font-bold lg:text-xl py-2 lg:py-3 w-full bg-primary text-white rounded-md hover:bg-primary-tint duration-100"
             >
               隨機產生行程
             </button>
           </div>
           {/* 拖拉 */}
-          <div className="flex flex-col">
-            {/* 房間行程連結，應該兩邊都一樣 */}
-            <h2 className="flex items-center mb-3 text-xl font-bold">
-              <BsLink45Deg className="mr-2 text-lg border w-[28px] h-[28px] rounded-md" />
-              行程名稱：美食吃透透
-            </h2>
-            {/* 拖拉1 max-lg為1280以下出現x軸 */}
+          <div className="flex-grow max-w-[840px]">
+            {/* 排序1 max-lg為1280以下出現x軸 */}
             <div className="mb-6 h-full lg:h-auto scrollbar-style max-lg:max-w-[396px] max-lg:overflow-x-scroll max-lg:mb-4">
               <Sortable />
             </div>
-            <ul className="flex mb-6">
-              {['備用景點', '地圖'].map((item, index) => {
-                return (
-                  <li
-                    key={index}
-                    className={`duration-150 pb-4 w-[25%] md:w-1/6 text-center border-b-2 cursor-pointer mb-[2px]
-                      ${tabPos === item ? `border-[#1890FF]` : null}`}
-                    onClick={() => {
-                      setTabPos(item)
-                    }}
-                  >
-                    {item}
-                  </li>
-                )
-              })}
-
-              <div className="flex-grow border-b-2 mb-[2px]"></div>
-            </ul>
-            {/* 拖拉2，備用景點 & 地圖 */}
-            {tabPos === '備用景點' ? (
-              <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] scrollbar-style overflow-y-scroll bg-gray-D9">
-                {Array(15)
-                  .fill('')
-                  .map((item, index) => {
-                    let className = `flex relative items-center justify-center w-[124px] h-[124px] bg-[#ECECEC] mb-6 mr-10`
-                    // 逢4 mr-0
-                    if (index % 5 === 4) {
-                      className += ' !mr-0'
-                    }
-                    return (
-                      <div key={index} className={className}>
-                        <MdOutlineCancel className="absolute text-xl top-1 right-1" />
-                        大安森林公園
-                        <BsList className="absolute text-xl bottom-1 left-[50%] -translate-x-[50%]" />
-                      </div>
-                    )
-                  })}
-              </div>
-            ) : (
-              <div className="w-full h-full mb-12 bg-gray-D9">我是地圖爹斯</div>
-            )}
-            <button className="inline-flex justify-center ml-auto px-10 py-4 items-center bg-gray-D9">
+            {/* tab切換區 */}
+            <PlanningTourTab tabPos={tabPos} setTabPos={setTabPos} />
+            {/* 根據tabPos判斷是 備用景點(拖拉) & 地圖 */}
+            {
+              tabPos === '備用景點' ? <PlanningTourStoreTours /> : <TourMap /> //塞data
+            }
+            <button
+              className={`${
+                true && '!bg-secondary hover:!bg-secondary/75'
+              } flex ml-auto text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-end items-center rounded-md text-white hover:bg-secondary duration-100`}
+              onClick={() => {
+                alert('儲存')
+              }}
+            >
               <MdSave className="text-lg mr-2" />
               儲存
             </button>
@@ -106,4 +100,31 @@ export default function PlanningTour() {
       </div>
     </div>
   )
+}
+
+export async function getServerSideProps({ params }: { params: paramsProp }) {
+  try {
+    const { id } = params
+
+    const response = await fetch(
+      `https://travelmaker.rocket-coding.com/api/rooms/${id}`
+    )
+    const data = await response.json()
+    // 以及知道這個連結的人會被加進來 (post token)
+
+    if (response.ok) {
+      return {
+        props: { data },
+      }
+    }
+    throw new Error('不知名錯誤')
+  } catch (err) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/login',
+      },
+      props: {},
+    }
+  }
 }

@@ -15,7 +15,6 @@ export interface randomTourProp {
   ImageUrl: string
 }
 
-
 export interface geoDefaultValueProp {
   CategoryId: string[];
   AttrCounts: string;
@@ -25,4 +24,14 @@ export interface geoDefaultValueProp {
   AttractionId?: number[] | undefined;
   Nlat: number;
   Elong: number;
+}
+
+
+export interface RoomAttractionsProp {
+  AttractionId: number
+  AttractionName: string
+  Elong: number
+  ImageUrl: string
+  Nlat: number
+  Order: number
 }
