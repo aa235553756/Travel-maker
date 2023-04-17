@@ -7,6 +7,8 @@ import Image from 'next/image'
 import { loginApi } from '@/util/userApi'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { CustomModal } from '@/common/components/CustomModal'
+import { useRouter } from 'next/router'
+import { BsFillCheckCircleFill, BsFillXCircleFill } from 'react-icons/bs'
 
 export interface LoginFormProp {
   Account: string
@@ -58,10 +60,17 @@ export default function Login() {
 
   const [isLoading, setIsLoading] = useState(false)
 
+  const [loginSuccess, setloginSuccess] = useState(false)
+  // For Modal icon
+  const [success, setSuccess] = useState(true)
+  const [modalText, setModalText] = useState('登入成功，自動跳轉...')
+
   const loginAccountRef = useRef<HTMLInputElement | null>(null)
   const registerAccountRef = useRef<HTMLInputElement | null>(null)
 
   const [modal, setModal] = useState(false)
+
+  const router = useRouter()
 
   useEffect(() => {
     loginAccountRef?.current?.focus()
@@ -72,19 +81,34 @@ export default function Login() {
     <div>
       <button
         onClick={() => {
-          setModal(!modal)
+          setloginSuccess(!loginSuccess)
         }}
       >
         modal按鈕
       </button>
 
       <CustomModal modal={modal} setModal={setModal} />
+      <CustomModal modal={loginSuccess} setModal={setloginSuccess} wrapper>
+        <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
+          {success ? (
+            <BsFillCheckCircleFill className="text-[64px] text-[#74C041]" />
+          ) : (
+            <BsFillXCircleFill className="text-[64px] text-highlight" />
+          )}
+          <p className="text-2xl">{modalText}</p>
+        </div>
+      </CustomModal>
 
       {isLoading ? <LoadingAnimate isLoading={isLoading} /> : null}
       <button
         onClick={() => {
           console.log('auth的', getCookie('auth'))
-          console.log('user的', JSON.parse(String(getCookie('user'))))
+          console.log(
+            'user的',
+            getCookie('user')
+              ? JSON.parse(String(getCookie('user')))
+              : undefined
+          )
           console.log('取得全部的(會包含亂碼)', getCookies())
         }}
       >
@@ -353,27 +377,41 @@ export default function Login() {
   // 登入
   async function onSubmit(data: LoginFormProp) {
     try {
-      alert(JSON.stringify(data))
       setIsLoading(true)
       // travel_maker login
       const res = await loginApi(data)
-      const resJSON = await res.json()
 
-      // 登入成功,user data,設cookies
+      // 登入成功,user data,設cookies,跳轉回上一頁
       if (res.ok) {
-        alert(JSON.stringify(resJSON))
+        const resJSON = await res.json()
+        setIsLoading(false)
+        setloginSuccess(true)
+        setSuccess(true)
+        setModalText('登入成功，自動跳轉中...')
+        setTimeout(() => {
+          setloginSuccess(false)
+        }, 2000)
         setCookie('auth', 'Bearer ' + resJSON.JwtToken, {
           maxAge: 60 * 60 * 24 * 7,
         })
         setCookie('user', JSON.stringify(resJSON), { maxAge: 60 * 60 * 24 * 7 })
-        setIsLoading(false)
+        console.log(router)
+
+        setTimeout(() => {
+          router.back()
+        }, 2000)
         return
       }
 
       // {"Message":"帳號或密碼有誤"} {"Message":"此帳號為被註冊"}
       if (res.status === 400) {
-        alert(JSON.stringify(resJSON))
         setIsLoading(false)
+        setloginSuccess(true)
+        setSuccess(false)
+        setModalText('登入失敗，帳號或密碼有誤')
+        setTimeout(() => {
+          setloginSuccess(false)
+        }, 2000)
         loginAccountRef?.current?.focus()
         return
       }
@@ -387,16 +425,13 @@ export default function Login() {
   // 註冊
   async function onSubmit2(data: RegisterFormProp) {
     try {
-      // RHF data
-      alert(JSON.stringify(data))
       setIsLoading(true)
       const newData = {
         Account: data.Account,
         Password: data.Password,
         UserName: data.UserName,
       }
-      // RHF去除passwordRepeat
-      alert(JSON.stringify(newData))
+
       // travel_maker login
       const res = await fetch(
         'https://travelmaker.rocket-coding.com/api/users/register',
@@ -408,25 +443,33 @@ export default function Login() {
           body: JSON.stringify(newData),
         }
       )
-      const resJSON = await res.json()
 
+      setIsLoading(true)
       // 註冊成功,切換到登入頁面,提醒重新登入
       if (res.ok) {
-        // 回傳資料
-        alert(JSON.stringify(resJSON))
-        // 重新登入
-        alert('請重新登入')
-        setIsLogin(true)
-        setActiveTab(1)
         setIsLoading(false)
+        setloginSuccess(true)
+        setSuccess(true)
+        setModalText('註冊成功，請重新登入')
+        setTimeout(() => {
+          setloginSuccess(false)
+        }, 2000)
+        setActiveTab(1)
+        setIsLogin(true)
+
         loginAccountRef?.current?.focus()
         return
       }
 
       // {"Message":"此帳號已註冊"}
       if (res.status === 400) {
-        alert(JSON.stringify(resJSON))
         setIsLoading(false)
+        setloginSuccess(true)
+        setSuccess(false)
+        setModalText('註冊失敗，信箱已註冊過')
+        setTimeout(() => {
+          setloginSuccess(false)
+        }, 2000)
         registerAccountRef?.current?.focus()
         return
       }

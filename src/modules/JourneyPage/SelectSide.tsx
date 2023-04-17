@@ -105,12 +105,12 @@ function LableType({
             setValue(
               'CategoryId',
               data.filter((item: string) => {
-                return bool ? item !== '1' : item === '1'
+                return bool ? item !== '0' : item === '0'
               })
             )
           }
           // 判斷是否為'1',隨心所欲，執行不同參數函式
-          item.value !== '1' ? setCurrentValue(true) : setCurrentValue(false)
+          item.value !== '0' ? setCurrentValue(true) : setCurrentValue(false)
         }
 
         return (
@@ -178,7 +178,7 @@ function LableArea({
             <>
               {/* 不限 */}
               <label
-                key={index}
+                key={index + 1}
                 className="ml-4 odd:!ml-0 w-[85px] [&:nth-child(2)]:!mt-0 cursor-pointer"
               >
                 <input
