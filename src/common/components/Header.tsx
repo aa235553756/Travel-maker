@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import { getCookie } from 'cookies-next'
 import { FcMenu } from 'react-icons/fc'
 import { FaBloggerB } from 'react-icons/fa'
 import {
@@ -54,6 +55,15 @@ export default function Header() {
       document.body.style.overflow = 'auto'
     }
   }, [isHam])
+
+  // 判斷有無取得 cookie
+  const user = getCookie('user')
+    ? JSON.parse(String(getCookie('user')))
+    : null
+
+  // 取得會員頭貼
+  const [picture, setPicture] = useState()
+  useEffect(() => setPicture(user.ProfilePicture), [user])
 
   return (
     <div className="z-10 relative overflow-hidden lg:overflow-visible">
@@ -115,11 +125,11 @@ export default function Header() {
                       showMemberState()
                     }}
                   >
-                    <IoLocationSharp className="text-lg text-primary group-hover:text-highlight duration-150" />
+                    <FaUserCircle className="text-lg text-primary group-hover:text-highlight duration-150" />
                     <span className="text-xl">會員中心</span>
                   </button>
                   {showMember ? (
-                    <div className="w-[300px] border ml-auto absolute right-0 top-[82px] z-10 rounded-lg shadow-lg bg-white">
+                    <div className="w-[300px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white">
                       <Link
                         href="/member-center"
                         onClick={() => {
@@ -128,7 +138,13 @@ export default function Header() {
                       >
                         <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
                           <div className="flex space-x-6 items-center">
-                            <div className="bg-[#ccc] rounded-full w-[52px] h-[52px]"></div>
+                            <Image
+                              width="52"
+                              height="52"
+                              src={picture}
+                              alt="圖片"
+                              className="h-[52px] rounded-full"
+                            ></Image>
                             <span className="text-xl">會員設定</span>
                           </div>
                           <AiOutlineSetting />
