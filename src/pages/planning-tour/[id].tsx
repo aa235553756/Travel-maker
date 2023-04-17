@@ -134,7 +134,6 @@ export default function PlanningTour({
           className="p-2 bg-primary"
           onClick={() => {
             alert(JSON.stringify(sortData.AttrationsData))
-            alert(JSON.stringify(data.AttrationsData))
           }}
         >
           案我data
@@ -226,12 +225,25 @@ export default function PlanningTour({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleDragEnd(e: any) {
     const { active, over } = e
-    alert(JSON.stringify(active))
 
     if (
       over &&
-      (over.id === 1 || over.id === 2) &&
-      (active.id === 51 || active.id === 52)
+      (over.id === 1 ||
+        over.id === 2 ||
+        over.id === 3 ||
+        over.id === 4 ||
+        over.id === 5 ||
+        over.id === 6 ||
+        over.id === 7 ||
+        over.id === 8) &&
+      (active.id === 51 ||
+        active.id === 52 ||
+        active.id === 53 ||
+        active.id === 54 ||
+        active.id === 55 ||
+        active.id === 56 ||
+        active.id === 57 ||
+        active.id === 58)
     ) {
       alert('觸發拖拉&取代')
       setSortData((prev) => {
@@ -284,7 +296,17 @@ export default function PlanningTour({
       })
     }
 
-    if (active.id !== over.id && active.id !== 51 && active.id !== 52) {
+    if (
+      active.id !== over?.id &&
+      active.id !== 51 &&
+      active.id !== 52 &&
+      active.id !== 53 &&
+      active.id !== 54 &&
+      active.id !== 55 &&
+      active.id !== 56 &&
+      active.id !== 57 &&
+      active.id !== 58
+    ) {
       alert('觸發排序')
       setItems((items) => {
         const oldIndex = items.indexOf(active.id)
@@ -292,16 +314,17 @@ export default function PlanningTour({
 
         return arrayMove(items, oldIndex, newIndex)
       })
-      setSortData((prev) => {
-        const newData = JSON.parse(JSON.stringify(sortData))
-        const temp = newData.AttrationsData[active.id - 1]
-        newData.AttrationsData[active.id - 1] =
-          newData.AttrationsData[over.id - 1]
-        newData.AttrationsData[active.id - 1].Order = active.id
-        newData.AttrationsData[over.id - 1] = temp
-        newData.AttrationsData[over.id - 1].Order = over.id
-        return newData
-      })
+
+      // setSortData((prev) => {
+      //   const newData = JSON.parse(JSON.stringify(sortData))
+      //   const temp = newData.AttrationsData[active.id - 1]
+      //   newData.AttrationsData[active.id - 1] =
+      //     newData.AttrationsData[over.id - 1]
+      //   newData.AttrationsData[active.id - 1].Order = active.id
+      //   newData.AttrationsData[over.id - 1] = temp
+      //   newData.AttrationsData[over.id - 1].Order = over.id
+      //   return newData
+      // })
     }
   }
 }
