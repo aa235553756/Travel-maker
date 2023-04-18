@@ -24,6 +24,8 @@ export default function HotAttract() {
                       attractName="彩虹橋"
                       district="大安"
                       rating={1.5}
+                      imagesUrl="/logo"
+                      type={['城市走走']}
                     />
                   </div>
                 )

@@ -116,6 +116,7 @@ export default function HotTopics() {
                   showLike={true}
                   creator={''}
                   showCreator={false}
+                  imagesUrl={['/logo']}
                 />
               </div>
             )
