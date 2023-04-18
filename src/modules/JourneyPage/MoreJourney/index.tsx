@@ -17,6 +17,7 @@ export default function MoreJourney() {
           showLike={true}
           creator={''}
           showCreator={false}
+          imagesUrl={['/logo']}
         />
         <TourCard
           tourName="好瘋狂熱血少年"
@@ -25,6 +26,7 @@ export default function MoreJourney() {
           showLike={true}
           creator={''}
           showCreator={false}
+          imagesUrl={['/logo']}
         />
         <div className="hidden lg:block">
           <TourCard
@@ -34,6 +36,7 @@ export default function MoreJourney() {
             showLike={true}
             creator={''}
             showCreator={false}
+            imagesUrl={['/logo']}
           />
         </div>
       </div>

@@ -1,13 +1,134 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { getCookie } from 'cookies-next'
 import Link from 'next/link'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import BlogCard from '@/common/components/card/BlogCard'
 import BlogDraftCard from '@/modules/MemberCenterPage/components/BlogDraftCard'
-import SeeMore from '@/common/components/SeeMore'
+import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
+import { CustomModal } from '@/common/components/CustomModal'
+import { BsXCircle } from 'react-icons/bs'
+import { MdKeyboardArrowUp } from 'react-icons/md'
 
-export default function Blog() {
+export async function getServerSideProps({
+  req,
+  res,
+}: {
+  req: undefined
+  res: undefined
+}) {
+  const token = getCookie('auth', { req, res })
+
+  // 【API】取得我的收藏遊記
+  const resBlogData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/users/blogCollections/1`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const blogData = await resBlogData.json()
+
+  // 【API】會員中心左邊選單各項數量
+  const resMemberCountData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const memberCountData = await resMemberCountData.json()
+
+  return {
+    props: {
+      blogData,
+      memberCountData,
+    },
+  }
+}
+
+export default function Blog({
+  blogData,
+  memberCountData,
+}: {
+  blogData: BlogDataProps
+  memberCountData: MemberCountProps
+}) {
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
+
+  // 將行程及房間數量往 MemberLayout 傳
+  const [countData, setCountData] = useState(memberCountData)
+  useEffect(() => {
+    setCountData(countData)
+  }, [countData])
+
+  // 獲取更多資料
+  const token = getCookie('auth')
+  const [moreBlogData, setMoreBlogData] = useState(blogData.BlogData)
+  const [page, setPage] = useState(2)
+  const [isLoading, setIsLoading] = useState(false)
+  const [noData, setNoData] = useState(false)
+  const [toTop, setToTop] = useState(false)
+
+  const getMoreBlogData = async (page: number) => {
+    const res = await fetch(
+      `https://travelmaker.rocket-coding.com/api/users/tours/${page}`,
+      {
+        method: 'GET',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const newBlogs = await res.json()
+
+    if (newBlogs.BlogData) {
+      setMoreBlogData((prevBlogs) => [...prevBlogs, ...newBlogs.BlogData])
+      setPage((prevPage) => prevPage + 1)
+      setIsLoading(true)
+    }
+
+    if (newBlogs.Message === '已無我的行程') {
+      setIsLoading(false)
+      setNoData(true)
+    }
+  }
+
+  useEffect(() => {
+    function handleScroll() {
+      const body = document.body
+      const html = document.documentElement
+      const documentHeight = Math.max(
+        body.scrollHeight,
+        body.offsetHeight,
+        html.clientHeight,
+        html.scrollHeight,
+        html.offsetHeight
+      )
+      if (window.innerHeight + window.pageYOffset >= documentHeight) {
+        getMoreBlogData(page)
+      }
+
+      if (window.pageYOffset > 1000) {
+        setToTop(true)
+      } else {
+        setToTop(false)
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [moreBlogData])
 
   return (
     <div>
@@ -15,7 +136,9 @@ export default function Blog() {
       <div className="container">
         <div className="md:hidden mt-8 mb-[100px]">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-bold">我的遊記(2)</h2>
+            <h2 className="text-lg font-bold">
+              我的遊記({memberCountData.BlogCounts})
+            </h2>
             <button className="border border-gray-73 px-4 py-2 rounded-md text-gray-73">
               新增遊記
             </button>
@@ -27,42 +150,51 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 1 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
+                  activeTab === 1
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-7`}
                 onClick={() => {
                   setActiveTab(1)
                 }}
               >
-                收藏遊記(3)
+                收藏遊記({blogData.CollectCounts})
               </button>
               <button
                 type="button"
                 className={`w-full text-center border-b-2 ${
-                  activeTab === 2 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
+                  activeTab === 2
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
                 } p-3 mb-7`}
                 onClick={() => {
                   setActiveTab(2)
                 }}
               >
-                草稿遊記(1)
+                草稿遊記({blogData.DraftCounts})
               </button>
             </div>
             {/* tab 內容 */}
             {activeTab === 1 && (
               <div className="flex flex-col space-y-6">
-                {Array(20)
-                  .fill('')
-                  .map((item, index) => {
-                    return (
+                {blogData?.BlogData.map((item) => {
+                  return (
+                    <div key={item.BlogGuid}>
                       <BlogCard
-                        key={index}
+                        id={parseInt(item.BlogGuid)}
                         showCollect={true}
-                        blogName="好瘋狂熱血少年"
-                        poster="老頭阿迪"
-                        time="2023-03-01 18:00"
+                        blogName={item.Title}
+                        poster={item.UserName}
+                        time={item.InitDate}
+                        type={item.Category}
+                        imageUrl={item.ProfilePicture}
+                        view={item.Sees}
+                        like={item.Likes}
+                        comment={item.Comments}
                       />
-                    )
-                  })}
+                    </div>
+                  )
+                })}
               </div>
             )}
             {activeTab === 2 && (
@@ -86,7 +218,21 @@ export default function Blog() {
         </div>
       </div>
       {/* 電腦版 */}
-      <MemberLayout path="Blog">
+      {/* 無行程提醒 */}
+      <CustomModal modal={noData} setModal={setNoData} wrapper>
+        <div className="w-[300px] p-7 bg-white rounded-xl">
+          <div className="flex flex-col items-center space-y-4">
+            <BsXCircle className="text-5xl text-highlight" />
+            <span className="text-2xl">已無行程</span>
+          </div>
+        </div>
+      </CustomModal>
+
+      <MemberLayout
+        path="Blog"
+        countData={countData}
+        setCountData={setCountData}
+      >
         <div className="md:flex md:flex-col md:space-y-10 md:w-2/3">
           {/* 分類資訊區 */}
           <div className="md:member-shadow md:rounded-md">
@@ -99,7 +245,9 @@ export default function Blog() {
               </Link>
             </div>
             <hr className="md:w-full md:border-gray-E2" />
-            <div className="md:px-10 md:py-6">共有6則遊記</div>
+            <div className="md:px-10 md:py-6">
+              共有{memberCountData.BlogCounts}則遊記
+            </div>
           </div>
           {/* 詳細資訊區 */}
           <div className="md:flex md:flex-col">
@@ -108,43 +256,69 @@ export default function Blog() {
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
-                  activeTab === 1 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
+                  activeTab === 1
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
                   setActiveTab(1)
                 }}
               >
-                收藏遊記(1)
+                收藏遊記({blogData.CollectCounts})
               </button>
               <button
                 type="button"
                 className={`w-1/2 text-center border-b-2 ${
-                  activeTab === 2 ? 'border-primary text-primary' : 'border-gray-E2 text-gray-A8'
+                  activeTab === 2
+                    ? 'border-primary text-primary'
+                    : 'border-gray-E2 text-gray-A8'
                 } p-4 mb-10`}
                 onClick={() => {
                   setActiveTab(2)
                 }}
               >
-                草稿遊記(1)
+                草稿遊記({blogData.DraftCounts})
               </button>
             </div>
             {/* tab 內容 */}
             {activeTab === 1 && (
               <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
-                {Array(20)
-                  .fill('')
-                  .map((item, index) => {
-                    return (
-                      <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
-                        <BlogCard
-                          showCollect={true}
-                          blogName="大小朋友手作烘焙DIY"
-                          poster="阿如小日子"
-                          time="2023-02-12 17:00"
-                        />
-                      </div>
-                    )
-                  })}
+                {moreBlogData.map((item) => {
+                  return (
+                    <div
+                      key={item.BlogGuid}
+                      className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer hover:opacity-80 hover:duration-500 hover:-translate-y-1"
+                    >
+                      <BlogCard
+                        id={parseInt(item.BlogGuid)}
+                        showCollect={true}
+                        blogName={item.Title}
+                        poster={item.UserName}
+                        time={item.InitDate}
+                        type={item.Category}
+                        imageUrl={item.ProfilePicture}
+                        view={item.Sees}
+                        like={item.Likes}
+                        comment={item.Comments}
+                      />
+                    </div>
+                  )
+                })}
+                {/* GoToTop */}
+                {toTop && (
+                  <button
+                    type="button"
+                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                      })
+                    }}
+                  >
+                    <MdKeyboardArrowUp className="text-3xl mx-auto" />
+                  </button>
+                )}
               </div>
             )}
             {activeTab === 2 && (
@@ -165,7 +339,7 @@ export default function Blog() {
                   })}
               </div>
             )}
-            <SeeMore />
+            {isLoading && <p className="text-lg text-center">loading...</p>}
           </div>
         </div>
       </MemberLayout>
