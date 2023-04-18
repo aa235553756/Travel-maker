@@ -53,6 +53,10 @@ export default function SSRPage({ data }: { data: undefined }) {
       <Link className="text-2xl" href={'./AnotherSSRpage'}>
         去另一頁看看Redux數值是否正確
       </Link>
+      <br />
+      <Link className="text-2xl" href={'./SSGpage'}>
+        去SSG看看Redux數值是否正確
+      </Link>
       <p>getServerSideProps可以getCookie，故SSG頁面 ex:會員,規劃</p>
       <button
         className="bg-green-200"
