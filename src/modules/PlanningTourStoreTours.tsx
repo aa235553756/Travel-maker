@@ -12,7 +12,8 @@ export default function PlanningTourStoreTours({
   data: RoomAttractionsProp[]
 }) {
   return (
-    <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll bg-gray-D9">
+    <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
+      {/* 取唯一一個id ！！！*/}
       {data.map((item, i) => {
         return (
           <Droppable id={i + 51} key={i + 51}>
@@ -24,9 +25,9 @@ export default function PlanningTourStoreTours({
                 </div>
                 <div className="absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
                 <div className="absolute text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
-                  {item.Order}
+                  {i + 1}
                 </div>
-                <div className="w-[124px] absolute top-1/2 text-center bottom-1 left-1/2 translate-x-[-50%] text-white ">
+                <div className="w-[124px] absolute top-1/2 text-center bottom-1 left-1/2 translate-x-[-50%] text-white  animate-pulse">
                   {item.AttractionName}
                 </div>
                 <Image
@@ -44,6 +45,14 @@ export default function PlanningTourStoreTours({
           </Droppable>
         )
       })}
+      <div className="cursor-pointer z-50 w-1/4 max-w-[124px] max-h-[124px] relative shadow mr-10 mb-6 [&:nth-child(5)]:!mr-0 [&:nth-child(10)]:!mr-0 [&:nth-child(15)]:!mr-0 bg-[#f7f7f7]">
+        <div className="w-[124px] h-[124px]">
+          <div className="w-[52px] h-[52px] border border-dashed border-gray-A8 absolute top-1/2 text-center left-1/2 translate-x-[-50%] translate-y-[-50%]"></div>
+          <div className="w-[124px] absolute top-1/2 text-center left-1/2 translate-x-[-50%] translate-y-[-50%] text-gray-A8">
+            ＋
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

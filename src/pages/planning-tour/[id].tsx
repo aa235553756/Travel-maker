@@ -75,7 +75,9 @@ export default function PlanningTour({
     false,
   ])
   const [draggableState, setDraggableState] = useState(
-    data.AttrationsData.map((item) => {
+    data.AttrationsData.filter((item) => {
+      return item.Order !== 0
+    }).map((item) => {
       return (
         <div
           key={item.AttractionId}

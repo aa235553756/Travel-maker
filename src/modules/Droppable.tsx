@@ -17,7 +17,7 @@ export default function Droppable(props: { children: ReactNode; id: number }) {
     <div
       ref={setNodeRef}
       style={style}
-      className="z-50 w-1/4 max-w-[124px] h-full relative shadow mr-10 mb-6 [&:nth-child(5)]:!mr-0 [&:nth-child(10)]:!mr-0 [&:nth-child(15)]:!mr-0"
+      className="z-50 w-1/4 max-w-[124px] max-h-[124px] relative shadow mr-10 mb-6 [&:nth-child(5)]:!mr-0 [&:nth-child(10)]:!mr-0 [&:nth-child(15)]:!mr-0"
     >
       {props.children}
     </div>
