@@ -48,7 +48,7 @@ const data = [
 
 export default function SeeOthers({}: SeeOthersProp) {
   return (
-    <div className="container pb-[80px]">
+    <div className="container lg:pb-[160px] pb-[80px]">
       <h3 className="text-[22px] mb-5 text-center font-bold md:mb-12 lg:text-4xl">
         看別人怎麼玩
       </h3>
