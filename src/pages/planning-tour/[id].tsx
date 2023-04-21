@@ -12,7 +12,16 @@ import { MdSave } from 'react-icons/md'
 import { defaultValueProp, RoomAttractionsProp } from '@/util/types'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import { defaultValues } from '@/util/selectData'
+import { getCookie } from 'cookies-next'
 // import { getCookie } from 'cookies-next'
+
+interface VoteDatesProp {
+  VoteDateId: number
+  Date: string
+  Count: number
+  IsVoted: boolean
+  UserGuid?: string
+}
 
 interface paramsProp {
   id: number
@@ -21,6 +30,7 @@ interface paramsProp {
 interface PlanningTour {
   AttrationsData: RoomAttractionsProp
   RoomName: string
+  VoteDates: VoteDatesProp[]
 }
 
 export default function PlanningTour({
@@ -47,8 +57,8 @@ export default function PlanningTour({
     <div>
       <div className="container">
         <div className="block mt-4 lg:flex lg:space-x-6 lg:mb-20 md:mt-[80px]">
-          <VoteDate />
-          <InvitePeople />
+          <VoteDate data={originData} />
+          <InvitePeople data={originData} />
         </div>
         {/* 中間拖拉 & 篩選區塊 */}
         <div className="flex flex-wrap mb-[200px]">
@@ -102,12 +112,26 @@ export default function PlanningTour({
   )
 }
 
-export async function getServerSideProps({ params }: { params: paramsProp }) {
+export async function getServerSideProps({
+  params,
+  res,
+  req,
+}: {
+  params: paramsProp
+  res: undefined
+  req: undefined
+}) {
   try {
     const { id } = params
+    const token = getCookie('auth', { req, res })
 
     const response = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/${id}`
+      `https://travelmaker.rocket-coding.com/api/rooms/${id}`,
+      {
+        headers: {
+          Authorization: `${token ?? undefined}`,
+        },
+      }
     )
     const data = await response.json()
     // 以及知道這個連結的人會被加進來 (post token)

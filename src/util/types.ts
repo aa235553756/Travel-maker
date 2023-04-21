@@ -35,3 +35,4 @@ export interface RoomAttractionsProp {
   Nlat: number
   Order: number
 }
+
