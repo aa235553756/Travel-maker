@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import CommentCard from '@/modules/MemberCenterPage/components/CommentCard'
-import SeeMore from '@/common/components/SeeMore'
 import { CommentDataProps, MemberCountProps } from '@/util/memberTypes'
 import { BsExclamationCircle } from 'react-icons/bs'
 import { CustomModal } from '@/common/components/CustomModal'
@@ -57,10 +56,14 @@ export default function Comment({
   commentData: CommentDataProps
   memberCountData: MemberCountProps
 }) {
+  // 無資料時
+  const [isNo, setIsNo] = useState(false)
+
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
+    setIsNo(!isNo)
   }, [countData])
 
   // 將評論資料往 CommentCard 傳
@@ -80,6 +83,8 @@ export default function Comment({
   useEffect(() => setUserName(user.UserName), [user])
 
   const [deleteConfirm, setDeleteConfirm] = useState(false)
+
+  // const [isLoading, setIsLoading] = useState(false)
 
   return (
     <div>
@@ -105,6 +110,9 @@ export default function Comment({
                   />
                 )
               })}
+              {isNo && (
+                <p className="text-lg text-center text-gray-B8">無資料</p>
+              )}
             </div>
           </div>
         </div>
@@ -146,31 +154,30 @@ export default function Comment({
             <h2 className="md:text-xl md:px-10 md:py-8">我的評論</h2>
             <hr className="md:w-full md:border-gray-E2" />
             <div className="md:px-10 md:py-6">
-              共有{commentData.AttCommentCounts}則評論
+              共有{memberCountData.AttCommentCounts}則評論
             </div>
           </div>
           {/* 詳細資訊區 */}
-          <div>
-            <div className="md:flex md:flex-col md:space-y-10  md:mb-[60px] lg:flex-row lg:flex-wrap">
-              {commentData?.CommentData?.map((item) => {
-                return (
-                  <CommentCard
-                    key={item.AttractionCommentId}
-                    id={item.AttractionCommentId}
-                    user={userName}
-                    attraction={item.AttractionName}
-                    comment={item.Comment}
-                    time={item.InitDate}
-                    star={item.Score}
-                    onClick={() => {
-                      setDeleteConfirm(!deleteConfirm)
-                    }}
-                  />
-                )
-              })}
-            </div>
-            <SeeMore />
+          <div className="justify-center md:items-center md:flex md:flex-col md:space-y-10  md:mb-[60px] lg:flex-row lg:flex-wrap">
+            {commentData?.CommentData?.map((item) => {
+              return (
+                <CommentCard
+                  key={item.AttractionCommentId}
+                  id={item.AttractionCommentId}
+                  user={userName}
+                  attraction={item.AttractionName}
+                  comment={item.Comment}
+                  time={item.InitDate}
+                  star={item.Score}
+                  onClick={() => {
+                    setDeleteConfirm(!deleteConfirm)
+                  }}
+                />
+              )
+            })}
+            {isNo && <p className="text-lg text-gray-B8">無資料</p>}
           </div>
+          {/* {isLoading && <p className="text-lg text-center">loading...</p>} */}
         </div>
       </MemberLayout>
     </div>

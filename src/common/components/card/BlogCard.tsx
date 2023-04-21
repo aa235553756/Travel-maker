@@ -32,7 +32,7 @@ export default function BlogCard({
   const router = useRouter()
 
   return (
-    <div className="border border-gray-E7 shadow-[1px_1px_15px_1px_rgba(0,0,0,0.08)] rounded-xl relative">
+    <div className="border border-gray-E7 shadow-[1px_1px_15px_1px_rgba(0,0,0,0.08)] rounded-md relative">
       <a
         onClick={(e) => {
           e.preventDefault()
@@ -47,13 +47,13 @@ export default function BlogCard({
       <Link href="../blog/view-blog/1">
         {/* 遊記圖片 */}
         <div className="relative w-full p-5 pb-0 md:p-4 md:pb-0">
-          <div className="absolute top-5 left-5 w-[calc(100%-40px)] h-9 bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl md:top-4 md:left-4 md:w-[calc(100%-32px)] md:h-[45px]"></div>
+          <div className="absolute top-5 left-5 w-[calc(100%-40px)] h-9 bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md md:top-4 md:left-4 md:w-[calc(100%-32px)] md:h-[45px]"></div>
           <Image
             src={imageUrl}
             alt="圖片"
             width={328}
             height={260}
-            className="w-full min-h-[260px] rounded-xl"
+            className="w-full min-h-[260px] rounded-md"
           ></Image>
         </div>
         {/* 遊記資訊 */}

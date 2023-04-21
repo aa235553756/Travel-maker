@@ -80,10 +80,14 @@ export default function Tour({
   // tab class 切換
   const [activeTab, setActiveTab] = useState(1)
 
+  // 無資料時
+  const [isNo, setIsNo] = useState(false)
+
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
+    setIsNo(!isNo)
   }, [countData])
 
   // 刪除提醒
@@ -95,7 +99,7 @@ export default function Tour({
   const [moreRoomData, setMoreRoomData] = useState(roomData.RoomData)
   const [page, setPage] = useState(2)
   const [isLoading, setIsLoading] = useState(false)
-  const [noData, setNoData] = useState(false)
+  const [noDataModal, setNoDataModal] = useState(false)
   const [toTop, setToTop] = useState(false)
 
   const getMoreTourData = async (page: number) => {
@@ -116,11 +120,11 @@ export default function Tour({
       setMoreTourData((prevTours) => [...prevTours, ...newTours.TourData])
       setPage((prevPage) => prevPage + 1)
       setIsLoading(true)
-    }
 
-    if (newTours.Message === '已無我的行程') {
-      setIsLoading(false)
-      setNoData(true)
+      if (newTours.Message === '已無我的行程') {
+        setIsLoading(false)
+        setNoDataModal(true)
+      }
     }
   }
 
@@ -146,7 +150,7 @@ export default function Tour({
 
     if (newRooms.Message === '已無我的行程') {
       setIsLoading(false)
-      setNoData(true)
+      setNoDataModal(true)
     }
   }
 
@@ -164,6 +168,7 @@ export default function Tour({
       if (window.innerHeight + window.pageYOffset >= documentHeight) {
         getMoreTourData(page)
         getMoreRoomData(page)
+        // return
       }
 
       if (window.pageYOffset > 1000) {
@@ -178,6 +183,8 @@ export default function Tour({
       window.removeEventListener('scroll', handleScroll)
     }
   }, [moreTourData])
+
+  console.log(moreTourData)
 
   return (
     <div>
@@ -202,7 +209,7 @@ export default function Tour({
                   setActiveTab(1)
                 }}
               >
-                一般模式({tourData.TourCounts})
+                一般模式({moreTourData ? `${tourData.TourCounts}` : '0'})
               </button>
               <button
                 type="button"
@@ -215,7 +222,7 @@ export default function Tour({
                   setActiveTab(2)
                 }}
               >
-                房間模式({tourData.RoomCounts})
+                房間模式({moreRoomData ? `${roomData.RoomCounts}` : '0'})
               </button>
             </div>
             {/* tab 內容 */}
@@ -233,12 +240,16 @@ export default function Tour({
                       creator={''}
                       showCreator={false}
                       imagesUrl={item.ImageUrl}
+                      showDelete
                       onClick={() => {
                         setDeleteConfirm(!deleteConfirm)
                       }}
                     />
                   )
                 })}
+                {isNo && (
+                  <p className="text-lg text-center text-gray-B8">無資料</p>
+                )}
               </div>
             )}
             {activeTab === 2 && (
@@ -255,13 +266,17 @@ export default function Tour({
                       showCreator={true}
                       imagesUrl={item.ImageUrl}
                       room={true}
-                      roomId={parseInt(item.RoomGuid)}
+                      roomId={item.RoomGuid}
+                      showDelete
                       onClick={() => {
                         setDeleteConfirm(!deleteConfirm)
                       }}
                     />
                   )
                 })}
+                {isNo && (
+                  <p className="text-lg text-center text-gray-B8">無資料</p>
+                )}
               </div>
             )}
           </div>
@@ -295,7 +310,7 @@ export default function Tour({
       </CustomModal>
 
       {/* 無行程提醒 */}
-      <CustomModal modal={noData} setModal={setNoData} wrapper>
+      <CustomModal modal={noDataModal} setModal={setNoDataModal} wrapper>
         <div className="w-[300px] p-7 bg-white rounded-xl">
           <div className="flex flex-col items-center space-y-4">
             <BsXCircle className="text-5xl text-highlight" />
@@ -317,7 +332,7 @@ export default function Tour({
             </h2>
             <hr className="md:w-full md:border-gray-E2" />
             <div className="md:px-10 md:py-6">
-              共有{tourData.TourCounts + tourData.RoomCounts}個收藏行程
+              共有{memberCountData.TourCounts}個收藏行程
             </div>
           </div>
           {/* 詳細資訊區 */}
@@ -335,7 +350,7 @@ export default function Tour({
                   setActiveTab(1)
                 }}
               >
-                一般模式({tourData.TourCounts})
+                一般模式({moreTourData ? `${tourData.TourCounts}` : '0'})
               </button>
               <button
                 type="button"
@@ -348,12 +363,12 @@ export default function Tour({
                   setActiveTab(2)
                 }}
               >
-                房間模式({tourData.RoomCounts})
+                房間模式({moreRoomData ? `${roomData.RoomCounts}` : '0'})
               </button>
             </div>
             {/* tab 內容 */}
             {activeTab === 1 && (
-              <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
+              <div className="flex flex-wrap justify-center -my-3 mb-[60px] lg:-mx-3">
                 {moreTourData?.map((item) => {
                   return (
                     <div
@@ -369,6 +384,7 @@ export default function Tour({
                         creator={''}
                         showCreator={false}
                         imagesUrl={item.ImageUrl}
+                        showDelete
                         onClick={() => {
                           setDeleteConfirm(!deleteConfirm)
                         }}
@@ -376,6 +392,9 @@ export default function Tour({
                     </div>
                   )
                 })}
+                {isNo && (
+                  <p className="text-lg text-gray-B8">無資料</p>
+                )}
                 {/* GoToTop */}
                 {toTop && (
                   <button
@@ -394,7 +413,7 @@ export default function Tour({
               </div>
             )}
             {activeTab === 2 && (
-              <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
+              <div className="flex flex-wrap justify-center -my-3 mb-[60px] lg:-mx-3">
                 {moreRoomData?.map((item) => {
                   return (
                     <div
@@ -410,7 +429,8 @@ export default function Tour({
                         showCreator={true}
                         imagesUrl={item.ImageUrl}
                         room={true}
-                        roomId={parseInt(item.RoomGuid)}
+                        roomId={item.RoomGuid}
+                        showDelete
                         onClick={() => {
                           setDeleteConfirm(!deleteConfirm)
                         }}
@@ -418,11 +438,14 @@ export default function Tour({
                     </div>
                   )
                 })}
+                {isNo && (
+                  <p className="text-lg text-gray-B8">無資料</p>
+                )}
                 {/* GoToTop */}
                 {toTop && (
                   <button
                     type="button"
-                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[isLoading(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
                     onClick={() => {
                       window.scrollTo({
                         top: 0,

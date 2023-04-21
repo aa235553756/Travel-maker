@@ -46,7 +46,7 @@ export default function MemberLayout({
                 <li>
                   <Link
                     href="/member-center"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === '/' ? 'text-primary font-bold' : 'text-gray-73'
                     }`}
                   >
@@ -57,7 +57,7 @@ export default function MemberLayout({
                 <li>
                   <Link
                     href="/member-center/tour"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Journey'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
@@ -70,7 +70,7 @@ export default function MemberLayout({
                 <li>
                   <Link
                     href="/member-center/attraction"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Attract'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
@@ -83,7 +83,7 @@ export default function MemberLayout({
                 <li>
                   <Link
                     href="/member-center/blog"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Blog'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
@@ -96,7 +96,7 @@ export default function MemberLayout({
                 <li>
                   <Link
                     href="/member-center/follow"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Track'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
@@ -109,7 +109,7 @@ export default function MemberLayout({
                 <li>
                   <Link
                     href="/member-center/comment"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Comment'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'

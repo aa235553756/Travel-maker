@@ -62,10 +62,14 @@ export default function Blog({
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
 
+  // 無資料時
+  const [isNo, setIsNo] = useState(false)
+
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
+    setIsNo(!isNo)
   }, [countData])
 
   // 獲取更多資料
@@ -75,6 +79,8 @@ export default function Blog({
   const [isLoading, setIsLoading] = useState(false)
   const [noData, setNoData] = useState(false)
   const [toTop, setToTop] = useState(false)
+
+  const [no, setNo] = useState(false)
 
   const getMoreBlogData = async (page: number) => {
     const res = await fetch(
@@ -99,6 +105,11 @@ export default function Blog({
     if (newBlogs.Message === '已無我的行程') {
       setIsLoading(false)
       setNoData(true)
+    }
+
+    if (!newBlogs) {
+      setNo(!no)
+      return
     }
   }
 
@@ -130,6 +141,8 @@ export default function Blog({
     }
   }, [moreBlogData])
 
+  console.log(moreBlogData)
+
   return (
     <div>
       {/* 手機版 */}
@@ -158,7 +171,7 @@ export default function Blog({
                   setActiveTab(1)
                 }}
               >
-                收藏遊記({blogData.CollectCounts})
+                收藏遊記({moreBlogData ? `${blogData.CollectCounts}` : '0'})
               </button>
               <button
                 type="button"
@@ -171,13 +184,13 @@ export default function Blog({
                   setActiveTab(2)
                 }}
               >
-                草稿遊記({blogData.DraftCounts})
+                草稿遊記({moreBlogData ? `${blogData.DraftCounts}` : '0'})
               </button>
             </div>
             {/* tab 內容 */}
             {activeTab === 1 && (
               <div className="flex flex-col space-y-6">
-                {blogData?.BlogData.map((item) => {
+                {blogData?.BlogData?.map((item) => {
                   return (
                     <div key={item.BlogGuid}>
                       <BlogCard
@@ -195,6 +208,9 @@ export default function Blog({
                     </div>
                   )
                 })}
+                {isNo && (
+                  <p className="text-lg text-gray-B8">無資料</p>
+                )}
               </div>
             )}
             {activeTab === 2 && (
@@ -212,6 +228,9 @@ export default function Blog({
                       />
                     )
                   })}
+                {isNo && (
+                  <p className="text-lg text-gray-B8">無資料</p>
+                )}
               </div>
             )}
           </div>
@@ -264,7 +283,7 @@ export default function Blog({
                   setActiveTab(1)
                 }}
               >
-                收藏遊記({blogData.CollectCounts})
+                收藏遊記({moreBlogData ? `${blogData.CollectCounts}` : '0'})
               </button>
               <button
                 type="button"
@@ -277,13 +296,13 @@ export default function Blog({
                   setActiveTab(2)
                 }}
               >
-                草稿遊記({blogData.DraftCounts})
+                草稿遊記({moreBlogData ? `${blogData.DraftCounts}` : '0'})
               </button>
             </div>
             {/* tab 內容 */}
             {activeTab === 1 && (
-              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
-                {moreBlogData.map((item) => {
+              <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
+                {moreBlogData?.map((item) => {
                   return (
                     <div
                       key={item.BlogGuid}
@@ -304,6 +323,10 @@ export default function Blog({
                     </div>
                   )
                 })}
+
+                {isNo && (
+                  <p className="text-lg text-gray-B8">無資料</p>
+                )}
                 {/* GoToTop */}
                 {toTop && (
                   <button
@@ -322,7 +345,7 @@ export default function Blog({
               </div>
             )}
             {activeTab === 2 && (
-              <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
+              <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
                 {Array(20)
                   .fill('')
                   .map((item, index) => {
@@ -337,6 +360,9 @@ export default function Blog({
                       </div>
                     )
                   })}
+                {isNo && (
+                  <p className="text-lg text-gray-B8">無資料</p>
+                )}
               </div>
             )}
             {isLoading && <p className="text-lg text-center">loading...</p>}

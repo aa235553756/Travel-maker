@@ -77,10 +77,14 @@ export default function Attract({
   memberCountData: MemberCountProps
   roomData: RoomDataProps
 }) {
+  // 無資料時
+  const [isNo, setIsNo] = useState(false)
+
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
+    setIsNo(!isNo)
   }, [countData])
 
   const [modal, setModal] = useState(false)
@@ -89,7 +93,8 @@ export default function Attract({
     [index: number]: boolean
   }>({})
 
-  const [collectConfirm, setCollectConfirm] = useState(false)
+  const [collectCancel, setCollectCancel] = useState(false)
+  const [modalText, setModalText] = useState('取消收藏')
 
   // 獲取更多資料
   const token = getCookie('auth')
@@ -155,15 +160,6 @@ export default function Attract({
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => {
-          setCollectConfirm(!collectConfirm)
-        }}
-      >
-        按我
-      </button>
-
       {/* 手機版 */}
       <div className="container">
         <div className="md:hidden mt-8 mb-[100px]">
@@ -173,7 +169,7 @@ export default function Attract({
           {/* 詳細資訊區 */}
           <div className="flex flex-col">
             <div className="flex flex-col space-y-6">
-              {attrData?.AttractionData.map((item) => {
+              {moreAttrData?.map((item) => {
                 return (
                   <div
                     key={item.AttractionId}
@@ -192,12 +188,15 @@ export default function Attract({
                         setModal(!modal)
                       }}
                       onClick1={() => {
-                        setCollectConfirm(!collectConfirm)
+                        setCollectCancel(!collectCancel)
                       }}
                     />
                   </div>
                 )
               })}
+              {isNo && (
+                <p className="text-lg text-center text-gray-B8">無資料</p>
+              )}
             </div>
           </div>
         </div>
@@ -212,7 +211,7 @@ export default function Attract({
           <hr />
           {/* 按鈕 */}
           <div className="flex flex-col space-y-3 mt-3 pr-3 h-[200px] overflow-y-auto">
-            {roomData.RoomData.map((item, index) => {
+            {roomData?.RoomData?.map((item, index) => {
               const isActive = addTourTagStyle[index]
               return (
                 <button
@@ -247,12 +246,10 @@ export default function Attract({
       </CustomModal>
 
       {/* 收藏提醒 */}
-      <CustomModal modal={collectConfirm} setModal={setCollectConfirm} wrapper>
-        <div className="w-[300px] p-7 bg-white rounded-xl">
-          <div className="flex flex-col items-center space-y-4">
-            <BsBookmarkX className="text-5xl text-secondary" />
-            <span className="text-2xl">取消收藏</span>
-          </div>
+      <CustomModal modal={collectCancel} setModal={setCollectCancel} wrapper>
+        <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
+          <BsBookmarkX className="text-[64px] text-highlight" />
+          <p className="text-2xl">{modalText}</p>
         </div>
       </CustomModal>
 
@@ -267,13 +264,13 @@ export default function Attract({
             <h2 className="md:text-xl md:px-10 md:py-8">我的收藏景點</h2>
             <hr className="md:w-full md:border-gray-E2" />
             <div className="md:px-10 md:py-6">
-              共有{attrData.AttCounts}個收藏景點
+              共有{memberCountData.AttCounts}個收藏景點
             </div>
           </div>
           {/* 詳細資訊區 */}
           <div>
-            <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
-              {moreAttrData.map((item) => {
+            <div className="flex flex-wrap -my-3 mb-[60px] justify-center lg:-mx-3">
+              {moreAttrData?.map((item) => {
                 return (
                   <div
                     key={item.AttractionId}
@@ -292,12 +289,17 @@ export default function Attract({
                         setModal(!modal)
                       }}
                       onClick1={() => {
-                        setCollectConfirm(!collectConfirm)
+                        setCollectCancel(!collectCancel)
+                        setModalText('取消收藏')
                       }}
                     />
                   </div>
                 )
               })}
+
+              {isNo && (
+                <p className="text-lg text-center text-gray-B8">無資料</p>
+              )}
               {/* GoToTop */}
               {toTop && (
                 <button
