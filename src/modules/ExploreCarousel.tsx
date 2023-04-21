@@ -3,7 +3,7 @@ import Marquee from 'react-fast-marquee'
 export default function ExploreCarousel() {
   return (
     <>
-      <Marquee speed={50} gradientWidth={20} play={true}>
+      <Marquee speed={70} gradientWidth={20} play={true}>
         {imagesSlides.map((item, index) => {
           return (
             <a href="" key={index} className="mr-5 group relative rounded-md">

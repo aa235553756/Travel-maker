@@ -207,16 +207,15 @@ export default function Banner() {
               }
             >
               {/* 選擇行程 */}
-              <p className="text-xl mb-2 font-bold">
-                選擇行程<span>(必選)</span>
-              </p>
+              <p className="text-xl mb-2 font-bold">選擇行程</p>
               <div className="flex space-x-5 mb-5">
                 {AttrCounts.map((item, index) => {
                   let className =
-                    'w-20 py-1 border text-gray-A8 border-gray-A8 text-center rounded-md hover:border-primary hover:text-primary cursor-pointer duration-100'
+                    'w-20 py-1 border text-gray-A8 border-gray-A8 text-center rounded-md cursor-pointer hover:text-primary duration-100'
+
                   className +=
                     watch('AttrCounts') === item.value
-                      ? '  !border-primary !text-primary'
+                      ? ' bg-primary-tint !text-white border-transparent'
                       : ''
                   return (
                     <label key={index} className={className}>
@@ -237,11 +236,11 @@ export default function Banner() {
               <div className="flex space-x-5 mb-6">
                 {Transports.map((item, index) => {
                   let className =
-                    'w-20 py-1 border border-primary-tint text-center rounded-md hover:bg-primary-tint hover:text-white cursor-pointer duration-100'
+                    'w-20 py-1 border text-gray-A8 border-gray-A8 text-center rounded-md cursor-pointer hover:text-primary duration-100'
                   // 判斷表單是否有相同值，加上對應className
                   className +=
                     watch('Transports') === item.value
-                      ? ' bg-primary-tint text-white'
+                      ? ' bg-primary-tint !text-white border-transparent'
                       : ''
                   return (
                     <label key={index} className={className}>
@@ -282,16 +281,16 @@ export default function Banner() {
             >
               {/* 選擇區域複選 */}
               <p className="text-xl mb-2 font-bold">
-                選擇區域<span>(複選)</span>
+                選擇區域<span>(可複選)</span>
               </p>
               {/* 鄰近Label */}
               {/* 這邊為了做判斷，而一定要使用陣列回傳  */}
               {[''].map((index) => {
                 let className =
-                  'block w-20 py-1 mb-5 border border-gray-A8 text-gray-A8 text-center rounded-md'
+                  'block w-20 py-1 mb-5 border border-gray-A8 text-gray-A8 text-center rounded-md hover:text-primary duration-100 cursor-pointer'
                 // 判斷表單值，賦予對應className
                 className += watch('nearBy')
-                  ? ' !border-primary !text-primary'
+                  ? ' bg-primary-tint !text-white border-transparent'
                   : ''
                 return (
                   <label key={index} className={className}>
@@ -314,9 +313,9 @@ export default function Banner() {
                 {DistrictName.map((item, index) => {
                   const DistrictName = { ...register('DistrictName') }
                   let className =
-                    'w-20 py-1 border text-center mr-5 mb-5 text-gray-A8 border-gray-A8 rounded-md hover:border-primary hover:text-primary cursor-pointer duration-100'
+                    'w-20 py-1 border text-center mr-5 mb-5 text-gray-A8 border-gray-A8 rounded-md hover:text-primary cursor-pointer duration-100'
                   className += watch('DistrictName').includes(item)
-                    ? ' !border-primary !text-primary'
+                    ? ' bg-primary-tint !text-white border-transparent'
                     : ''
                   const handleOnChange = (
                     e: React.ChangeEvent<HTMLInputElement>
@@ -366,13 +365,16 @@ export default function Banner() {
 
           {/* 手機版顯示下拉選單 Modal */}
           <BannerSelectorMobile
+            handleSubmit={handleSubmit2}
+            onSubmit={onSubmit}
             isHidden={isHidden}
             setIsHidden={setIsHidden}
             formIdMobile={formIdMobile}
             register={register2}
             watch={watch2}
             setValue={setValue2}
-            handleErrors={handleErrors2}
+            errors={errors2}
+            // handleErrors={handleErrors2}
           />
         </div>
       </div>

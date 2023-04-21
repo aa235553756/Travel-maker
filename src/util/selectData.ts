@@ -3,7 +3,7 @@
 export const defaultValues = {
   CategoryId: ['0'],
   AttrCounts: '4',
-  Transports: '走路',
+  Transports: '不限',
   nearBy: false,
   DistrictName: ['不限']
 }
