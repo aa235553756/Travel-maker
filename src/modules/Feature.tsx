@@ -8,7 +8,7 @@ export default function Feature() {
     <div className="container">
       <div className="py-[60px] lg:mx-auto lg:w-10/12 justify-between  items-center lg:pt-[112px] lg:pb-[110px] md:flex">
         <div className="mb-10 md:mb-0 order-1">
-          <h3 className="text-[22px] mb-3 lg:text-4xl lg:mb-10">
+          <h3 className="text-[22px] lg:text-4xl mb-3 font-medium lg:mb-10">
             我們可以幫你...
           </h3>
           <p className="text-gray-64 mb-6 lg:mb-4 lg:text-xl">
