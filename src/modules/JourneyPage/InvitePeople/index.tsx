@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { getCookie } from 'cookies-next'
 import { MdAdd, MdOutlineCancel } from 'react-icons/md'
-import { BsPersonFillAdd, BsLink45Deg } from 'react-icons/bs'
+import { BsPersonFillAdd } from 'react-icons/bs'
 import { RiGlobalLine } from 'react-icons/ri'
 import Image from 'next/image'
 import { RoomAttractionsProp } from '@/util/types'
