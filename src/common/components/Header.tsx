@@ -120,85 +120,95 @@ export default function Header() {
                     </div>
                   </Link>
                 </li>
-                <li className="flex space-x-2 items-center">
+                <li>
                   <Link
                     href="/hot-topics/attractions"
-                    className="flex space-x-2 items-center group duration-150 relative "
-                  >
-                    <div className="absolute group-hover:opacity-75 opacity-0 group-hover:translate-y-[16px] bg-highlight h-[4px] w-[calc(100%-8px)] left-2 duration-300"></div>
-                    <BsFillFlagFill className="text-lg text-primary group-hover:text-highlight duration-150" />
-                    <span className="text-xl">熱門話題</span>
-                  </Link>
-                </li>
-
-                <li className="relative">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      showMemberState()
-                    }}
                     className="flex space-x-2 items-center py-10 group hover:animate-navbar-hover relative "
                   >
                     <div className="flex space-x-2 items-center  duration-300 relative py-1 pr-2  rounded-md ">
-                      <div className="absolute translate-y-8 group-hover:translate-y-5 group-hover:opacity-100  w-0 opacity-0 bg-highlight h-[2px] group-hover:w-[calc(100%-12px)] left-2  duration-500"></div>
-                      <FaUserCircle className="text-lg text-primary group-hover:text-highlight duration-150" />
+                      <div className="absolute translate-y-8 group-hover:translate-y-5 group-hover:opacity-100  w-0 opacity-0 bg-highlight h-[2px] group-hover:w-[calc(100%-16px)] left-3  duration-500"></div>
+                      <BsFillFlagFill className="text-lg text-primary group-hover:text-highlight duration-150" />
                       <span className="text-xl group-hover:text-highlight/80">
-                        會員中心
+                        熱門話題
                       </span>
                     </div>
-                  </button>
-                  {showMember ? (
-                    <div className="w-[300px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white">
-                      <Link
-                        href="/member-center"
-                        onClick={() => {
-                          showMemberState()
-                        }}
-                      >
-                        <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
-                          <div className="flex space-x-6 items-center">
-                            <Image
-                              width="52"
-                              height="52"
-                              src={picture}
-                              alt="圖片"
-                              className="h-[52px] rounded-full"
-                            ></Image>
-                            <span className="text-xl">會員設定</span>
-                          </div>
-                          <AiOutlineSetting />
-                        </div>
-                      </Link>
-                      <hr className="mx-[-20px]" />
-                      <Link
-                        href="/social-media"
-                        className="block px-5 py-4 hover:bg-gray-100"
-                        role="menuitem"
-                        onClick={() => {
-                          showMemberState()
-                        }}
-                      >
-                        我的社群
-                      </Link>
-                      <hr className="mx-[-20px]" />
-                      <Link
-                        href="/login"
-                        className="block px-5 py-4 hover:bg-gray-100"
-                        role="menuitem"
-                        onClick={() => {
-                          showMemberState()
-                        }}
-                      >
-                        登出{' '}
-                      </Link>
-                    </div>
-                  ) : null}
+                  </Link>
                 </li>
+                {token ? (
+                  <li className="relative">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        showMemberState()
+                      }}
+                      className="flex space-x-2 items-center py-10 group hover:animate-navbar-hover relative "
+                    >
+                      <div className="flex space-x-2 items-center  duration-300 relative py-1 pr-2  rounded-md ">
+                        <div className="absolute translate-y-8 group-hover:translate-y-5 group-hover:opacity-100  w-0 opacity-0 bg-highlight h-[2px] group-hover:w-[calc(100%-12px)] left-2  duration-500"></div>
+                        <FaUserCircle className="text-lg text-primary group-hover:text-highlight duration-150" />
+                        <span className="text-xl group-hover:text-highlight/80">
+                          會員中心
+                        </span>
+                      </div>
+                    </button>
+                    {showMember ? (
+                      <div className="w-[300px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white">
+                        <Link
+                          href="/member-center"
+                          onClick={() => {
+                            showMemberState()
+                          }}
+                        >
+                          <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
+                            <div className="flex space-x-6 items-center">
+                              <Image
+                                width="52"
+                                height="52"
+                                src={picture}
+                                alt="圖片"
+                                className="h-[52px] rounded-full"
+                              ></Image>
+                              <span className="text-xl">會員設定</span>
+                            </div>
+                            <AiOutlineSetting />
+                          </div>
+                        </Link>
+                        <hr className="mx-[-20px]" />
+                        <Link
+                          href="/social-media"
+                          className="block px-5 py-4 hover:bg-gray-100"
+                          role="menuitem"
+                          onClick={() => {
+                            showMemberState()
+                          }}
+                        >
+                          我的社群
+                        </Link>
+                        <hr className="mx-[-20px]" />
+                        <button
+                          className="block w-full text-left px-5 py-4 hover:bg-gray-100"
+                          role="menuitem"
+                          onClick={() => {
+                            deleteCookie('auth')
+                            deleteCookie('user')
+                            setToken(false)
+                            setPicture('')
+                            if (router.pathname.includes('/member-center')) {
+                              router.push('/login')
+                            }
+                          }}
+                        >
+                          登出
+                        </button>
+                      </div>
+                    ) : null}
+                  </li>
+                ) : null}
                 {token ? null : (
                   <li>
                     <Link
                       href="/login"
-                      className="flex h-full group items-center relative hover:animate-navbar-hover"
+                      className="ml-2 flex h-full group items-center relative hover:animate-navbar-hover"
                     >
                       <div className="block  text-lg text-white  py-2 px-4 bg-primary rounded-md group-hover:bg-primary-tint duration-300">
                         登入註冊
