@@ -35,6 +35,7 @@ import { postRoomTours } from '@/util/roomApi'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useRouter } from 'next/router'
 import { getRandomTours } from '@/util/tourApi'
+import { HiOutlineLockOpen } from 'react-icons/hi'
 
 interface paramsProp {
   id: number
@@ -262,6 +263,14 @@ export default function PlanningTour({
                                         >
                                           <MdOutlineCancel />
                                         </button>
+                                        <button
+                                          className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-[30px]"
+                                          onClick={() => {
+                                            alert('還沒做，假裝他有鎖起來了')
+                                          }}
+                                        >
+                                          <HiOutlineLockOpen />
+                                        </button>
                                       </div>
                                       {draggableState[i]}
                                     </div>
@@ -361,7 +370,7 @@ export default function PlanningTour({
         active.id === 57 ||
         active.id === 58)
     ) {
-      alert('觸發拖拉&取代')
+      // alert('觸發拖拉&取代')
       setUnSaved(true)
 
       const newIndex = items.indexOf(over.id) + 1
@@ -415,7 +424,7 @@ export default function PlanningTour({
       active.id !== 57 &&
       active.id !== 58
     ) {
-      alert('觸發排序')
+      // alert('觸發排序')
       // ===設定重排順序===
       setItems((items) => {
         const oldIndex = items.indexOf(active.id)
@@ -441,14 +450,14 @@ export default function PlanningTour({
         if (didfrent && item.Order <= newIndex2 && item.Order >= oldIndex2) {
           // ==有才開啟未儲存==
           setUnSaved(true)
-          alert('進入-法')
+          // alert('進入-法')
           item.Order -= 1
           return item
         }
         if (didfrent < 0 && item.Order < oldIndex2 && item.Order >= newIndex2) {
           // ==有才開啟未儲存==
           setUnSaved(true)
-          alert('進入+法')
+          // alert('進入+法')
           item.Order += 1
           return item
         }
