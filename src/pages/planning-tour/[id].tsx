@@ -154,6 +154,17 @@ export default function PlanningTour({
     console.log('storeTours', storeTours)
   }, [isDropped, draggableState, sortData, storeTours])
 
+  useEffect(() => {
+    const token = getCookie('auth')
+    if (token === undefined) {
+      setLoginConfirm(true)
+      setTimeout(() => {
+        router.push('/login')
+      }, 2000)
+      return
+    }
+  }, [])
+
   return (
     <div>
       <LoadingAnimate isLoading={isLoading} />
