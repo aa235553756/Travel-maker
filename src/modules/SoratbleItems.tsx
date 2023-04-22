@@ -19,7 +19,7 @@ export function SortableItem(props: { children: ReactNode; id: number }) {
     <div
       ref={setNodeRef}
       style={style}
-      className="w-1/4 z-0 bg-[#F7F7F7]  max-w-[180px] h-[180px] relative shadow mr-10 mb-6 [&:nth-child(4)]:!mr-0 [&:nth-child(8)]:!mr-0"
+      className="group w-1/4 z-0 bg-[#F7F7F7]  max-w-[180px] h-[180px] relative shadow mr-10 mb-6 [&:nth-child(4)]:!mr-0 [&:nth-child(8)]:!mr-0"
     >
       <div
         {...attributes}

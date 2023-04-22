@@ -217,42 +217,44 @@ export default function PlanningTour({
                             if (id === i + 1) {
                               return (
                                 <DroppableBig key={i} id={id}>
-                                  {/* 漸層工具列 */}
-                                  {/* <div className="opacity-0 hover:opcity-100 duration-300 absolute bg-gradient-to-b from-[#0F0B0B] to-[rgba(2, 0, 0, 0.25)] z-[1] w-full h-[33px]"> */}
-                                  <div className="absolute bg-red-500/50 z-[1] w-full h-[33px]">
-                                    <div className="absolute z-[1] text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
-                                      {index + 1}
-                                    </div>
-                                    <button
-                                      className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-1"
-                                      onClick={() => {
-                                        alert(i + 1)
-                                        setUnSaved(true)
-                                        setIsDropped(() => {
-                                          const newData = [...isDropped]
-                                          newData[i] = false
-                                          return newData
-                                        })
-                                        setSortData(
-                                          sortData.filter(
-                                            (item: RoomAttractionsProp) => {
-                                              return !(item.Order === index + 1)
-                                            }
-                                          )
-                                        )
-                                        console.log(index)
-
-                                        // 尚缺真的把sortData刪除
-                                      }}
-                                    >
-                                      <MdOutlineCancel />
-                                    </button>
-                                    {/* 鎖點btn */}
-                                    {/* <button className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-7">
-                                      <MdOutlineCancel />
-                                    </button> */}
+                                  <div className="absolute z-[2] text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
+                                    {index + 1}
                                   </div>
-                                  {isDropped[i] ? draggableState[i] : null}
+                                  {isDropped[i] ? (
+                                    <div>
+                                      {/* 漸層工具列 */}
+                                      <div className="group-hover:opacity-100 opacity-0 duration-300 absolute bg-gradient-to-b from-[#0F0B0B] to-[rgba(2, 0, 0, 0.25)] z-[1] w-full h-[33px]">
+                                        {/* <div className="absolute bg-red-500/50 z-[1] w-full h-[33px]"> */}
+                                        <button
+                                          className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-1"
+                                          onClick={() => {
+                                            // ==設置未儲存State==
+                                            setUnSaved(true)
+                                            // ==設置不顯示此塊State==
+                                            setIsDropped(() => {
+                                              const newData = [...isDropped]
+                                              newData[i] = false
+                                              return newData
+                                            })
+                                            // ==設置排序資料==
+                                            setSortData(
+                                              sortData.filter(
+                                                (item: RoomAttractionsProp) => {
+                                                  return !(
+                                                    item.Order ===
+                                                    index + 1
+                                                  )
+                                                }
+                                              )
+                                            )
+                                          }}
+                                        >
+                                          <MdOutlineCancel />
+                                        </button>
+                                      </div>
+                                      {draggableState[i]}
+                                    </div>
+                                  ) : null}
                                 </DroppableBig>
                               )
                             }
@@ -446,6 +448,7 @@ export default function PlanningTour({
   }
 
   async function onSubmit(data: defaultValueProp) {
+    // 假設鎖1,2
     try {
       setIsLoading(true)
       // 缺geo,故先判斷鄰近值,在做函式返回newData

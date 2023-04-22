@@ -20,7 +20,7 @@ export default function DroppableBig(props: {
     <div
       ref={setNodeRef}
       style={style}
-      className=" w-full h-full relative shadow mr-10 mb-6 [&:nth-child(5)]:!mr-0 [&:nth-child(10)]:!mr-0 [&:nth-child(15)]:!mr-0"
+      className="w-full h-full relative shadow mr-10 mb-6 [&:nth-child(5)]:!mr-0 [&:nth-child(10)]:!mr-0 [&:nth-child(15)]:!mr-0"
     >
       {props.children}
     </div>
