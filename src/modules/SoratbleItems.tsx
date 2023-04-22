@@ -19,14 +19,17 @@ export function SortableItem(props: { children: ReactNode; id: number }) {
     <div
       ref={setNodeRef}
       style={style}
-      className="w-1/4 bg-[#F7F7F7]  max-w-[180px] h-[180px] relative shadow mr-10 mb-6 [&:nth-child(4)]:!mr-0 [&:nth-child(8)]:!mr-0"
-      {...attributes}
-      {...listeners}
+      className="w-1/4 z-0 bg-[#F7F7F7]  max-w-[180px] h-[180px] relative shadow mr-10 mb-6 [&:nth-child(4)]:!mr-0 [&:nth-child(8)]:!mr-0"
     >
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute  z-50 w-full h-[calc(100%-33px)] bottom-0"
+      ></div>
+      <div className="absolute w-[100px] h-[100px] border border-dashed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"></div>
       <div className="absolute animate-pulse top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%] text-lg whitespace-nowrap text-black">
         拖曳景點至此
       </div>
-      <div className="absolute w-[100px] h-[100px] border border-dashed top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]"></div>
       {props.children}
     </div>
   )

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import PlanningTourStoreTours from './../../modules/PlanningTourStoreTours'
 import TourMap from './../../modules/TourMap'
 import PlanningTourTab from './../../modules/PlanningTourTab'
@@ -10,35 +9,32 @@ import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
 import { MdOutlineCancel, MdSave } from 'react-icons/md'
 import { defaultValueProp, RoomAttractionsProp } from '@/util/types'
-import { useForm, SubmitHandler } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { defaultValues } from '@/util/selectData'
-// import { SortableItem } from "@/components/SoratbleItems";
+
 import {
   DndContext,
-  useDroppable,
-  useDraggable,
   useSensor,
   PointerSensor,
   KeyboardSensor,
   useSensors,
   closestCenter,
-  DragEndEvent,
 } from '@dnd-kit/core'
 import {
   arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-  horizontalListSortingStrategy,
   rectSortingStrategy,
 } from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 import { SortableItem } from '@/modules/SoratbleItems'
-import Draggable from '@/modules/Dragable'
-import { BsList } from 'react-icons/bs'
 import DroppableBig from '@/modules/DroppableBig'
-import Image from 'next/image'
-// import { getCookie } from 'cookies-next'
+import { CustomModal } from '@/common/components/CustomModal'
+import DragStateDIV from '@/modules/DragStateDIV'
+import { getCookie } from 'cookies-next'
+import { postRoomTours } from '@/util/roomApi'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
+import { useRouter } from 'next/router'
+import { getRandomTours } from '@/util/tourApi'
 
 interface paramsProp {
   id: number
@@ -47,6 +43,7 @@ interface paramsProp {
 interface PlanningTour {
   AttrationsData: RoomAttractionsProp[]
   RoomName: string
+  RoomGuid: string
 }
 
 export default function PlanningTour({
@@ -54,62 +51,87 @@ export default function PlanningTour({
 }: {
   data: PlanningTour
 }) {
-  // 這是data
-  console.log(originData)
-  // 所有的order都會在拖拉底下
-  // order包含1,2,3,4,5,6,7,8會在上面
-
-  const [data, setData] = useState(originData)
-  const [sortData, setSortData] = useState(originData)
+  const router = useRouter()
+  // =========原始資料,其他UI=========
+  const [data] = useState(originData)
   const [tabPos, setTabPos] = useState('備用景點')
+  const [unSaved, setUnSaved] = useState(false)
+
+  // =========各種Modal的State=========
+  const [isLoading, setIsLoading] = useState(false)
+  const [loginConfirm, setLoginConfirm] = useState(false)
+
+  // ============sort拖拉State=========
   const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8])
 
-  const [isDropped, setIsDropped] = useState([
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-    false,
-  ])
-  const [draggableState, setDraggableState] = useState(
-    data.AttrationsData.filter((item) => {
-      return item.Order !== 0
-    }).map((item) => {
-      return (
-        <div
-          key={item.AttractionId}
-          style={{
-            width: '180px',
-            height: '180px',
-            position: 'relative',
-            background: 'green',
-          }}
-        >
-          <div className="h-full">
-            <div className=" absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
+  //=========上方判斷是否顯示的boolean陣列=========
+  const newIsDropped = JSON.parse(JSON.stringify(data.AttrationsData))
+  const [isDropped, setIsDropped] = useState(
+    // [true, false, true, false, true, false, true, false]
+    Array(8)
+      .fill('')
+      .map((item, index) => {
+        const booleanAry = newIsDropped.filter((item: RoomAttractionsProp) => {
+          return item.Order === index + 1
+        })
+        if (booleanAry[0]) {
+          return true
+        }
+        return false
+      })
+  )
+  //=========上方內存景點資料=========
+  const newSortData = JSON.parse(JSON.stringify(data))
+  const [sortData, setSortData] = useState(
+    newSortData.AttrationsData.filter(
+      (item: RoomAttractionsProp) => item.Order !== 0
+    )
+  )
 
-            <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white ">
-              {item.AttractionName}
-            </div>
-            <Image
-              alt=""
-              src={item.ImageUrl}
-              width={180}
-              height={180}
-              className="object-cover w-full h-full"
-              priority
-              blurDataURL="/Group 329.png"
-              placeholder="blur"
-            />
-          </div>
-        </div>
-      )
+  //=========上方由判斷顯示的實際HTML元素陣列=========
+  const newDraggableState = JSON.parse(JSON.stringify(data))
+  const [draggableState, setDraggableState] = useState(
+    // [<DragStateDIV></DragStateDIV>,<></>,<></>,<></>,<></>,<></>,<></>,<></>]
+    Array(8)
+      .fill('')
+      .map((item, index) => {
+        // order與index匹配回傳true,使得DragState位置能夠是正確order
+        const orderData = newDraggableState.AttrationsData.filter(
+          (item: RoomAttractionsProp) => {
+            if (item.Order === index + 1) {
+              return true
+            }
+          }
+        )
+        return orderData[0] ? (
+          <DragStateDIV key={orderData[0].Order} item={orderData[0]} />
+        ) : (
+          <></>
+        )
+      })
+  )
+
+  // =========下方備用景點資料=========
+  const newStoreTours = JSON.parse(JSON.stringify(data))
+  const [storeTours, setStoreTours] = useState(
+    newStoreTours.AttrationsData.filter(
+      (item: RoomAttractionsProp, index: number) => {
+        return (
+          newStoreTours.AttrationsData.findIndex(
+            (elem: RoomAttractionsProp) =>
+              elem.AttractionId === item.AttractionId
+          ) === index
+        )
+      }
+    ).map((item: RoomAttractionsProp) => {
+      item.Order = 0
+      return item
     })
   )
 
+  const [addTourModal, setAddTourModal] = useState(false)
+
+  // =========拖拉參數=========
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -117,31 +139,44 @@ export default function PlanningTour({
     })
   )
 
+  // ============React Hook Form============
   const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
     { defaultValues }
   )
-  // 這邊打POST取得隨機行程
+  // ============表單ID============
   const formId = 'planning-tour-form'
-  const onSubmit: SubmitHandler<defaultValueProp> = (data) =>
-    alert(JSON.stringify(data))
+
+  // =========useEffect=========
+  useEffect(() => {
+    console.log('isDropped', isDropped)
+    console.log('draggableState', draggableState)
+    console.log('sortData', sortData)
+    console.log('storeTours', storeTours)
+  }, [isDropped, draggableState, sortData, storeTours])
 
   return (
     <div>
+      <LoadingAnimate isLoading={isLoading} />
+      <CustomModal
+        modal={loginConfirm}
+        setModal={setLoginConfirm}
+        typeConfirm
+        typeConfirmWarnIcon
+        wrapper
+        unClickable
+        typeConfirmText={'請先登入，自動跳轉中...'}
+        onConfirm={() => {
+          router.push('/login')
+        }}
+      />
+      <CustomModal wrapper modal={addTourModal} setModal={setAddTourModal} />
       <div className="container">
         <div className="block mt-4 lg:flex lg:space-x-6 lg:mb-20 md:mt-[80px]">
           <VoteDate />
           <InvitePeople />
         </div>
-        <button
-          className="p-2 bg-primary"
-          onClick={() => {
-            alert(JSON.stringify(sortData.AttrationsData))
-          }}
-        >
-          案我data
-        </button>
         {/* 中間拖拉 & 篩選區塊 */}
-        <div className="flex flex-wrap mb-[200px]">
+        <div className="flex flex-wrap mb-[200px] min-w-[1128px]">
           {/* 排行程 & 行程名稱 寬100% */}
           <PlanningTourTitle RoomName={data.RoomName} />
           {/* 篩選器及其按鈕 */}
@@ -182,10 +217,42 @@ export default function PlanningTour({
                             if (id === i + 1) {
                               return (
                                 <DroppableBig key={i} id={id}>
-                                  <div className="absolute z-10 text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
-                                    {index + 1}
+                                  {/* 漸層工具列 */}
+                                  {/* <div className="opacity-0 hover:opcity-100 duration-300 absolute bg-gradient-to-b from-[#0F0B0B] to-[rgba(2, 0, 0, 0.25)] z-[1] w-full h-[33px]"> */}
+                                  <div className="absolute bg-red-500/50 z-[1] w-full h-[33px]">
+                                    <div className="absolute z-[1] text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
+                                      {index + 1}
+                                    </div>
+                                    <button
+                                      className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-1"
+                                      onClick={() => {
+                                        alert(i + 1)
+                                        setUnSaved(true)
+                                        setIsDropped(() => {
+                                          const newData = [...isDropped]
+                                          newData[i] = false
+                                          return newData
+                                        })
+                                        setSortData(
+                                          sortData.filter(
+                                            (item: RoomAttractionsProp) => {
+                                              return !(item.Order === index + 1)
+                                            }
+                                          )
+                                        )
+                                        console.log(index)
+
+                                        // 尚缺真的把sortData刪除
+                                      }}
+                                    >
+                                      <MdOutlineCancel />
+                                    </button>
+                                    {/* 鎖點btn */}
+                                    {/* <button className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-7">
+                                      <MdOutlineCancel />
+                                    </button> */}
                                   </div>
-                                  {draggableState[i]}
+                                  {isDropped[i] ? draggableState[i] : null}
                                 </DroppableBig>
                               )
                             }
@@ -200,18 +267,21 @@ export default function PlanningTour({
               {/* 根據tabPos判斷是 備用景點(拖拉) & 地圖 */}
               {
                 tabPos === '備用景點' ? (
-                  <PlanningTourStoreTours data={data.AttrationsData} />
+                  <PlanningTourStoreTours
+                    data={storeTours}
+                    setAddTourModal={setAddTourModal}
+                    setStoreTours={setStoreTours}
+                    setUnSaved={setUnSaved}
+                  />
                 ) : (
                   <TourMap />
                 ) //塞data
               }
               <button
                 className={`${
-                  true && '!bg-secondary hover:!bg-secondary/75'
-                } flex ml-auto text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-end items-center rounded-md text-white hover:bg-secondary duration-100`}
-                onClick={() => {
-                  alert('儲存')
-                }}
+                  unSaved && '!bg-secondary hover:!bg-secondary/75'
+                } flex ml-auto text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-end items-center rounded-md text-white hover:bg-primary/75 duration-100`}
+                onClick={handleSave}
               >
                 <MdSave className="text-lg mr-2" />
                 儲存
@@ -224,10 +294,41 @@ export default function PlanningTour({
     </div>
   )
 
+  async function handleSave() {
+    try {
+      // ===確認token===
+      const token = getCookie('auth')
+      if (token === undefined) {
+        setLoginConfirm(true)
+        setTimeout(() => {
+          router.push('/login')
+        }, 2000)
+        return
+      }
+      //===loading發 POST===
+      setIsLoading(true)
+      const AttrationsData = sortData.concat(storeTours)
+      const RoomGuid = originData.RoomGuid
+      const res = await postRoomTours(token, RoomGuid, AttrationsData)
+      //===res.ok 取消loading===
+      if (res.ok) {
+        setIsLoading(false)
+        setUnSaved(false)
+        const resJSON = await res.json()
+        alert(JSON.stringify(resJSON))
+        return
+      }
+      //==throw Error===
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleDragEnd(e: any) {
     const { active, over } = e
-
+    // ======進入拖拉取代判斷======
     if (
       over &&
       (over.id === 1 ||
@@ -248,58 +349,50 @@ export default function PlanningTour({
         active.id === 58)
     ) {
       alert('觸發拖拉&取代')
-      setSortData((prev) => {
-        const newData = JSON.parse(JSON.stringify(sortData))
-        newData.AttrationsData[over.id - 1] = {
-          ...data.AttrationsData[active.id - 51],
+      setUnSaved(true)
+
+      const newIndex = items.indexOf(over.id) + 1
+      const newObj = { ...storeTours[active.id - 51], Order: newIndex }
+
+      // ===設置sortData===
+      setSortData(() => {
+        let newData = [...sortData]
+        let isChanged = false
+
+        newData.map((item, i) => {
+          if (item.Order === newIndex) {
+            newData[i] = newObj
+            isChanged = true
+            return item
+          }
+        })
+        if (!isChanged) {
+          newData = [...sortData, newObj]
         }
-        newData.AttrationsData[over.id - 1].Order = over.id
 
         return newData
       })
-      // Droppeds[over.id - 1](true)
-      setIsDropped((prev) => {
-        const newData = isDropped
+
+      // ===開啟isDropped===
+      setIsDropped(() => {
+        const newData = [...isDropped]
         newData[over.id - 1] = true
         return newData
       })
 
-      setDraggableState((prev) => {
+      // ===設置dragState===
+      setDraggableState(() => {
         const newData = [...draggableState]
         newData[over.id - 1] = (
-          <div
-            style={{
-              width: '180px',
-              height: '180px',
-              position: 'relative',
-              background: 'green',
-            }}
-          >
-            <div
-              key={data.AttrationsData[active.id - 51].AttractionId}
-              className="h-full"
-            >
-              <div className=" absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
-
-              <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white ">
-                {data.AttrationsData[active.id - 51].AttractionName}
-              </div>
-              <Image
-                alt=""
-                src={data.AttrationsData[active.id - 51].ImageUrl}
-                width={180}
-                height={180}
-                className="object-cover w-full h-full"
-              />
-            </div>
-          </div>
+          <DragStateDIV item={storeTours[active.id - 51]} />
         )
         return newData
       })
     }
 
+    // ======進入排序判斷======
     if (
-      active.id !== over?.id &&
+      active.id !== over.id &&
       active.id !== 51 &&
       active.id !== 52 &&
       active.id !== 53 &&
@@ -310,23 +403,82 @@ export default function PlanningTour({
       active.id !== 58
     ) {
       alert('觸發排序')
+      // ===設定重排順序===
       setItems((items) => {
         const oldIndex = items.indexOf(active.id)
         const newIndex = items.indexOf(over.id)
+        console.log('oldIndex', oldIndex)
+        console.log('newIndex', newIndex)
 
         return arrayMove(items, oldIndex, newIndex)
       })
+      const oldIndex2 = items.indexOf(active.id) + 1
+      const newIndex2 = items.indexOf(over.id) + 1
 
-      // setSortData((prev) => {
-      //   const newData = JSON.parse(JSON.stringify(sortData))
-      //   const temp = newData.AttrationsData[active.id - 1]
-      //   newData.AttrationsData[active.id - 1] =
-      //     newData.AttrationsData[over.id - 1]
-      //   newData.AttrationsData[active.id - 1].Order = active.id
-      //   newData.AttrationsData[over.id - 1] = temp
-      //   newData.AttrationsData[over.id - 1].Order = over.id
-      //   return newData
-      // })
+      // ===設定重排資料===
+      const newData = [...sortData]
+      newData.map((item) => {
+        const didfrent = newIndex2 - oldIndex2
+        if (item.Order === oldIndex2) {
+          // ==有才開啟未儲存==
+          setUnSaved(true)
+          item.Order = newIndex2
+          return item
+        }
+        if (didfrent && item.Order <= newIndex2 && item.Order >= oldIndex2) {
+          // ==有才開啟未儲存==
+          setUnSaved(true)
+          alert('進入-法')
+          item.Order -= 1
+          return item
+        }
+        if (didfrent < 0 && item.Order < oldIndex2 && item.Order >= newIndex2) {
+          // ==有才開啟未儲存==
+          setUnSaved(true)
+          alert('進入+法')
+          item.Order += 1
+          return item
+        }
+      })
+      // ===設定重排資料2===
+      setSortData(newData)
+    }
+  }
+
+  async function onSubmit(data: defaultValueProp) {
+    try {
+      setIsLoading(true)
+      // 缺geo,故先判斷鄰近值,在做函式返回newData
+      const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
+      alert('這先留著' + JSON.stringify(newData))
+      const res = await getRandomTours(newData)
+      if (res.ok) {
+        const resJSON = await res.json()
+        alert(JSON.stringify(resJSON))
+        // setGetRandomConfirm(true)
+        // setData(resJSON)
+        // setAnotherRandom(true)
+        setIsLoading(false)
+        return
+      }
+      throw new Error('錯誤,or沒找到景點')
+    } catch (err) {
+      setIsLoading(false)
+      alert(err)
+    }
+
+    function handleNearBy(bool: boolean) {
+      let newData
+      // 目前只有false狀態，尚缺true狀態
+      if (!bool) {
+        // 取得google定位，設定經緯度
+        newData = { Nlat: 0, Elong: 0, ...data }
+        // 取得鎖點(懶人頁較簡易）
+        newData.AttractionId = Array(4).fill(0)
+        //刪除鄰近
+        delete newData.nearBy
+      }
+      return newData
     }
   }
 }
@@ -351,7 +503,7 @@ export async function getServerSideProps({ params }: { params: paramsProp }) {
     return {
       redirect: {
         permanent: false,
-        destination: '/login',
+        destination: '/',
       },
       props: {},
     }
