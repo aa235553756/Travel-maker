@@ -22,12 +22,13 @@ import TypeLabel from '@/modules/Banner/TypeLabel'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
 import Image from 'next/image'
 import BannerSelectorMobile from '@/modules/Banner/BannerSelectorMobile'
-import { getCookie } from 'cookies-next'
+import { getCookie, hasCookie } from 'cookies-next'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { MdBookmarkBorder, MdSave } from 'react-icons/md'
 import { CustomModal } from '@/common/components/CustomModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveForm, getToursForm } from '@/redux/toursFormSlice'
+import { getRandomTour, saveTours } from '@/redux/randomTourSlice'
 
 export default function RandamTourLayout({
   data: originData,
@@ -44,11 +45,10 @@ export default function RandamTourLayout({
 }) {
   const router = useRouter()
   const currentUrl = router.asPath
+  const dispatch = useDispatch()
 
   // =========Redux表單=========
   const formValue = useSelector(getToursForm)
-  const dispatch = useDispatch()
-  console.log('formValue', formValue)
 
   // =========token,user State=========
   const token = getCookie('auth')
@@ -57,8 +57,9 @@ export default function RandamTourLayout({
     : undefined
   const [userGuid, setUserGuid] = useState(undefined)
 
-  // =========隨機資料state=========
-  const [data, setData] = useState(originData)
+  // =========隨機資料state 修改為Redux行程=========
+  const [idData, setIdData] = useState(originData)
+  const data = useSelector(getRandomTour)
 
   // =========手機版表單state=========
   const [isHidden, setIsHidden] = useState(true)
@@ -91,6 +92,8 @@ export default function RandamTourLayout({
   const roomNameInputRef = useRef<HTMLInputElement>(null)
 
   // ========= RHF 表單 =========
+  const formId = 'random-tour-form'
+  const formIdMobile = 'random-tour-form-Mobile'
   const {
     register,
     handleSubmit,
@@ -108,22 +111,10 @@ export default function RandamTourLayout({
     setValue: setValue2,
     formState: { errors: errors2 },
   } = useForm<defaultValueProp>({
-    defaultValues,
+    defaultValues: formValue ? formValue : defaultValues,
   })
-  const formIdMobile = 'random-tour-form-Mobile'
-  // const handleErrors2 = (e: { preventDefault: () => void }) => {
-  //   // 判斷2個都為false時
-  //   if (!watch('nearBy') && !watch('DistrictName').length) {
-  //     alert('錯誤，表單填寫不完整 區域')
-  //     e.preventDefault()
-  //     return
-  //   }
-  //   // 判斷有無沒填寫
-  //   if (Object.keys(errors2).length) {
-  //     alert('錯誤，表單填寫不完整 Type')
-  //   }
-  // }
-  const formId = 'random-tour-form'
+
+  // ========= RHF 錯誤捕捉 p.s alert記得關 =========
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
@@ -131,33 +122,20 @@ export default function RandamTourLayout({
       e.preventDefault()
       return
     }
-    // 判斷有無沒填寫
-    // if (!errors) {
-    //   return
-    // }
-
     if (Object.keys(errors).length) {
       alert('錯誤，表單填寫不完整 Type')
     }
   }
 
-  // 電腦版Slider
+  // =========電腦版Slider=========
   const settings = {
-    // className: 'center',
-    // centerMode: true,
-    // centerPadding: '60px',
-    // dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 2,
-    // rows: 4,
   }
-  // 手機版Slider
+  // =========手機版Slider=========
   const settings2 = {
-    // className: 'center',
-    // centerMode: true,
-    // centerPadding: '60px',
     dots: true,
     infinite: false,
     speed: 500,
@@ -165,17 +143,15 @@ export default function RandamTourLayout({
     slidesToScroll: 1,
     rows: 2,
   }
-  useEffect(() => {
-    console.log(data)
-    // alert('每次setData,重整google地圖')
-  }, [data])
 
+  //=========手機版表單 限制滾動useEffect=========
   useEffect(() => {
     if (isHidden) {
       document.body.style.overflow = 'auto'
     }
   }, [isHidden])
 
+  // =========更換行程名稱focus useEffect=========
   useEffect(() => {
     if (TourNameInputRef.current) {
       TourNameInputRef.current.value = String(tourName)
@@ -183,6 +159,7 @@ export default function RandamTourLayout({
     TourNameInputRef?.current?.focus()
   }, [tourName, isChangeTourName])
 
+  //=========不同用戶顯示不同UI useEffect=========
   useEffect(() => {
     // user.UserGuid為cookies內的guid 之後會判斷是否與傳進來的行程創建guid是否吻合
     setUserGuid(user?.UserGuid)
@@ -410,7 +387,7 @@ export default function RandamTourLayout({
           隨機產生行程
         </button>
         <Slider {...settings2}>
-          {data?.map((item, i) => {
+          {(IsTourId ? idData : data)?.map((item, i) => {
             return (
               <div
                 key={item.AttractionId}
@@ -518,7 +495,7 @@ export default function RandamTourLayout({
                     }}
                     className={`${
                       linkEffect && 'animate-fade-in-out'
-                    } absolute text-normal !text-primary opacity-0 top-0 left-[calc(100%+8px)]`}
+                    } z-[-1] absolute text-normal !text-primary opacity-0 top-0 left-[calc(100%+8px)]`}
                   >
                     copied！
                   </div>
@@ -543,7 +520,7 @@ export default function RandamTourLayout({
                   }}
                   className={`${
                     linkEffect && 'animate-fade-in-out'
-                  } absolute text-normal !text-primary opacity-0 left-[calc(100%+8px)]`}
+                  } z-[-1] absolute text-normal !text-primary opacity-0 left-[calc(100%+8px)]`}
                 >
                   copied！
                 </div>
@@ -576,7 +553,7 @@ export default function RandamTourLayout({
             {/* Swiper圖片 */}
             <div className="hidden lg:block max-h-[180px] mb-8">
               <Slider {...settings}>
-                {data?.map((item, i) => {
+                {(IsTourId ? idData : data)?.map((item, i) => {
                   return (
                     <div
                       key={item.AttractionId + 1}
@@ -615,10 +592,12 @@ export default function RandamTourLayout({
             {/* 邀請收藏按鈕 */}
             <div className="flex justify-end">
               <button
-                disabled={data[0].AttractionId ? false : true}
+                disabled={
+                  (IsTourId ? idData : data)[0].AttractionId ? false : true
+                }
                 className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white hover:bg-primary-tint duration-100 disabled:bg-primary/25"
                 onClick={async () => {
-                  if (token === undefined) {
+                  if (!hasCookie('auth')) {
                     setLoginConflirm(true)
                     //請先登入
                     setTimeout(() => {
@@ -626,6 +605,7 @@ export default function RandamTourLayout({
                     }, 2000)
                     return
                   }
+
                   setJoinModal(true)
                 }}
               >
@@ -647,9 +627,11 @@ export default function RandamTourLayout({
               ) : (
                 <button
                   className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-center items-center rounded-md text-white hover:bg-primary-tint duration-100 disabled:bg-primary/25"
-                  disabled={data[0].AttractionId ? false : true}
+                  disabled={
+                    (IsTourId ? idData : data)[0].AttractionId ? false : true
+                  }
                   onClick={() => {
-                    if (token === undefined) {
+                    if (!hasCookie('auth')) {
                       setLoginConflirm(true)
                       //請先登入
                       setTimeout(() => {
@@ -685,7 +667,7 @@ export default function RandamTourLayout({
       const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
       alert('這先留著' + JSON.stringify(newData))
 
-      // ===設置 Redux表單===
+      // ===設置 Redux表單 ===
       dispatch(saveForm(newData))
 
       // ===打post===
@@ -694,7 +676,13 @@ export default function RandamTourLayout({
       // ===res.ok===
       if (res.ok) {
         const resJSON = await res.json()
-        setData(resJSON)
+        //==設置Redux Tours==
+        if (IsTourId) {
+          setIdData(resJSON)
+        } else {
+          dispatch(saveTours(resJSON))
+        }
+
         setIsHidden(true)
         setGetRandomConfirm(true)
         setAnotherRandom(true)
@@ -733,10 +721,12 @@ export default function RandamTourLayout({
       .join('&')
     // 複製連結
     if (IsTourId) {
+      // !這邊記得換網域
       navigator.clipboard.writeText(`http://localhost:3000${currentUrl}`)
       return
     }
     navigator.clipboard.writeText(
+      // !這邊記得換網域
       `http://localhost:3000/random-tour?${idParams}`
     )
   }
@@ -751,7 +741,7 @@ export default function RandamTourLayout({
         return
       }
       // 行程id陣列
-      const AttractionId = data.map(
+      const AttractionId = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
 
@@ -786,7 +776,7 @@ export default function RandamTourLayout({
       setIsLoading(true)
       const newTourName = newTourNameInputRef?.current?.value
 
-      const AttractionId = data.map(
+      const AttractionId = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
 
@@ -836,7 +826,7 @@ export default function RandamTourLayout({
       setIsLoading(true)
 
       const TourName = newTourNameInputRef?.current?.value
-      const AttractionId = data.map(
+      const AttractionId = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
 
@@ -875,7 +865,7 @@ export default function RandamTourLayout({
       }
       setIsLoading(true)
       const RoomName = roomNameInputRef.current?.value
-      const Attractions = data.map(
+      const Attractions = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
       const res = await postRoomApi(

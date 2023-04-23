@@ -16,6 +16,7 @@ import { useRouter } from 'next/router'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useDispatch } from 'react-redux'
 import { saveForm } from '@/redux/toursFormSlice'
+import { setIsQuery } from '@/redux/isQuerySlice'
 
 export default function Banner() {
   const router = useRouter()
@@ -47,8 +48,9 @@ export default function Banner() {
     const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
     // alert(JSON.stringify(newData))
     setIsLoading(!isLoading)
-    // ===設置 Redux表單===
+    // ===設置 Redux表單 & 避免重新獲取行程狀態===
     dispatch(saveForm(newData))
+    dispatch(setIsQuery(true))
 
     // ===這邊就算找不到景點也會導航到/random-tour===
     router.push({

@@ -38,7 +38,6 @@ export default function HotAttract() {
           </h2>
           <ul className="flex flex-col md:flex-row space-y-10 md:space-y-0 md:space-x-8 lg:space-x-0 items-center justify-between cursor-pointer">
             {hotAttr.map((item, index) => {
-              console.log(item.imagesUrl)
               return (
                 <div
                   key={index}
