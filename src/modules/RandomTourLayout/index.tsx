@@ -26,7 +26,8 @@ import { getCookie } from 'cookies-next'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { MdBookmarkBorder, MdSave } from 'react-icons/md'
 import { CustomModal } from '@/common/components/CustomModal'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { saveForm, getToursForm } from '@/redux/toursFormSlice'
 
 export default function RandamTourLayout({
   data: originData,
@@ -41,10 +42,13 @@ export default function RandamTourLayout({
   UserGuid?: string
   TourId?: number
 }) {
-  const formValue = useSelector((state) => state.toursForm.value)
-  console.log('formValue', formValue)
   const router = useRouter()
   const currentUrl = router.asPath
+
+  // =========Redux表單=========
+  const formValue = useSelector(getToursForm)
+  const dispatch = useDispatch()
+  console.log('formValue', formValue)
 
   // =========token,user State=========
   const token = getCookie('auth')
@@ -87,9 +91,15 @@ export default function RandamTourLayout({
   const roomNameInputRef = useRef<HTMLInputElement>(null)
 
   // ========= RHF 表單 =========
-  const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
-    { defaultValues: formValue ? formValue : defaultValues }
-  )
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<defaultValueProp>({
+    defaultValues: formValue ? formValue : defaultValues,
+  })
   const {
     register: register2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -100,8 +110,21 @@ export default function RandamTourLayout({
   } = useForm<defaultValueProp>({
     defaultValues,
   })
-  const formIdMobile = 'random-tour-form'
-  const handleErrors2 = (e: { preventDefault: () => void }) => {
+  const formIdMobile = 'random-tour-form-Mobile'
+  // const handleErrors2 = (e: { preventDefault: () => void }) => {
+  //   // 判斷2個都為false時
+  //   if (!watch('nearBy') && !watch('DistrictName').length) {
+  //     alert('錯誤，表單填寫不完整 區域')
+  //     e.preventDefault()
+  //     return
+  //   }
+  //   // 判斷有無沒填寫
+  //   if (Object.keys(errors2).length) {
+  //     alert('錯誤，表單填寫不完整 Type')
+  //   }
+  // }
+  const formId = 'random-tour-form'
+  const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
       alert('錯誤，表單填寫不完整 區域')
@@ -109,11 +132,14 @@ export default function RandamTourLayout({
       return
     }
     // 判斷有無沒填寫
-    if (Object.keys(errors2).length) {
+    // if (!errors) {
+    //   return
+    // }
+
+    if (Object.keys(errors).length) {
       alert('錯誤，表單填寫不完整 Type')
     }
   }
-  const formId = 'random-tour-form'
 
   // 電腦版Slider
   const settings = {
@@ -344,11 +370,14 @@ export default function RandamTourLayout({
       <BannerSelectorMobile
         isHidden={isHidden}
         setIsHidden={setIsHidden}
+        handleSubmit={handleSubmit2}
+        onSubmit={onSubmit}
         formIdMobile={formIdMobile}
         register={register2}
         watch={watch2}
         setValue={setValue2}
-        handleErrors={handleErrors2}
+        errors={errors2}
+        // handleErrors={handleErrors2}
       />
       {/* 手機版上方介面 */}
       <div className="lg:hidden mb-14">
@@ -361,6 +390,22 @@ export default function RandamTourLayout({
         <button
           form={formIdMobile}
           className="w-full bg-primary text-white py-2 rounded-[10px] mb-6"
+          onClick={(e) => {
+            // 表單2
+            const handleErrors2 = (e: { preventDefault: () => void }) => {
+              // 判斷2個都為false時
+              if (!watch2('nearBy') && !watch2('DistrictName').length) {
+                alert('錯誤，表單填寫不完整 區域')
+                e.preventDefault()
+                return
+              }
+              // 判斷有無沒填寫
+              if (Object.keys(errors2).length) {
+                alert('錯誤，表單填寫不完整 Type')
+              }
+            }
+            handleErrors2(e)
+          }}
         >
           隨機產生行程
         </button>
@@ -385,7 +430,7 @@ export default function RandamTourLayout({
                   height={180}
                   className="object-cover w-full h-full"
                   priority
-                  blurDataURL="/Group 329.png"
+                  blurDataURL="/logo.png"
                   placeholder="blur"
                 />
               </div>
@@ -521,6 +566,7 @@ export default function RandamTourLayout({
             <button
               form={formId}
               className="text-lg font-bold lg:text-xl py-2 lg:py-3 w-full bg-primary text-white rounded-md hover:bg-primary-tint duration-100"
+              onClick={handleErrors}
             >
               隨機產生行程
             </button>
@@ -634,24 +680,36 @@ export default function RandamTourLayout({
   async function onSubmit(data: defaultValueProp) {
     try {
       setIsLoading(true)
+
       // 缺geo,故先判斷鄰近值,在做函式返回newData
       const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
       alert('這先留著' + JSON.stringify(newData))
+
+      // ===設置 Redux表單===
+      dispatch(saveForm(newData))
+
+      // ===打post===
       const res = await getRandomTours(newData)
+
+      // ===res.ok===
       if (res.ok) {
         const resJSON = await res.json()
-        setGetRandomConfirm(true)
         setData(resJSON)
+        setIsHidden(true)
+        setGetRandomConfirm(true)
         setAnotherRandom(true)
         setIsLoading(false)
         return
       }
+
+      // ===throw Error===
       throw new Error('錯誤,or沒找到景點')
     } catch (err) {
       setIsLoading(false)
       alert(err)
     }
 
+    // ======handleNearBy控制鄰近經緯 p.s記得補======
     function handleNearBy(bool: boolean) {
       let newData
       // 目前只有false狀態，尚缺true狀態

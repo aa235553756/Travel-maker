@@ -14,7 +14,7 @@ export default function FollowUserCard({
   followers: number
 }) {
   return (
-    <div className="shadow-[1px_1px_15px_1px_rgba(1,1,15,0.08)] rounded-xl">
+    <div className="shadow-[1px_1px_15px_1px_rgba(1,1,15,0.08)] rounded-md">
       <div className="h-[240px] rounded-t-md">
         <div className="p-10">
           <div className="flex flex-col items-center space-y-9">

@@ -16,6 +16,7 @@ export default function TourCard({
   imagesUrl,
   room,
   roomId,
+  showDelete,
   onClick,
 }: {
   id?: number
@@ -27,7 +28,8 @@ export default function TourCard({
   showCreator: boolean
   imagesUrl: string[]
   room?: boolean
-  roomId?: number
+  roomId?: number | string
+  showDelete?: boolean
   onClick?: () => void
   onClickTour?: () => void
   onClickRoom?: () => void
@@ -35,7 +37,7 @@ export default function TourCard({
   const router = useRouter()
 
   return (
-    <div className="shadow-[1px_2px_12px_1px_rgba(0,0,0,0.25)] rounded-xl relative z-0">
+    <div className="shadow-[1px_2px_12px_1px_rgba(0,0,0,0.25)] rounded-md relative z-0">
       {room && (
         <a
           onClick={(e) => {
@@ -57,7 +59,7 @@ export default function TourCard({
 
       {/* 刪除行程 */}
       <div className="absolute top-5 md:top-8 right-5 md:right-8 z-30">
-        <DeleteBtn onClick={onClick} />
+        {showDelete && <DeleteBtn onClick={onClick} />}
       </div>
 
       <div className="absolute bottom-3 md:bottom-7 right-5 z-10">
@@ -73,13 +75,13 @@ export default function TourCard({
         <div className="w-full p-0 md:p-3">
           {/* 第一張圖片 */}
           <div className="relative w-full">
-            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
+            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md"></div>
             <Image
               src={imagesUrl[0]}
               alt="圖片"
               width={336}
               height={335}
-              className="w-full h-[348px] min-h-[348px] rounded-t-xl object-cover md:rounded-xl"
+              className="w-full h-[348px] min-h-[348px] rounded-t-xl object-cover md:rounded-md"
             ></Image>
           </div>
         </div>
@@ -88,13 +90,13 @@ export default function TourCard({
         <div className="w-full p-0 md:p-3">
           {/* 第一張圖片 */}
           <div className="relative w-full">
-            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
+            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md"></div>
             <Image
               src={imagesUrl[0]}
               alt="圖片"
               width={336}
               height={228}
-              className="w-full h-[228px] min-h-[228px] rounded-t-xl object-cover md:rounded-xl mb-0 md:mb-3"
+              className="w-full h-[228px] min-h-[228px] rounded-t-xl object-cover md:rounded-md mb-0 md:mb-3"
             ></Image>
           </div>
           {/* 第二張圖片 */}
@@ -103,7 +105,7 @@ export default function TourCard({
             alt="圖片"
             width={336}
             height={108}
-            className="w-full h-[108px] min-h-[108px] rounded-xl hidden object-cover md:block"
+            className="w-full h-[108px] min-h-[108px] rounded-md hidden object-cover md:block"
           ></Image>
         </div>
       )}
@@ -111,13 +113,13 @@ export default function TourCard({
         <div className="flex flex-wrap w-full p-0 md:p-3">
           {/* 第一張圖片 */}
           <div className="relative w-full">
-            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
+            <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md"></div>
             <Image
               src={imagesUrl[0]}
               alt="圖片"
               width={336}
               height={228}
-              className="w-full h-[228px] min-h-[228px] rounded-t-xl object-cover md:rounded-xl mb-0 md:mb-3"
+              className="w-full h-[228px] min-h-[228px] rounded-t-xl object-cover md:rounded-md mb-0 md:mb-3"
             ></Image>
           </div>
           {/* 第二張圖片 */}
@@ -126,7 +128,7 @@ export default function TourCard({
             alt="圖片"
             width={162}
             height={108}
-            className="w-[calc(50%-6px)] h-[108px] min-h-[108px] rounded-xl mr-[6px] hidden object-cover md:block"
+            className="w-[calc(50%-6px)] h-[108px] min-h-[108px] rounded-md mr-[6px] hidden object-cover md:block"
           ></Image>
           {/* 第三張圖片 */}
           <Image
@@ -134,7 +136,7 @@ export default function TourCard({
             alt="圖片"
             width={162}
             height={108}
-            className="w-[calc(50%-6px)] h-[108px] min-h-[108px] rounded-xl ml-[6px] hidden object-cover md:block"
+            className="w-[calc(50%-6px)] h-[108px] min-h-[108px] rounded-md ml-[6px] hidden object-cover md:block"
           ></Image>
         </div>
       )}

@@ -49,7 +49,7 @@ export default function AttractCard({
       </div>
       {/* 景點圖片 */}
       <div className="relative w-full">
-        <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-xl"></div>
+        <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md"></div>
         <Image
           src={imagesUrl}
           alt="圖片"
