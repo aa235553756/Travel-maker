@@ -14,10 +14,13 @@ import OpenFormBtn from '@/common/components/OpenFormBtn'
 import { defaultValueProp } from '@/util/types'
 import { useRouter } from 'next/router'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
+import { useDispatch } from 'react-redux'
+import { saveForm } from '@/redux/toursFormSlice'
 
 export default function Banner() {
   const router = useRouter()
-  // 這邊是ReactHookForm，有分電腦版,手機版
+  const dispatch = useDispatch()
+  // =========這邊是ReactHookForm，有分電腦版,手機版=========
   const {
     register,
     handleSubmit,
@@ -38,13 +41,24 @@ export default function Banner() {
   })
   const formId = 'banner-form'
   const formIdMobile = 'banner-form-mobile'
-  // 這邊打POST,取得隨機行程 (鄰近為true要處理經緯度)
+  // =========這邊打POST,取得隨機行程 (鄰近為true要處理經緯度)=========
   const onSubmit = async (data: defaultValueProp) => {
     // 缺geo,故先判斷鄰近值,在做函式返回newData
     const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
     // alert(JSON.stringify(newData))
     setIsLoading(!isLoading)
+    // ===設置 Redux表單===
+    dispatch(saveForm(newData))
 
+    // ===這邊就算找不到景點也會導航到/random-tour===
+    router.push({
+      pathname: '/random-tour',
+      query: {
+        data: JSON.stringify(newData),
+      },
+    })
+
+    // ======handleNearBy控制鄰近經緯 p.s記得補======
     function handleNearBy(bool: boolean) {
       let newData
       // 目前只有false狀態
@@ -58,20 +72,13 @@ export default function Banner() {
       }
       return newData
     }
-
-    // 這邊就算找不到景點也會導航到/random-tour
-    router.push({
-      pathname: '/random-tour',
-      query: {
-        data: JSON.stringify(newData),
-      },
-    })
   }
 
-  // state
+  // =========loading & 手機表單modal state=========
   const [isHidden, setIsHidden] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
-  // Toggle 選擇行程 & 距離下拉選單 以及 Toggle 選擇區域下拉選單
+  // =========Toggle 選擇行程 & 距離下拉選單 以及 Toggle 選擇區域下拉選單state=========
   const [isToggle, setIsToggle] = useState(false)
   const [areaToggle, setAreaToggle] = useState(false)
   const toggleState = () => {
@@ -83,6 +90,7 @@ export default function Banner() {
     setIsToggle(false)
   }
 
+  //=========RHF 錯誤捕捉alert 電腦版 p.s之後換modal=========
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
@@ -95,7 +103,7 @@ export default function Banner() {
       alert('錯誤，表單填寫不完整 Type')
     }
   }
-  // 表單2
+  //=========RHF 錯誤捕捉alert 手機版 之後換modal=========
   const handleErrors2 = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch2('nearBy') && !watch2('DistrictName').length) {
@@ -109,8 +117,7 @@ export default function Banner() {
     }
   }
 
-  const [isLoading, setIsLoading] = useState(false)
-
+  //=========useEffect 手機版表單 控制scroll=========
   useEffect(() => {
     if (isHidden) {
       document.body.style.overflow = 'auto'
@@ -118,7 +125,7 @@ export default function Banner() {
   }, [isHidden])
 
   return (
-    // bg圖片待討論，給設計看2560px
+    // bg圖片待更換，p.s記得改
     <div className="bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-right bg-no-repeat">
       {/* loading動畫示範 */}
       {isLoading && <LoadingAnimate isLoading={isLoading} />}

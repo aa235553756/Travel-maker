@@ -53,8 +53,7 @@ export async function getServerSideProps(context: {
           .fill('')
           .map(() => {
             return {
-              ImageUrl:
-                'https://fakeimg.pl/200x100/?retina=1&text=示範圖&font=noto',
+              ImageUrl: '/Group 329.png',
               AttractionName: '景點名稱',
             }
           }),

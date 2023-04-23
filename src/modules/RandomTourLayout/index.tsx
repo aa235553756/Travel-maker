@@ -26,6 +26,7 @@ import { getCookie } from 'cookies-next'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { MdBookmarkBorder, MdSave } from 'react-icons/md'
 import { CustomModal } from '@/common/components/CustomModal'
+import { useSelector } from 'react-redux'
 
 export default function RandamTourLayout({
   data: originData,
@@ -40,19 +41,25 @@ export default function RandamTourLayout({
   UserGuid?: string
   TourId?: number
 }) {
-  //token
+  const formValue = useSelector((state) => state.toursForm.value)
+  console.log('formValue', formValue)
+  const router = useRouter()
+  const currentUrl = router.asPath
+
+  // =========token,user State=========
   const token = getCookie('auth')
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
     : undefined
   const [userGuid, setUserGuid] = useState(undefined)
 
-  const router = useRouter()
-  const currentUrl = router.asPath
-
-  console.log(originData)
+  // =========隨機資料state=========
   const [data, setData] = useState(originData)
+
+  // =========手機版表單state=========
   const [isHidden, setIsHidden] = useState(true)
+
+  // =========各種modal state=========
   const [isLoading, setIsLoading] = useState(false)
   const [isChangeTourName, setIsChangeTourName] = useState(false)
 
@@ -66,18 +73,22 @@ export default function RandamTourLayout({
   const [loginConflirm, setLoginConflirm] = useState(false)
 
   const [collectModal, setCollectModal] = useState(false)
+  // ===unSaved state===
   const [anotherRandom, setAnotherRandom] = useState(false)
   const [joinModal, setJoinModal] = useState(false)
 
+  // =========link特效state=========
   const [linkEffect, setLinkEffect] = useState(false)
 
+  // ========= useRef =========
   const newCollectTourNameInputRef = useRef<HTMLInputElement>(null)
   const newTourNameInputRef = useRef<HTMLInputElement>(null)
   const TourNameInputRef = useRef<HTMLInputElement>(null)
   const roomNameInputRef = useRef<HTMLInputElement>(null)
 
+  // ========= RHF 表單 =========
   const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
-    { defaultValues: defaultValues }
+    { defaultValues: formValue ? formValue : defaultValues }
   )
   const {
     register: register2,
