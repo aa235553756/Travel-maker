@@ -65,7 +65,7 @@ export async function getServerSideProps(context: {
           .fill('')
           .map(() => {
             return {
-              ImageUrl: '/Group 329.png',
+              ImageUrl: '/logo.png',
               AttractionName: '景點名稱',
             }
           }),

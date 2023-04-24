@@ -37,6 +37,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         banner: "url('/bannerBg.jpg')",
+        'banner-sm': "url('/手機版banner.png')",
         'footer-texture': "url('/img/footer-texture.png')",
       },
       colors: {

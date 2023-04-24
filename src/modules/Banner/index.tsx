@@ -128,8 +128,9 @@ export default function Banner() {
 
   return (
     // bg圖片待更換，p.s記得改
-    <div className="bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto bg-right bg-no-repeat">
-      {/* loading動畫示範 */}
+    <div className="bg-banner-sm max-sm:bg-cover sm:bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto min-[1920px]:bg-[length:125%] min-[1920px]:bg-[100%_50%] bg-right md:bg-[90%_62%] lg:bg-right bg-no-repeat">
+      {/* <div className="bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto min-[1920px]:bg-cover min-[1920px]:bg-[0_50%] bg-right bg-no-repeat"> */}
+      {/* 上面原本長??  & loading動畫示範 */}
       {isLoading && <LoadingAnimate isLoading={isLoading} />}
 
       <div className="container">
