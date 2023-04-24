@@ -7,7 +7,7 @@ const initialState = {
     .fill('')
     .map(() => {
       return {
-        ImageUrl: '/logo.png',
+        ImageUrl: '/blurLogo.png',
         AttractionName: '景點名稱',
       }
     }),

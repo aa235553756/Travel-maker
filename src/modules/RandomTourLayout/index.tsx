@@ -621,7 +621,7 @@ export default function RandamTourLayout({
                 <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
                   趕緊按下
                   <span className="text-primary">隨機產生行程</span>
-                  獲得地圖吧！
+                  獲得行程地圖吧！
                 </span>
               </div>
             )}
