@@ -61,6 +61,22 @@ export default function RandamTourLayout({
   const [idData, setIdData] = useState(originData)
   const data = useSelector(getRandomTour)
 
+  // =========地圖需要的中間點 變數=========
+  const waypoint =
+    (IsTourId ? idData.length : data.length) >= 2
+      ? '&waypoints=' +
+        (IsTourId ? idData : data)
+          .filter((item, i) => {
+            if (i === 0 || i === data.length - 1) {
+              return false
+            }
+            return item.AttractionName
+          })
+          .map((item) => item.AttractionName)
+          .join(' 台北市|') +
+        ' 台北市'
+      : null
+
   // =========手機版表單state=========
   const [isHidden, setIsHidden] = useState(true)
 
@@ -580,15 +596,35 @@ export default function RandamTourLayout({
                 })}
               </Slider>
             </div>
-            {/* 地圖 */}
-            <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d14459.774055448219!2d121.49936893054726!3d25.035990943540952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x3442a94a4ed4888b%3A0x7880a95f29f4878e!2z5Zyw5bmz57ea5Z-65Zyw!3m2!1d25.0239646!2d121.5094846!4m5!1s0x3442a90e8737b2f7%3A0x6b6ee112e9e7c58b!2z5bCP5ZCz54mb6IKJ6bq1IDEwOOWPsOWMl-W4guiQrOiPr-WNgOa0m-mZveihlzQ1LTEx6Jmf!3m2!1d25.047628399999997!2d121.508326!5e0!3m2!1szh-TW!2stw!4v1680440395475!5m2!1szh-TW!2stw"
-                className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
+            {data[0].AttractionId || IsTourId ? (
+              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
+                <iframe
+                  src={`https://www.google.com/maps/embed/v1/directions?key=${
+                    process.env.NEXT_PUBLIC_YANG_GOOGLE_KEY
+                  }&origin=${
+                    (IsTourId ? idData[0] : data[0]).AttractionName + ' 台北市'
+                  }${waypoint}
+                  &destination=${
+                    (IsTourId
+                      ? idData[idData.length - 1]
+                      : data[data.length - 1]
+                    ).AttractionName + ' 台北市'
+                  }`}
+                  // &mode=${'walking'}
+                  className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            ) : (
+              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md relative">
+                <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+                  趕緊按下
+                  <span className="text-primary">隨機產生行程</span>
+                  獲得地圖吧！
+                </span>
+              </div>
+            )}
             {/* 邀請收藏按鈕 */}
             <div className="flex justify-end">
               <button
