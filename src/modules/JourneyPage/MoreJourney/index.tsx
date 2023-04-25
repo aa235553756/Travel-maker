@@ -14,6 +14,7 @@ export default function MoreJourney() {
           tourName="好瘋狂熱血少年"
           countAttr={4}
           likes={100}
+          isLike={true}
           showLike={true}
           creator={''}
           showCreator={false}
@@ -23,6 +24,7 @@ export default function MoreJourney() {
           tourName="好瘋狂熱血少年"
           countAttr={4}
           likes={100}
+          isLike={true}
           showLike={true}
           creator={''}
           showCreator={false}
@@ -33,6 +35,7 @@ export default function MoreJourney() {
             tourName="好瘋狂熱血少年"
             countAttr={4}
             likes={100}
+            isLike={true}
             showLike={true}
             creator={''}
             showCreator={false}

@@ -9,7 +9,7 @@ export default function CustomLink({
 }) {
   return (
     <Link
-      href="/attractionions"
+      href="/hot-topics"
       className="text-lg inline-flex items-center mb-5 md:text-xl md:mb-11"
     >
       <IoIosArrowBack className="mr-2" />

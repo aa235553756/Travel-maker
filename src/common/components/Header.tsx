@@ -122,7 +122,7 @@ export default function Header() {
                 </li>
                 <li>
                   <Link
-                    href="/hot-topics/attractions"
+                    href="/hot-topics"
                     className="flex space-x-2 items-center py-10 group hover:animate-navbar-hover relative "
                   >
                     <div className="flex space-x-2 items-center  duration-300 relative py-1 pr-2  rounded-md ">
@@ -390,7 +390,7 @@ export default function Header() {
                     }}
                   >
                     <BsPencil className="text-lg" />
-                    <span>我的遊記</span>
+                    <span>收藏遊記&草稿</span>
                   </Link>
                 </li>
                 <li className="flex space-x-3 py-4 items-center">
@@ -414,7 +414,7 @@ export default function Header() {
                     }}
                   >
                     <FaRegCommentDots className="text-lg" />
-                    <span>我的評論</span>
+                    <span>我的景點評論</span>
                   </Link>
                 </li>
                 <li className="flex space-x-3 py-4 items-center">
@@ -448,7 +448,7 @@ export default function Header() {
             </li>
             <li className="flex space-x-3 py-4 items-center">
               <Link
-                href="/hot-topics/attractions"
+                href="/hot-topics"
                 className="flex space-x-2 items-center"
                 onClick={() => {
                   hamState()

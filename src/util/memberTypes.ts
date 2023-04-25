@@ -38,6 +38,9 @@ export interface RoomData {
 }
 
 export interface RoomDataProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  map(arg0: (item: any) => JSX.Element): ReactNode
+  IsExisted: boolean
   TourCounts: number
   RoomCounts: number
   RoomData: RoomData[]

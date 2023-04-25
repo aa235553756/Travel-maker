@@ -47,7 +47,7 @@ export default function OtherComment({
       </div>
       {/* 這是評論小卡區 */}
       <div className="mb-6">
-        {Comments.map((item: CommentsProp) => {
+        {Comments?.map((item: CommentsProp) => {
           return (
             <div
               key={item.AttractionCommentId}

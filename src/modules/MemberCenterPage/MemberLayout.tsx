@@ -90,7 +90,7 @@ export default function MemberLayout({
                     }`}
                   >
                     <BsPencil className="md:text-lg" />
-                    <span>我的遊記({countData?.BlogCounts})</span>
+                    <span>收藏遊記&草稿({countData?.BlogCounts})</span>
                   </Link>
                 </li>
                 <li>
@@ -116,7 +116,7 @@ export default function MemberLayout({
                     }`}
                   >
                     <FaRegCommentDots className="md:text-lg" />
-                    <span>我的評論({countData?.AttCommentCounts})</span>
+                    <span>我的景點評論({countData?.AttCommentCounts})</span>
                   </Link>
                 </li>
               </ul>
