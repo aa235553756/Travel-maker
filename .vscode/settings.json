@@ -5,7 +5,16 @@
   // Add those two lines:
   "editor.formatOnSave": true, // Tell VSCode to format files on save
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "cSpell.words": ["exif", "filepond", "onupdatefiles", "selectbox", "vertile"] // Tell VSCode to use Prettier as default file formatter
+  "cSpell.words": [
+    "Attrations",
+    "Creater",
+    "datepicker",
+    "exif",
+    "filepond",
+    "onupdatefiles",
+    "selectbox",
+    "vertile"
+  ] // Tell VSCode to use Prettier as default file formatter
   // , // OR If want only typescript files to be formatted on save
   // "[typescript]": {
   //   "editor.formatOnSave": true,

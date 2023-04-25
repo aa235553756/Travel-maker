@@ -1,17 +1,26 @@
-import React, { ReactNode } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { getCookie } from 'cookies-next'
 import { BsPencil, BsBookmarkHeart, BsFillCameraFill } from 'react-icons/bs'
 import { FaRegCommentDots } from 'react-icons/fa'
 import { SlSettings } from 'react-icons/sl'
 import { AiOutlineHeart } from 'react-icons/ai'
 import { IoLocationOutline } from 'react-icons/io5'
+import { MemberLayoutProps } from '@/util/memberTypes'
 
-type Props = {
-  children: ReactNode
-  path?: string
-}
+export default function MemberLayout({
+  children,
+  path,
+  countData,
+}: MemberLayoutProps): JSX.Element {
+  // 判斷有無取得 cookie
+  const user = getCookie('user') ? JSON.parse(String(getCookie('user'))) : null
 
-export default function MemberLayout({ children, path }: Props) {
+  // 這邊避免使用三元運算會報出伺服器與本地 HTML 渲染不一致的問題
+  // 可參考 https://nextjs.org/docs/messages/react-hydration-error
+  const [userName, setUserName] = useState()
+  useEffect(() => setUserName(user.UserName), [user])
+
   return (
     <div>
       <div className="container">
@@ -28,7 +37,7 @@ export default function MemberLayout({ children, path }: Props) {
               </div>
               <div className="md:flex md:flex-col md:space-y-4 md:text-center">
                 <h3 className="md:text-lg md:font-bold">會員中心-我的帳戶</h3>
-                <p className="md:text-lg">暱稱:小熊軟糖</p>
+                <p className="md:text-lg">暱稱:{userName}</p>
               </div>
             </div>
             {/* 會員中心分類 */}
@@ -37,7 +46,7 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === '/' ? 'text-primary font-bold' : 'text-gray-73'
                     }`}
                   >
@@ -48,66 +57,66 @@ export default function MemberLayout({ children, path }: Props) {
                 <li>
                   <Link
                     href="/member-center/tour"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Journey'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
                     }`}
                   >
                     <AiOutlineHeart className="md:text-lg" />
-                    <span>我的收藏行程(6)</span>
+                    <span>我的收藏行程({countData?.TourCounts})</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/attraction"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Attract'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
                     }`}
                   >
                     <IoLocationOutline className="md:text-lg" />
-                    <span>我的收藏景點(5)</span>
+                    <span>我的收藏景點({countData?.AttCounts})</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/blog"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Blog'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
                     }`}
                   >
                     <BsPencil className="md:text-lg" />
-                    <span>我的遊記(6)</span>
+                    <span>我的遊記({countData?.BlogCounts})</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/follow"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Track'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
                     }`}
                   >
                     <BsBookmarkHeart className="md:text-lg" />
-                    <span>我的追蹤(3)</span>
+                    <span>我的追蹤({countData?.FollowCounts})</span>
                   </Link>
                 </li>
                 <li>
                   <Link
                     href="/member-center/comment"
-                    className={`flex space-x-3 py-4 items-center ${
+                    className={`flex space-x-3 py-4 items-center hover:text-primary hover:font-bold ${
                       path === 'Comment'
                         ? 'text-primary font-bold'
                         : 'text-gray-73'
                     }`}
                   >
                     <FaRegCommentDots className="md:text-lg" />
-                    <span>我的評論(9)</span>
+                    <span>我的評論({countData?.AttCommentCounts})</span>
                   </Link>
                 </li>
               </ul>

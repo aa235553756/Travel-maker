@@ -50,7 +50,7 @@ export default function TypeLabel({
 
           return (
             <label key={index} className={className}>
-              <div className="group-hover:scale-110 duration-300">
+              <div className="group-hover:scale-110 group-hover:md:scale-105 group-hover:lg:scale-110  duration-300">
                 {/* icon */}
                 <div className="mb-2 mx-auto text-2xl w-[24px]">
                   {iconArray[index]}

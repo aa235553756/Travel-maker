@@ -78,12 +78,19 @@ module.exports = {
           '0%': { opacity: 0 },
           '50%': { opacity: 1 },
           '100%': { opacity: 0 },
-        }
+        },
+        'navbar-hover': {
+          '0%': { top: '-16px', opacity: '0' },
+          '100%': { top: '0px', opacity: '1' }
+        },
+
       },
       animation: {
         'fade': 'fade 150ms ease-in-out',
         'fade-in-out': 'fade-out 500ms ease-in-out',
-        'fade-out': 'fade-out 150ms ease-in-out'
+        'fade-out': 'fade-out 150ms ease-in-out',
+        'navbar-hover': 'navbar-hover 500ms ease-in-out ',
+
       },
     },
   },

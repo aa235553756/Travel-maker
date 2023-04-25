@@ -82,6 +82,13 @@
     color: #9f9f9f;
   }
 
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
   /* 字數過多隱藏(2行) */
   .line-clamp-2 {
     overflow: hidden;

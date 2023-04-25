@@ -30,11 +30,20 @@ import { SortableItem } from '@/modules/SoratbleItems'
 import DroppableBig from '@/modules/DroppableBig'
 import { CustomModal } from '@/common/components/CustomModal'
 import DragStateDIV from '@/modules/DragStateDIV'
-import { getCookie } from 'cookies-next'
 import { postRoomTours } from '@/util/roomApi'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useRouter } from 'next/router'
 import { getRandomTours } from '@/util/tourApi'
+import { getCookie } from 'cookies-next'
+// import { getCookie } from 'cookies-next'
+
+interface VoteDatesProp {
+  VoteDateId: number
+  Date: string
+  Count: number
+  IsVoted: boolean
+  UserGuid?: string
+}
 
 interface paramsProp {
   id: number
@@ -44,6 +53,7 @@ interface PlanningTour {
   AttrationsData: RoomAttractionsProp[]
   RoomName: string
   RoomGuid: string
+  VoteDates: VoteDatesProp[]
 }
 
 export default function PlanningTour({
@@ -187,8 +197,8 @@ export default function PlanningTour({
       <CustomModal wrapper modal={addTourModal} setModal={setAddTourModal} />
       <div className="container">
         <div className="block mt-4 lg:flex lg:space-x-6 lg:mb-20 md:mt-[80px]">
-          <VoteDate />
-          <InvitePeople />
+          <VoteDate data={originData} />
+          <InvitePeople data={originData} />
         </div>
         {/* 中間拖拉 & 篩選區塊 */}
         <div className="flex flex-wrap mb-[200px] min-w-[1128px]">
@@ -476,7 +486,7 @@ export default function PlanningTour({
         const resJSON = await res.json()
         console.log('resJSON', resJSON)
 
-        // 完成等待中setIsDropped
+        // ======setIsDropped======
         setIsDropped(() => {
           const newData = Array(8)
             .fill('')
@@ -490,34 +500,38 @@ export default function PlanningTour({
           return newData
         })
 
-        // 完成等待中setSortData
+        // ======setSortData======
         setSortData(() => {
-          const newData = resJSON.map((item, index) => {
-            const obj = {
-              AttractionId: item.AttractionId,
-              UserGuid: user.UserGuid,
-              AttractionName: item.AttractionName,
-              ImageUrl: item.ImageUrl,
-              Order: index + 1,
+          const newData = resJSON.map(
+            (item: RoomAttractionsProp, index: number) => {
+              const obj = {
+                AttractionId: item.AttractionId,
+                UserGuid: user.UserGuid,
+                AttractionName: item.AttractionName,
+                ImageUrl: item.ImageUrl,
+                Order: index + 1,
+              }
+              return obj
             }
-            return obj
-          })
+          )
           console.log('newData', newData)
           return newData
         })
 
-        // 完成等待中setDraggableState
+        // ======setDraggableState======
         setDraggableState(() => {
-          const newResJSON = resJSON.map((item, index) => {
-            const obj = {
-              AttractionId: item.AttractionId,
-              UserGuid: user.UserGuid,
-              AttractionName: item.AttractionName,
-              ImageUrl: item.ImageUrl,
-              Order: index + 1,
+          const newResJSON = resJSON.map(
+            (item: RoomAttractionsProp, index: number) => {
+              const obj = {
+                AttractionId: item.AttractionId,
+                UserGuid: user.UserGuid,
+                AttractionName: item.AttractionName,
+                ImageUrl: item.ImageUrl,
+                Order: index + 1,
+              }
+              return obj
             }
-            return obj
-          })
+          )
           const newData = Array(8)
             .fill('')
             .map((item, index) => {
@@ -536,18 +550,20 @@ export default function PlanningTour({
           return newData
         })
 
-        // !尚未完成 若景點id已在備用會導致兩個相同備用景點 異常
-        setStoreTours((prev) => {
-          const newResJSON = resJSON.map((item, index) => {
-            const obj = {
-              AttractionId: item.AttractionId,
-              UserGuid: user.UserGuid,
-              AttractionName: item.AttractionName,
-              ImageUrl: item.ImageUrl,
-              Order: index + 1,
+        // !======尚未完成 若景點id已在備用會導致兩個相同備用景點 異常======
+        setStoreTours((prev: RoomAttractionsProp[]) => {
+          const newResJSON = resJSON.map(
+            (item: RoomAttractionsProp, index: number) => {
+              const obj = {
+                AttractionId: item.AttractionId,
+                UserGuid: user.UserGuid,
+                AttractionName: item.AttractionName,
+                ImageUrl: item.ImageUrl,
+                Order: index + 1,
+              }
+              return obj
             }
-            return obj
-          })
+          )
           const newData = prev.concat(newResJSON)
           console.log('1', newData)
 
@@ -582,12 +598,26 @@ export default function PlanningTour({
   }
 }
 
-export async function getServerSideProps({ params }: { params: paramsProp }) {
+export async function getServerSideProps({
+  params,
+  res,
+  req,
+}: {
+  params: paramsProp
+  res: undefined
+  req: undefined
+}) {
   try {
     const { id } = params
+    const token = getCookie('auth', { req, res })
 
     const response = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/${id}`
+      `https://travelmaker.rocket-coding.com/api/rooms/${id}`,
+      {
+        headers: {
+          Authorization: `${token ?? undefined}`,
+        },
+      }
     )
     const data = await response.json()
     // 以及知道這個連結的人會被加進來 (post token)
