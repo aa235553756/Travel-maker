@@ -21,13 +21,13 @@ export default function AttractCard({
 }: {
   id?: number
   showSelect?: boolean
-  showCollect?: boolean 
+  showCollect?: boolean
   showDetail?: boolean
   district: string
   attractName: string
   rating: number
   imagesUrl: string
-  type: string[] 
+  type: string[]
   onClick?: () => void
   onClick1?: () => void
 }) {
@@ -38,7 +38,7 @@ export default function AttractCard({
       <a
         onClick={(e) => {
           e.preventDefault()
-          router.push(`/hot-topics/${id}`)
+          router.push(`/hot-topics/attractions/${id}`)
         }}
         className="absolute w-full h-full z-10 cursor-pointer"
       ></a>
