@@ -11,6 +11,7 @@ export interface CustomModalProp {
   typeConfirm?: boolean
   typeConfirmWarnIcon?: boolean
   typeConfirmText?: string
+  unClickable?: boolean
   onConfirm?: () => void
   onCopy?: () => void
   onReplace?: () => void
@@ -26,6 +27,7 @@ export function CustomModal({
   typeConfirm,
   typeConfirmWarnIcon,
   typeConfirmText,
+  unClickable,
 }: CustomModalProp) {
   // 請帶children取代modal示範
 
@@ -43,7 +45,13 @@ export function CustomModal({
   return (
     <>
       {/* 黑遮罩 待上opacityDuration */}
-      {modal && wrapper && <BlackWrapper setModal={setModal} modal={modal} />}
+      {modal && wrapper && (
+        <BlackWrapper
+          setModal={setModal}
+          modal={modal}
+          unClickable={unClickable}
+        />
+      )}
       {/* modal本體 */}
       <div
         className={`${
@@ -69,11 +77,11 @@ export function CustomModal({
   )
 }
 
-function BlackWrapper({ setModal, modal }: CustomModalProp) {
+function BlackWrapper({ setModal, modal, unClickable }: CustomModalProp) {
   return (
     <div
       onClick={() => {
-        setModal(!modal)
+        unClickable ? null : setModal(!modal)
       }}
       className={`z-50 fixed w-full h-full bg-[rgba(0,0,0,0.5)] top-0 left-0 duration-150 animate-fade`}
     ></div>

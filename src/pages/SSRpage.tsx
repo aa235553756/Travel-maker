@@ -1,7 +1,7 @@
 import { increment } from '@/redux/counterSlice'
 import { getCookie } from 'cookies-next'
+import React, { useState } from 'react'
 import Link from 'next/link'
-import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // const token =
@@ -33,12 +33,30 @@ interface CounterStateProp {
 }
 
 export default function SSRPage({ data }: { data: undefined }) {
+  const [firstData, setfirstData] = useState(0) //originData
+  const [secondData] = useState(firstData)
   // Redux
   const count = useSelector((state: CounterStateProp) => state.counter.value)
   const dispatch = useDispatch()
 
   return (
     <>
+      <div className="text-2xl">
+        {'原始&伺服器日期數量' + firstData}
+        <br />
+        {'本地端基於原始state日期數量' + secondData}
+        <br />
+        <button
+          onClick={() => {
+            setTimeout(() => {
+              setfirstData((prev) => prev + 1)
+            }, 2000)
+          }}
+        >
+          案我GET伺服器數量
+        </button>
+      </div>
+      <br />
       <h1 className="text-2xl">{count}</h1>
       <button
         className="text-2xl"

@@ -14,7 +14,7 @@ interface UsersProp {
 }
 
 interface InvitePeopleProp {
-  AttrationsData: RoomAttractionsProp
+  AttrationsData: RoomAttractionsProp[]
   RoomName: string
   RoomGuid?: string
   Users?: UsersProp[]
