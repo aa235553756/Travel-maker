@@ -80,7 +80,6 @@ export default function MyBlog() {
               poster="老頭阿迪"
               time="2023-03-01 18:00"
               type={['城市走走']}
-              imageUrl="/logo"
               view={10}
               like={10}
               comment={10}
@@ -91,7 +90,6 @@ export default function MyBlog() {
               poster="老頭阿迪"
               time="2023-03-01 18:00"
               type={['城市走走']}
-              imageUrl="/logo"
               view={10}
               like={10}
               comment={10}
@@ -102,7 +100,6 @@ export default function MyBlog() {
               poster="老頭阿迪"
               time="2023-03-01 18:00"
               type={['城市走走']}
-              imageUrl="/logo"
               view={10}
               like={10}
               comment={10}
