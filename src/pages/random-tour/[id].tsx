@@ -10,9 +10,6 @@ export interface randomTourIdProp {
 }
 
 export default function randomTourId({ data }: { data: randomTourIdProp }) {
-  // data
-  console.log(data)
-
   // 同random-index
   return (
     <div>

@@ -22,10 +22,13 @@ import TypeLabel from '@/modules/Banner/TypeLabel'
 import OpenFormBtn from '@/common/components/OpenFormBtn'
 import Image from 'next/image'
 import BannerSelectorMobile from '@/modules/Banner/BannerSelectorMobile'
-import { getCookie } from 'cookies-next'
+import { getCookie, hasCookie } from 'cookies-next'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { MdBookmarkBorder, MdSave } from 'react-icons/md'
 import { CustomModal } from '@/common/components/CustomModal'
+import { useDispatch, useSelector } from 'react-redux'
+import { saveForm, getToursForm } from '@/redux/toursFormSlice'
+import { getRandomTour, saveTours } from '@/redux/randomTourSlice'
 
 export default function RandamTourLayout({
   data: originData,
@@ -40,19 +43,44 @@ export default function RandamTourLayout({
   UserGuid?: string
   TourId?: number
 }) {
-  //token
+  const router = useRouter()
+  const currentUrl = router.asPath
+  const dispatch = useDispatch()
+
+  // =========Redux表單=========
+  const formValue = useSelector(getToursForm)
+
+  // =========token,user State=========
   const token = getCookie('auth')
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
     : undefined
   const [userGuid, setUserGuid] = useState(undefined)
 
-  const router = useRouter()
-  const currentUrl = router.asPath
+  // =========隨機資料state 修改為Redux行程=========
+  const [idData, setIdData] = useState(originData)
+  const data = useSelector(getRandomTour)
 
-  console.log(originData)
-  const [data, setData] = useState(originData)
+  // =========地圖需要的中間點 變數=========
+  const waypoint =
+    (IsTourId ? idData.length : data.length) >= 2
+      ? '&waypoints=' +
+        (IsTourId ? idData : data)
+          .filter((item, i) => {
+            if (i === 0 || i === data.length - 1) {
+              return false
+            }
+            return item.AttractionName
+          })
+          .map((item) => item.AttractionName)
+          .join(' 台北市|') +
+        ' 台北市'
+      : null
+
+  // =========手機版表單state=========
   const [isHidden, setIsHidden] = useState(true)
+
+  // =========各種modal state=========
   const [isLoading, setIsLoading] = useState(false)
   const [isChangeTourName, setIsChangeTourName] = useState(false)
 
@@ -66,23 +94,31 @@ export default function RandamTourLayout({
   const [loginConflirm, setLoginConflirm] = useState(false)
 
   const [collectModal, setCollectModal] = useState(false)
+  // ===unSaved state===
   const [anotherRandom, setAnotherRandom] = useState(false)
   const [joinModal, setJoinModal] = useState(false)
 
+  // =========link特效state=========
   const [linkEffect, setLinkEffect] = useState(false)
 
+  // ========= useRef =========
   const newCollectTourNameInputRef = useRef<HTMLInputElement>(null)
   const newTourNameInputRef = useRef<HTMLInputElement>(null)
   const TourNameInputRef = useRef<HTMLInputElement>(null)
   const roomNameInputRef = useRef<HTMLInputElement>(null)
 
+  // ========= RHF 表單 =========
+  const formId = 'random-tour-form'
+  const formIdMobile = 'random-tour-form-Mobile'
   const {
     register,
     handleSubmit,
     setValue,
     watch,
     formState: { errors },
-  } = useForm<defaultValueProp>({ defaultValues: defaultValues })
+  } = useForm<defaultValueProp>({
+    defaultValues: formValue ? formValue : defaultValues,
+  })
   const {
     register: register2,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -91,22 +127,10 @@ export default function RandamTourLayout({
     setValue: setValue2,
     formState: { errors: errors2 },
   } = useForm<defaultValueProp>({
-    defaultValues,
+    defaultValues: formValue ? formValue : defaultValues,
   })
-  const formIdMobile = 'random-tour-form-Mobile'
-  // const handleErrors2 = (e: { preventDefault: () => void }) => {
-  //   // 判斷2個都為false時
-  //   if (!watch('nearBy') && !watch('DistrictName').length) {
-  //     alert('錯誤，表單填寫不完整 區域')
-  //     e.preventDefault()
-  //     return
-  //   }
-  //   // 判斷有無沒填寫
-  //   if (Object.keys(errors2).length) {
-  //     alert('錯誤，表單填寫不完整 Type')
-  //   }
-  // }
-  const formId = 'random-tour-form'
+
+  // ========= RHF 錯誤捕捉 p.s alert記得關 =========
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
@@ -114,33 +138,20 @@ export default function RandamTourLayout({
       e.preventDefault()
       return
     }
-    // 判斷有無沒填寫
-    // if (!errors) {
-    //   return
-    // }
-
     if (Object.keys(errors).length) {
       alert('錯誤，表單填寫不完整 Type')
     }
   }
 
-  // 電腦版Slider
+  // =========電腦版Slider=========
   const settings = {
-    // className: 'center',
-    // centerMode: true,
-    // centerPadding: '60px',
-    // dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 2,
-    // rows: 4,
   }
-  // 手機版Slider
+  // =========手機版Slider=========
   const settings2 = {
-    // className: 'center',
-    // centerMode: true,
-    // centerPadding: '60px',
     dots: true,
     infinite: false,
     speed: 500,
@@ -148,17 +159,15 @@ export default function RandamTourLayout({
     slidesToScroll: 1,
     rows: 2,
   }
-  useEffect(() => {
-    console.log(data)
-    // alert('每次setData,重整google地圖')
-  }, [data])
 
+  //=========手機版表單 限制滾動useEffect=========
   useEffect(() => {
     if (isHidden) {
       document.body.style.overflow = 'auto'
     }
   }, [isHidden])
 
+  // =========更換行程名稱focus useEffect=========
   useEffect(() => {
     if (TourNameInputRef.current) {
       TourNameInputRef.current.value = String(tourName)
@@ -166,6 +175,7 @@ export default function RandamTourLayout({
     TourNameInputRef?.current?.focus()
   }, [tourName, isChangeTourName])
 
+  //=========不同用戶顯示不同UI useEffect=========
   useEffect(() => {
     // user.UserGuid為cookies內的guid 之後會判斷是否與傳進來的行程創建guid是否吻合
     setUserGuid(user?.UserGuid)
@@ -393,7 +403,7 @@ export default function RandamTourLayout({
           隨機產生行程
         </button>
         <Slider {...settings2}>
-          {data?.map((item, i) => {
+          {(IsTourId ? idData : data)?.map((item, i) => {
             return (
               <div
                 key={item.AttractionId}
@@ -501,7 +511,7 @@ export default function RandamTourLayout({
                     }}
                     className={`${
                       linkEffect && 'animate-fade-in-out'
-                    } absolute text-normal !text-primary opacity-0 top-0 left-[calc(100%+8px)]`}
+                    } z-[-1] absolute text-normal !text-primary opacity-0 top-0 left-[calc(100%+8px)]`}
                   >
                     copied！
                   </div>
@@ -526,7 +536,7 @@ export default function RandamTourLayout({
                   }}
                   className={`${
                     linkEffect && 'animate-fade-in-out'
-                  } absolute text-normal !text-primary opacity-0 left-[calc(100%+8px)]`}
+                  } z-[-1] absolute text-normal !text-primary opacity-0 left-[calc(100%+8px)]`}
                 >
                   copied！
                 </div>
@@ -559,7 +569,7 @@ export default function RandamTourLayout({
             {/* Swiper圖片 */}
             <div className="hidden lg:block max-h-[180px] mb-8">
               <Slider {...settings}>
-                {data?.map((item, i) => {
+                {(IsTourId ? idData : data)?.map((item, i) => {
                   return (
                     <div
                       key={item.AttractionId + 1}
@@ -586,22 +596,44 @@ export default function RandamTourLayout({
                 })}
               </Slider>
             </div>
-            {/* 地圖 */}
-            <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d14459.774055448219!2d121.49936893054726!3d25.035990943540952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e6!4m5!1s0x3442a94a4ed4888b%3A0x7880a95f29f4878e!2z5Zyw5bmz57ea5Z-65Zyw!3m2!1d25.0239646!2d121.5094846!4m5!1s0x3442a90e8737b2f7%3A0x6b6ee112e9e7c58b!2z5bCP5ZCz54mb6IKJ6bq1IDEwOOWPsOWMl-W4guiQrOiPr-WNgOa0m-mZveihlzQ1LTEx6Jmf!3m2!1d25.047628399999997!2d121.508326!5e0!3m2!1szh-TW!2stw!4v1680440395475!5m2!1szh-TW!2stw"
-                className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              ></iframe>
-            </div>
+            {data[0].AttractionId || IsTourId ? (
+              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
+                <iframe
+                  src={`https://www.google.com/maps/embed/v1/directions?key=${
+                    process.env.NEXT_PUBLIC_YANG_GOOGLE_KEY
+                  }&origin=${
+                    (IsTourId ? idData[0] : data[0]).AttractionName + ' 台北市'
+                  }${waypoint}
+                  &destination=${
+                    (IsTourId
+                      ? idData[idData.length - 1]
+                      : data[data.length - 1]
+                    ).AttractionName + ' 台北市'
+                  }`}
+                  // &mode=${'walking'}
+                  className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
+              </div>
+            ) : (
+              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md relative">
+                <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
+                  趕緊按下
+                  <span className="text-primary">隨機產生行程</span>
+                  獲得行程地圖吧！
+                </span>
+              </div>
+            )}
             {/* 邀請收藏按鈕 */}
             <div className="flex justify-end">
               <button
-                disabled={data[0].AttractionId ? false : true}
+                disabled={
+                  (IsTourId ? idData : data)[0].AttractionId ? false : true
+                }
                 className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 mr-10 justify-center items-center rounded-md text-white hover:bg-primary-tint duration-100 disabled:bg-primary/25"
                 onClick={async () => {
-                  if (token === undefined) {
+                  if (!hasCookie('auth')) {
                     setLoginConflirm(true)
                     //請先登入
                     setTimeout(() => {
@@ -609,6 +641,7 @@ export default function RandamTourLayout({
                     }, 2000)
                     return
                   }
+
                   setJoinModal(true)
                 }}
               >
@@ -630,9 +663,11 @@ export default function RandamTourLayout({
               ) : (
                 <button
                   className="inline-flex text-xl bg-primary py-2 lg:py-3 px-6 lg:px-10 justify-center items-center rounded-md text-white hover:bg-primary-tint duration-100 disabled:bg-primary/25"
-                  disabled={data[0].AttractionId ? false : true}
+                  disabled={
+                    (IsTourId ? idData : data)[0].AttractionId ? false : true
+                  }
                   onClick={() => {
-                    if (token === undefined) {
+                    if (!hasCookie('auth')) {
                       setLoginConflirm(true)
                       //請先登入
                       setTimeout(() => {
@@ -663,25 +698,42 @@ export default function RandamTourLayout({
   async function onSubmit(data: defaultValueProp) {
     try {
       setIsLoading(true)
+
       // 缺geo,故先判斷鄰近值,在做函式返回newData
       const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
       alert('這先留著' + JSON.stringify(newData))
+
+      // ===設置 Redux表單 ===
+      dispatch(saveForm(newData))
+
+      // ===打post===
       const res = await getRandomTours(newData)
+
+      // ===res.ok===
       if (res.ok) {
-        setIsHidden(true)
         const resJSON = await res.json()
+        //==設置Redux Tours==
+        if (IsTourId) {
+          setIdData(resJSON)
+        } else {
+          dispatch(saveTours(resJSON))
+        }
+
+        setIsHidden(true)
         setGetRandomConfirm(true)
-        setData(resJSON)
         setAnotherRandom(true)
         setIsLoading(false)
         return
       }
+
+      // ===throw Error===
       throw new Error('錯誤,or沒找到景點')
     } catch (err) {
       setIsLoading(false)
       alert(err)
     }
 
+    // ======handleNearBy控制鄰近經緯 p.s記得補======
     function handleNearBy(bool: boolean) {
       let newData
       // 目前只有false狀態，尚缺true狀態
@@ -705,10 +757,12 @@ export default function RandamTourLayout({
       .join('&')
     // 複製連結
     if (IsTourId) {
+      // !這邊記得換網域
       navigator.clipboard.writeText(`http://localhost:3000${currentUrl}`)
       return
     }
     navigator.clipboard.writeText(
+      // !這邊記得換網域
       `http://localhost:3000/random-tour?${idParams}`
     )
   }
@@ -723,7 +777,7 @@ export default function RandamTourLayout({
         return
       }
       // 行程id陣列
-      const AttractionId = data.map(
+      const AttractionId = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
 
@@ -758,7 +812,7 @@ export default function RandamTourLayout({
       setIsLoading(true)
       const newTourName = newTourNameInputRef?.current?.value
 
-      const AttractionId = data.map(
+      const AttractionId = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
 
@@ -808,7 +862,7 @@ export default function RandamTourLayout({
       setIsLoading(true)
 
       const TourName = newTourNameInputRef?.current?.value
-      const AttractionId = data.map(
+      const AttractionId = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
 
@@ -847,7 +901,7 @@ export default function RandamTourLayout({
       }
       setIsLoading(true)
       const RoomName = roomNameInputRef.current?.value
-      const Attractions = data.map(
+      const Attractions = (IsTourId ? idData : data).map(
         (item: { AttractionId: number }) => item.AttractionId
       )
       const res = await postRoomApi(
