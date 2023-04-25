@@ -834,7 +834,6 @@ export default function HotTopics({
                       handleAddAttr(item.RoomGuid, addAttrId)
                     }}
                     key={item.RoomGuid}
-                    id={addAttrId}
                   >
                     {item.RoomName}
                   </button>
