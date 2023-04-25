@@ -1,9 +1,15 @@
 import React, { useState } from 'react'
 import { MdBookmark, MdBookmarkBorder } from 'react-icons/md'
 
-export default function CollectBtn({ onClick1 }: { onClick1?: () => void }) {
+export default function CollectBtn({
+  showCollect,
+  onClick1,
+}: {
+  showCollect: boolean | undefined
+  onClick1?: () => void
+}) {
   // 收藏 css 狀態
-  const [isCollect, setIsCollect] = useState(true)
+  const [isCollect, setIsCollect] = useState(showCollect)
 
   return (
     <button

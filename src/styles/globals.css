@@ -88,4 +88,12 @@
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
   }
+
+  .css-1fgce2b-control {
+    height: 100% !important;
+  }
+
+  .css-njp27n-control {
+    height: 100% !important;
+  }
 }

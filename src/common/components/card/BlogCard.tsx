@@ -17,8 +17,9 @@ export default function BlogCard({
   view,
   like,
   comment,
+  onClick,
 }: {
-  id?: number
+  id?: number|string
   showCollect: boolean
   blogName: string
   poster: string
@@ -28,21 +29,23 @@ export default function BlogCard({
   view: number
   like: number
   comment: number
+  onClick?: () => void
 }) {
   const router = useRouter()
 
   return (
-    <div className="border border-gray-E7 shadow-[1px_1px_15px_1px_rgba(0,0,0,0.08)] rounded-md relative">
+    <div className="border border-gray-E7 shadow-[1px_1px_15px_1px_rgba(0,0,0,0.08)] rounded-md relative hover:opacity-80 hover:duration-500 hover:-translate-y-1">
       <a
         onClick={(e) => {
           e.preventDefault()
           router.push(`/blog/view-blog/${id}`)
         }}
-        className="absolute w-full h-full z-10"
+        className="absolute w-full h-full z-10 cursor-pointer"
       ></a>
       {/* 收藏遊記 */}
       <div className="absolute top-10 right-10 flex space-x-2 z-30 md:top-5 md:right-5">
-        {showCollect && <CollectBtn />}
+        {/* {showCollect && <CollectBtn showCollect={false} />} */}
+        <CollectBtn onClick1={onClick} showCollect={showCollect} />
       </div>
       <Link href="../blog/view-blog/1">
         {/* 遊記圖片 */}
@@ -53,12 +56,12 @@ export default function BlogCard({
             alt="圖片"
             width={328}
             height={260}
-            className="w-full min-h-[260px] rounded-md"
+            className="w-full h-[260px] min-h-[260px] rounded-md  object-contain bg-black lg:object-none"
           ></Image>
         </div>
         {/* 遊記資訊 */}
         <div className="p-5 pt-4 flex flex-col space-y-3 md:p-4 md:pb-3">
-          <p className="text-lg">{blogName}</p>
+          <p className="text-lg line-clamp-1">{blogName}</p>
           <div className="flex items-center space-x-3">
             <div className="flex item-center space-x-2">
               <Image

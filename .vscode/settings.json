@@ -12,6 +12,7 @@
     "exif",
     "filepond",
     "onupdatefiles",
+    "Randam",
     "selectbox",
     "vertile"
   ] // Tell VSCode to use Prettier as default file formatter

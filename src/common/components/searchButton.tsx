@@ -1,9 +1,12 @@
 import React from 'react'
 import { BsSearch } from 'react-icons/bs'
-export default function SearchButton({}) {
+export default function SearchButton({ onClick }: { onClick?: () => void }) {
   return (
-    <button className="w-full rounded-md py-[10px] bg-[#B9B8B8] md:p-5 md:w-auto">
-      <BsSearch className="inline mx-auto text-xl" />
+    <button
+      className="rounded-xl py-[10px] bg-primary text-white w-[60px] h-[60px] md:p-5 md:w-auto hover:bg-primary-tint hover:duration-500"
+      onClick={onClick}
+    >
+      <BsSearch className="text-xl mx-auto" />
     </button>
   )
 }

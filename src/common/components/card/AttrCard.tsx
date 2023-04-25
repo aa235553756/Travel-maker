@@ -21,7 +21,7 @@ export default function AttractCard({
 }: {
   id?: number
   showSelect?: boolean
-  showCollect?: boolean
+  showCollect?: boolean 
   showDetail?: boolean
   district: string
   attractName: string
@@ -34,17 +34,17 @@ export default function AttractCard({
   const router = useRouter()
 
   return (
-    <div className="shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] rounded-md relative">
+    <div className="shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] rounded-md relative hover:opacity-80 hover:duration-500 hover:-translate-y-1">
       <a
         onClick={(e) => {
           e.preventDefault()
-          router.push(`/hot-topics/attractions/${id}`)
+          router.push(`/hot-topics/${id}`)
         }}
-        className="absolute w-full h-full z-10"
+        className="absolute w-full h-full z-10 cursor-pointer"
       ></a>
       {/* 收藏 & 加入行程 */}
       <div className="absolute top-5 right-5 flex space-x-3 z-30">
-        {showCollect && <CollectBtn onClick1={onClick1} />}
+        <CollectBtn onClick1={onClick1} showCollect={showCollect} />
         {showSelect && <AddTourBtn onClick={onClick} />}
       </div>
       {/* 景點圖片 */}
@@ -55,7 +55,7 @@ export default function AttractCard({
           alt="圖片"
           width={360}
           height={210}
-          className="w-full h-[210px] min-h-[210px] rounded-t-md"
+          className="w-full h-[210px] min-h-[210px] rounded-t-md object-contain bg-black lg:object-none"
         ></Image>
       </div>
       {/* 景點資訊 */}
@@ -64,7 +64,7 @@ export default function AttractCard({
           <BsGeoAltFill className="text-highlight" />
           <p className="font-bold">{district}</p>
         </div>
-        <p className="text-lg mb-3">{attractName}</p>
+        <p className="text-lg mb-3 line-clamp-1">{attractName}</p>
         <div className="mb-3">
           <CustomStar rating={rating} />
         </div>
