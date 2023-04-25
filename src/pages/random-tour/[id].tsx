@@ -10,6 +10,7 @@ export interface randomTourIdProp {
 }
 
 export default function randomTourId({ data }: { data: randomTourIdProp }) {
+  // 同random-index
   return (
     <div>
       {!data.TourId ? '！錯誤，沒有此行程' : null}
