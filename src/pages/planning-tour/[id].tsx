@@ -35,7 +35,6 @@ import { postRoomTours } from '@/util/roomApi'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useRouter } from 'next/router'
 import { getRandomTours } from '@/util/tourApi'
-import { HiOutlineLockOpen } from 'react-icons/hi'
 
 interface paramsProp {
   id: number
@@ -53,6 +52,10 @@ export default function PlanningTour({
   data: PlanningTour
 }) {
   const router = useRouter()
+  const user = getCookie('user')
+    ? JSON.parse(String(getCookie('user')))
+    : undefined
+
   // =========原始資料,其他UI=========
   const [data] = useState(originData)
   const [tabPos, setTabPos] = useState('備用景點')
@@ -263,14 +266,6 @@ export default function PlanningTour({
                                         >
                                           <MdOutlineCancel />
                                         </button>
-                                        <button
-                                          className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-[30px]"
-                                          onClick={() => {
-                                            alert('還沒做，假裝他有鎖起來了')
-                                          }}
-                                        >
-                                          <HiOutlineLockOpen />
-                                        </button>
                                       </div>
                                       {draggableState[i]}
                                     </div>
@@ -361,14 +356,15 @@ export default function PlanningTour({
         over.id === 6 ||
         over.id === 7 ||
         over.id === 8) &&
-      (active.id === 51 ||
-        active.id === 52 ||
-        active.id === 53 ||
-        active.id === 54 ||
-        active.id === 55 ||
-        active.id === 56 ||
-        active.id === 57 ||
-        active.id === 58)
+      active.id >= 51
+      // (active.id === 51 ||
+      //   active.id === 52 ||
+      //   active.id === 53 ||
+      //   active.id === 54 ||
+      //   active.id === 55 ||
+      //   active.id === 56 ||
+      //   active.id === 57 ||
+      //   active.id === 58)
     ) {
       // alert('觸發拖拉&取代')
       setUnSaved(true)
@@ -415,14 +411,15 @@ export default function PlanningTour({
     // ======進入排序判斷======
     if (
       active.id !== over.id &&
-      active.id !== 51 &&
-      active.id !== 52 &&
-      active.id !== 53 &&
-      active.id !== 54 &&
-      active.id !== 55 &&
-      active.id !== 56 &&
-      active.id !== 57 &&
-      active.id !== 58
+      active.id < 51
+      // active.id !== 51 &&
+      // active.id !== 52 &&
+      // active.id !== 53 &&
+      // active.id !== 54 &&
+      // active.id !== 55 &&
+      // active.id !== 56 &&
+      // active.id !== 57 &&
+      // active.id !== 58
     ) {
       // alert('觸發排序')
       // ===設定重排順序===
@@ -477,7 +474,86 @@ export default function PlanningTour({
       const res = await getRandomTours(newData)
       if (res.ok) {
         const resJSON = await res.json()
-        alert(JSON.stringify(resJSON))
+        console.log('resJSON', resJSON)
+
+        // 完成等待中setIsDropped
+        setIsDropped(() => {
+          const newData = Array(8)
+            .fill('')
+            .map((item, index) => {
+              if (resJSON[index]) {
+                return true
+              }
+              return false
+            })
+          console.log('newData', newData)
+          return newData
+        })
+
+        // 完成等待中setSortData
+        setSortData(() => {
+          const newData = resJSON.map((item, index) => {
+            const obj = {
+              AttractionId: item.AttractionId,
+              UserGuid: user.UserGuid,
+              AttractionName: item.AttractionName,
+              ImageUrl: item.ImageUrl,
+              Order: index + 1,
+            }
+            return obj
+          })
+          console.log('newData', newData)
+          return newData
+        })
+
+        // 完成等待中setDraggableState
+        setDraggableState(() => {
+          const newResJSON = resJSON.map((item, index) => {
+            const obj = {
+              AttractionId: item.AttractionId,
+              UserGuid: user.UserGuid,
+              AttractionName: item.AttractionName,
+              ImageUrl: item.ImageUrl,
+              Order: index + 1,
+            }
+            return obj
+          })
+          const newData = Array(8)
+            .fill('')
+            .map((item, index) => {
+              if (newResJSON[index]) {
+                return (
+                  <DragStateDIV
+                    key={newResJSON[index].Order}
+                    item={newResJSON[index]}
+                  />
+                )
+              } else {
+                return <></>
+              }
+            })
+          console.log('newDataDrag', newData)
+          return newData
+        })
+
+        // !尚未完成 若景點id已在備用會導致兩個相同備用景點 異常
+        setStoreTours((prev) => {
+          const newResJSON = resJSON.map((item, index) => {
+            const obj = {
+              AttractionId: item.AttractionId,
+              UserGuid: user.UserGuid,
+              AttractionName: item.AttractionName,
+              ImageUrl: item.ImageUrl,
+              Order: index + 1,
+            }
+            return obj
+          })
+          const newData = prev.concat(newResJSON)
+          console.log('1', newData)
+
+          return newData
+        })
+
         // setGetRandomConfirm(true)
         // setData(resJSON)
         // setAnotherRandom(true)

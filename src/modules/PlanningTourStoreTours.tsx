@@ -18,7 +18,7 @@ export default function PlanningTourStoreTours({
   setUnSaved: React.Dispatch<boolean>
 }) {
   return (
-    <div className="flex flex-wrap mb-12 py-5 px-7 max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
+    <div className=" flex flex-wrap mb-12 py-5 px-7 /max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll z-[-1] rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
       {/* 取唯一一個id ！！！*/}
       {data.map((item, index) => {
         return (
@@ -31,7 +31,6 @@ export default function PlanningTourStoreTours({
                 <MdOutlineCancel
                   className="absolute z-[1] text-white text-xl top-1 right-1 cursor-pointer"
                   onClick={() => {
-                    alert('刪除StoreTours')
                     setStoreTours(data.filter((item, i) => !(i === index)))
                     setUnSaved(true)
                   }}
