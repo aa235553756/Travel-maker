@@ -3,7 +3,20 @@ import Image from 'next/image'
 import React, { useState } from 'react'
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa'
 
-export default function OtherComment({ CommentData }) {
+interface CommentsProp {
+  AttractionCommentId: number
+  ProfilePicture: string
+  UserName: string
+  Score: number
+  InitDate: string
+  Comment: string
+}
+
+export default function OtherComment({
+  CommentData,
+}: {
+  CommentData: { Comments: CommentsProp[]; AverageScore: number }
+}) {
   const { Comments } = CommentData
 
   const [isCommToggle, setIsCommToggle] = useState(false)
@@ -34,7 +47,7 @@ export default function OtherComment({ CommentData }) {
       </div>
       {/* 這是評論小卡區 */}
       <div className="mb-6">
-        {Comments.map((item, index) => {
+        {Comments.map((item: CommentsProp) => {
           return (
             <div
               key={item.AttractionCommentId}

@@ -12,7 +12,10 @@ export default function PostBlog() {
     <div className="container">
       <div className="md:pt-7 pb-[100px] lg:mb-[160px]">
         {/* 圖片 */}
-        <AttrImageContainer className="flex flex-col justify-center mb-10 relative min-w-full min-h-[208px] bg-[rgba(0,0,0,0.5)] md:aspect-[21/9]" />
+        <AttrImageContainer
+          ImageUrl={['/logo.png']}
+          className="flex flex-col justify-center mb-10 relative min-w-full min-h-[208px] bg-[rgba(0,0,0,0.5)] md:aspect-[21/9]"
+        />
 
         {/* 用戶 */}
         <div className="w-full mx-auto lg:w-1/2">

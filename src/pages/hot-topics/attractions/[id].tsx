@@ -10,11 +10,46 @@ import InfoList from '@/modules/AttrPage/InfoList'
 interface paramsProp {
   id: number
 }
+interface AttrAroundsProp {
+  AttractionId: string
+  ImageUrl: string
+  AttractionName: string
+  City: string
+}
+interface Attraction {
+  AttractionData: {
+    IsCollect: boolean
+    AttractionId: number
+    AttractionName: string
+    Introduction: string
+    Address: string
+    Tel: string
+    Email: string
+    OfficialSite: string
+    Facebook: string
+    OpenTime: string
+    ImageUrl: string[]
+  }
+  CommentData: {
+    AverageScore: number
+    Comments: CommentsProp[]
+  }
+  MoreAttractions: AttrAroundsProp[]
+}
+
+interface CommentsProp {
+  AttractionCommentId: number
+  ProfilePicture: string
+  UserName: string
+  Score: number
+  InitDate: string
+  Comment: string
+}
 
 // !不同token下會顯示不同UI，尚缺
 // !修改評論and登入評論and取得更多評論and收藏按鈕and評論排序
 // !圖片輪播
-export default function AttractionsId({ data }: { data: undefined }) {
+export default function AttractionsId({ data }: { data: Attraction }) {
   console.log(data)
 
   return (
