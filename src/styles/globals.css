@@ -89,11 +89,19 @@
     -webkit-line-clamp: 1;
   }
 
-  .css-1fgce2b-control {
-    height: 100% !important;
+  /* 字數過多隱藏(2行) */
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
   }
 
-  .css-njp27n-control {
-    height: 100% !important;
+  /* 字數過多隱藏(3行) */
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
   }
 }

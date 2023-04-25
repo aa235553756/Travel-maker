@@ -3,8 +3,20 @@ import { getRandomTours, getShareTours } from '@/util/tourApi'
 import RandamTourLayout from '@/modules/RandomTourLayout'
 import { randomTourProp } from '@/util/types'
 import Head from 'next/head'
+import { saveTours } from '@/redux/randomTourSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { getIsQuery, setIsQuery } from '@/redux/isQuerySlice'
 
 export default function RandamTour({ data }: { data: randomTourProp[] }) {
+  const dispatch = useDispatch()
+  const isQuery = useSelector(getIsQuery)
+
+  if (isQuery) {
+    //===設定什麼時候要設置true 只有從Ｂanner過來的時候,或其他間接會回到這頁===
+    dispatch(saveTours(data))
+    dispatch(setIsQuery(false))
+  }
+
   return (
     <>
       <Head>
@@ -62,8 +74,7 @@ export async function getServerSideProps(context: {
           .fill('')
           .map(() => {
             return {
-              ImageUrl:
-                'https://fakeimg.pl/200x100/?retina=1&text=示範圖&font=noto',
+              ImageUrl: '/blurLogo.png',
               AttractionName: '景點名稱',
             }
           }),

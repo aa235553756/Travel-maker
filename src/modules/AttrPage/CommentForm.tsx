@@ -4,7 +4,7 @@ import React from 'react'
 
 export default function CommentForm({}) {
   return (
-    <form className="md:mb-[80px] pb-[72px] md:pb-120px md:border-b">
+    <form className="">
       <div className="mx-auto lg:w-2/3">
         <p className="mb-6">
           您尚未登入，亦可
