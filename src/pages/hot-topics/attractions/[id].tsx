@@ -5,60 +5,68 @@ import AttrImageContainer from '@/common/components/AttrImageContainer'
 import AttrIntro from '@/modules/AttrPage/AttrIntro'
 import OthersComment from '../../../modules/AttrPage/OthersComment/index'
 import AttrArounds from '@/modules/AttrPage/AttrArounds'
-import {
-  infoAry,
-  attractionInfo,
-  attractionInfoScore,
-  userName,
-  userComment,
-  attrArounds,
-} from '@/util/attrData'
 import InfoList from '@/modules/AttrPage/InfoList'
 
 interface paramsProp {
   id: number
 }
 
-export async function getServerSideProps({ params }: { params: paramsProp }) {
-  const { id } = params
-  const res = await fetch(`https://dummyjson.com/products/${id}`)
-  const data = await res.json()
-  return {
-    props: { data },
-  }
-}
-
-export default function AttractionsId({ data }: { data: { title: string } }) {
+// !不同token下會顯示不同UI，尚缺
+// !修改評論and登入評論and取得更多評論and收藏按鈕and評論排序
+// !圖片輪播
+export default function AttractionsId({ data }: { data: undefined }) {
   console.log(data)
 
   return (
     <div className="container pt-9 pb-[100px] md:pb-[160px]">
-      <CustomLink data={data} />
+      <CustomLink AttractionName={data.AttractionData.AttractionName} />
 
       {/* 圖片 */}
-      <AttrImageContainer className="flex flex-col justify-center mb-10 relative min-w-full min-h-[208px] bg-[rgba(0,0,0,0.5)] md:aspect-[21/9]" />
+      <div className="lg:w-2/3 mx-auto">
+        <AttrImageContainer
+          ImageUrl={data.AttractionData.ImageUrl}
+          className="flex flex-col justify-center mb-10 relative min-w-full min-h-[208px] bg-black md:aspect-[16/9] rounded-md"
+        />
 
-      {/* 小資訊 */}
-      <InfoList infoAry={infoAry} />
+        {/* 小資訊 */}
+        <InfoList AttractionData={data.AttractionData} />
 
-      {/* 景點介紹 */}
-      <AttrIntro attractionInfo={attractionInfo} />
+        {/* 景點介紹 */}
+        <AttrIntro Introduction={data.AttractionData.Introduction} />
 
-      {/* 圖片 */}
-      <AttrImageContainer className="flex flex-col justify-center relative min-w-full min-h-[208px] bg-[rgba(0,0,0,0.5)] md:aspect-[21/9] mb-[62px] md:mb-[68px]" />
+        {/* 圖片 */}
+        <AttrImageContainer
+          ImageUrl={data.AttractionData.ImageUrl}
+          className="flex flex-col justify-center relative min-w-full min-h-[208px] bg-black md:aspect-[16/9] mb-[62px] md:mb-[68px] rounded-md"
+        />
+      </div>
 
       {/* 其他評論區 */}
-      <OthersComment
-        attractionInfoScore={attractionInfoScore}
-        userName={userName}
-        userComment={userComment}
-      />
+      <div className="pb-[60px] border-b mb-10">
+        <div className="lg:w-2/3 mx-auto ">
+          <OthersComment CommentData={data.CommentData} />
+        </div>
+      </div>
 
       {/* 撰寫評論區 */}
-      <CommentForm />
-
+      <div className="md:mb-[80px] pb-[72px] md:pb-120px md:border-b">
+        <CommentForm />
+      </div>
       {/* 周邊景點列表 */}
-      <AttrArounds attrArounds={attrArounds} />
+
+      <AttrArounds MoreAttractions={data.MoreAttractions} />
     </div>
   )
+}
+
+export async function getServerSideProps({ params }: { params: paramsProp }) {
+  const { id } = params
+  const res = await fetch(
+    `https://travelmaker.rocket-coding.com/api/attractions/${id}`
+    // 記得換token
+  )
+  const data = await res.json()
+  return {
+    props: { data },
+  }
 }
