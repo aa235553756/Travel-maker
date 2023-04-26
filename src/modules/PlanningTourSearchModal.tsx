@@ -103,7 +103,7 @@ export default function PlanningTourSearchModal({
   const attrCardDIVRef = useRef<HTMLDivElement>(null)
 
   return (
-    <div className="px-10 min-w-[calc(744px+80px)] /container pt-[56px] pb-[56px] bg-white rounded-md">
+    <div className="px-10 max-w-[calc(744px+80px)] min-w-[calc(744px+80px)] /container pt-[56px] pb-[56px] bg-white rounded-md">
       {/* 三個Select */}
       <div className="w-full flex mb-7 flex-wrap md:flex-nowrap md:space-x-6">
         <Select
@@ -204,6 +204,7 @@ export default function PlanningTourSearchModal({
                     <AttrCard
                       id={item.AttractionId}
                       showSelect
+                      hideCollectPlanning
                       showCollect={item.IsCollect}
                       district={item.CityDistrict}
                       attractName={item.AttractionName}

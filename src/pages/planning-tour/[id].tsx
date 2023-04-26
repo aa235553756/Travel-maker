@@ -54,6 +54,7 @@ interface PlanningTour {
   AttrationsData: RoomAttractionsProp[]
   RoomName: string
   RoomGuid: string
+  CreaterGuid: string
   VoteDates: VoteDatesProp[]
 }
 
@@ -80,6 +81,8 @@ export default function PlanningTour({
   data: PlanningTour
   hotAttrData: HotAttrProps
 }) {
+  console.log(originData)
+
   const router = useRouter()
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
@@ -93,7 +96,7 @@ export default function PlanningTour({
   // =========各種Modal State=========
   const [isLoading, setIsLoading] = useState(false)
   const [loginConfirm, setLoginConfirm] = useState(false)
-  const [successConfirmModal, setSuccessConfirmModal] = useState(true)
+  const [successConfirmModal, setSuccessConfirmModal] = useState(false)
   const [successConfirmText, setSuccessConfirmText] = useState('')
 
   // ============sort拖拉State=========
@@ -183,11 +186,12 @@ export default function PlanningTour({
 
   // =========useEffect=========
   useEffect(() => {
+    console.log('items', items)
     console.log('isDropped', isDropped)
     console.log('draggableState', draggableState)
     console.log('sortData', sortData)
     console.log('storeTours', storeTours)
-  }, [isDropped, draggableState, sortData, storeTours])
+  }, [isDropped, draggableState, sortData, storeTours, items])
 
   useEffect(() => {
     const token = getCookie('auth')
@@ -353,6 +357,7 @@ export default function PlanningTour({
                 tabPos === '備用景點' ? (
                   <PlanningTourStoreTours
                     data={storeTours}
+                    CreaterGuid={originData.CreaterGuid}
                     setAddTourModal={setAddTourModal}
                     setStoreTours={setStoreTours}
                     setUnSaved={setUnSaved}
@@ -398,8 +403,9 @@ export default function PlanningTour({
       if (res.ok) {
         setIsLoading(false)
         setUnSaved(false)
-        const resJSON = await res.json()
-        alert(JSON.stringify(resJSON))
+        // const resJSON = await res.json()
+        setSuccessConfirmModal(true)
+        setSuccessConfirmText('房間景點修改成功')
         return
       }
       //==throw Error===
@@ -540,6 +546,7 @@ export default function PlanningTour({
       if (res.ok) {
         const resJSON = await res.json()
         //==設置state==
+        setItems([1, 2, 3, 4, 5, 6, 7, 8])
         setSuccessConfirmModal(true)
         setSuccessConfirmText('行程取得成功')
         setIsLoading(false)
