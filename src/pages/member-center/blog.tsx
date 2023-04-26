@@ -199,6 +199,8 @@ export default function Blog({
               {activeTab === 1 && (
                 <div className="flex flex-col space-y-6">
                   {blogData?.BlogData?.map((item) => {
+                    console.log(item.Cover)
+
                     return (
                       <div key={item.BlogGuid}>
                         <BlogCard
@@ -208,7 +210,8 @@ export default function Blog({
                           poster={item.UserName}
                           time={item.InitDate}
                           type={item.Category}
-                          imageUrl={item.ProfilePicture}
+                          blogImage={item.Cover}
+                          userImage={item.ProfilePicture}
                           view={item.Sees}
                           like={item.Likes}
                           comment={item.Comments}
@@ -319,7 +322,8 @@ export default function Blog({
                           poster={item.UserName}
                           time={item.InitDate}
                           type={item.Category}
-                          imageUrl={item.ProfilePicture}
+                          blogImage={item.Cover?.toString() ?? ''}
+                          userImage={item.ProfilePicture?.toString() ?? ''}
                           view={item.Sees}
                           like={item.Likes}
                           comment={item.Comments}
