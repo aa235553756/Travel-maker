@@ -46,6 +46,14 @@ export default function RandamTourLayout({
   const router = useRouter()
   const currentUrl = router.asPath
   const dispatch = useDispatch()
+  const origin =
+    typeof window !== 'undefined' && window.location.origin
+      ? window.location.origin
+      : ''
+
+  const URL = `${origin}`
+  console.log('URL', URL)
+  console.log('router', router.pathname)
 
   // =========Redux表單=========
   const formValue = useSelector(getToursForm)
@@ -413,9 +421,14 @@ export default function RandamTourLayout({
                 <div className="absolute text-white top-1 left-1 w-5 h-5 bg-primary rounded-full flex justify-center items-center">
                   {i + 1}
                 </div>
-                <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white ">
+                <a
+                  target="_blank"
+                  href={`${URL}`}
+                  rel="noopener noreferrer"
+                  className="cursor-pointer absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white "
+                >
                   {item.AttractionName}
-                </div>
+                </a>
                 <Image
                   alt=""
                   src={item.ImageUrl}
@@ -581,9 +594,13 @@ export default function RandamTourLayout({
                         {i + 1}
                       </div>
 
-                      <div className="absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 ">
+                      <a
+                        target="_blank"
+                        href={`/hot-topics/attractions/${item.AttractionId}`}
+                        className="cursor-pointer hover:text-primary-tint absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 "
+                      >
                         {item.AttractionName}
-                      </div>
+                      </a>
                       <Image
                         alt=""
                         src={item.ImageUrl}
@@ -701,7 +718,7 @@ export default function RandamTourLayout({
 
       // 缺geo,故先判斷鄰近值,在做函式返回newData
       const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
-      alert('這先留著' + JSON.stringify(newData))
+      // alert('這先留著' + JSON.stringify(newData))
 
       // ===設置 Redux表單 ===
       dispatch(saveForm(newData))
@@ -758,12 +775,12 @@ export default function RandamTourLayout({
     // 複製連結
     if (IsTourId) {
       // !這邊記得換網域
-      navigator.clipboard.writeText(`http://localhost:3000${currentUrl}`)
+      navigator.clipboard.writeText(`${URL}${currentUrl}`)
       return
     }
     navigator.clipboard.writeText(
       // !這邊記得換網域
-      `http://localhost:3000/random-tour?${idParams}`
+      `${URL}${router.pathname}?${idParams}`
     )
   }
 

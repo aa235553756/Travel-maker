@@ -5,9 +5,19 @@ import WhereIGO from '@/modules/WhereIGO'
 import Explore from '@/modules/Explore'
 import Feature from '@/modules/Feature'
 import Banner from '@/modules/Banner'
+import { useEffect } from 'react'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function Home({ data }: { data: undefined }) {
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((data) => {
+      const latitude = data.coords.latitude
+      const longitude = data.coords.longitude
+      console.log('緯度：', latitude)
+      console.log('經度：', longitude)
+    })
+  }, [])
+
   return (
     <>
       <Head>
