@@ -5,6 +5,7 @@ import { BsCalendar3 } from 'react-icons/bs'
 import { MdAdd, MdOutlineCancel, MdOutlineDateRange } from 'react-icons/md'
 import moment from 'moment'
 import { getCookie } from 'cookies-next'
+
 interface VoteDatesProp {
   VoteDateId: number
   Date: string
@@ -32,6 +33,20 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
         return
       }
 
+      // 篩選出已經有的投票日期
+      const filterDate = selectedDates.map((item) => {
+        return item.Date
+      })
+
+      if (filterDate.includes(moment(startDate).format('YYYY-M-D'))) {
+        alert('此日期已在選項內，請重新選擇日期')
+        return
+      }
+
+      console.log(filterDate);
+      console.log(moment(startDate).format('YYYY-M-D'));
+      
+
       if (startDate) {
         // 【API】主揪.被揪新增日期選項
         const resAddDateData = await fetch(
@@ -45,7 +60,7 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
             },
             body: JSON.stringify({
               RoomGuid: originData.RoomGuid,
-              Date: moment(startDate).format('YYYY-MM-DD'),
+              Date: moment(startDate).format('YYYY-M-D'),
             }),
           }
         )
@@ -65,6 +80,10 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
         setSelectedDates(renderAddDate)
         setStartDate(null)
       }
+
+      // if(startDate===selectedDates.value){
+      //   alert('已有此日期，請勿重複加入')
+      // }
     } catch (err) {
       alert(err)
     }
@@ -199,6 +218,7 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
                       {moment(item.Date).format('YYYY-MM-DD')}
                     </label>
                   </div>
+
                   <div className="flex items-center space-x-4 cursor-pointer">
                     <span>{item.Count}</span>
                     {/* 若是主揪，執行前者，若非主揪，執行後者 */}
@@ -211,7 +231,11 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
                           }}
                         />
                       ) : (
-                        <div className="w-4 h-4"></div>
+                        <MdOutlineCancel
+                          onClick={() => {
+                            handleDelDate(index)
+                          }}
+                        />
                       )
                     ) : item.UserGuid === userGuid ? (
                       //  若是被揪，顯示登入者自己的 Icon
