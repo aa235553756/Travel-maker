@@ -84,6 +84,7 @@ export default function MyBlog() {
               like={10}
               comment={10}
               blogImage={''}
+              userImage={''}
             />
             <BlogCard
               showCollect={false}
@@ -95,6 +96,7 @@ export default function MyBlog() {
               like={10}
               comment={10}
               blogImage={''}
+              userImage={''}
             />
             <BlogCard
               showCollect={false}
@@ -106,6 +108,7 @@ export default function MyBlog() {
               like={10}
               comment={10}
               blogImage={''}
+              userImage={''}
             />
           </div>
         )}

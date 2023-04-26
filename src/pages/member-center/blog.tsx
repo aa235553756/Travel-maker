@@ -323,7 +323,7 @@ export default function Blog({
                           time={item.InitDate}
                           type={item.Category}
                           blogImage={item.Cover?.toString() ?? ''}
-                          userImage={item.ProfilePicture}
+                          userImage={item.ProfilePicture?.toString() ?? ''}
                           view={item.Sees}
                           like={item.Likes}
                           comment={item.Comments}

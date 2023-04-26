@@ -891,7 +891,7 @@ export default function HotTopics({
                           time={'2023-03-12 10:00'}
                           type={item.Category}
                           blogImage={item.Cover?.toString() ?? ''}
-                          userImage={item.ProfilePicture}
+                          userImage={item.ProfilePicture?.toString() ?? ''}
                           view={item.Sees}
                           like={item.Likes}
                           comment={item.Comments}
