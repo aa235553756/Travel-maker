@@ -463,7 +463,7 @@ export default function Header() {
             <>
               <hr />
               <ul className="inline-flex flex-col w-[122px]">
-                <li className="flex space-x-3 py-4 items-center">
+                <li className="flex space-x-3 py-4 items-center cursor-pointer">
                   <div
                     className="flex space-x-2 items-center"
                     onClick={() => {
