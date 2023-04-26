@@ -2,6 +2,7 @@ import React, { ReactNode, useEffect, useRef } from 'react'
 import { BsCheckCircle, BsExclamationCircle } from 'react-icons/bs'
 
 export interface CustomModalProp {
+  top_50?: boolean
   modal: boolean
   wrapper?: boolean
   overflowOpen?: boolean
@@ -18,6 +19,7 @@ export interface CustomModalProp {
 }
 
 export function CustomModal({
+  top_50,
   modal,
   setModal,
   overflowOpen,
@@ -54,9 +56,9 @@ export function CustomModal({
       )}
       {/* modal本體 */}
       <div
-        className={`${
-          modal ? 'scale-x-100 scale-y-100' : null
-        } z-50 fixed top-[40%] left-1/2 translate-x-[-50%] translate-y-[-50%] duration-150 scale-x-0 scale-y-0 `}
+        className={`${modal ? 'scale-x-100 scale-y-100' : null} z-50 fixed ${
+          top_50 ? 'top-1/2' : 'top-[40%]'
+        } left-1/2 translate-x-[-50%] translate-y-[-50%] duration-150 scale-x-0 scale-y-0 `}
       >
         {children || typeConfirm ? children : <ModalExample />}
         {typeConfirm && (

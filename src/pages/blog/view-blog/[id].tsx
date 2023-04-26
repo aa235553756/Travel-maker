@@ -13,7 +13,7 @@ export default function PostBlog() {
       <div className="md:pt-7 pb-[100px] lg:mb-[160px]">
         {/* 圖片 */}
         <AttrImageContainer
-          ImageUrl={['/logo.png']}
+          ImageUrl={['/logo.png.png']}
           className="flex flex-col justify-center mb-10 relative min-w-full min-h-[208px] bg-[rgba(0,0,0,0.5)] md:aspect-[21/9]"
         />
 
