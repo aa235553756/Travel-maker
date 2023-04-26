@@ -1,6 +1,7 @@
 import { RoomAttractionsProp } from '@/util/types'
+import { getCookie } from 'cookies-next'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsList } from 'react-icons/bs'
 import { MdOutlineCancel } from 'react-icons/md'
 import Draggable from './Dragable'
@@ -8,15 +9,27 @@ import Droppable from './Droppable'
 
 export default function PlanningTourStoreTours({
   data,
+  CreaterGuid,
   setAddTourModal,
   setStoreTours,
   setUnSaved,
 }: {
   data: RoomAttractionsProp[]
+  CreaterGuid: string
   setAddTourModal: React.Dispatch<boolean>
   setStoreTours: React.Dispatch<RoomAttractionsProp[]>
   setUnSaved: React.Dispatch<boolean>
 }) {
+  const user = getCookie('user')
+    ? JSON.parse(String(getCookie('user')))
+    : undefined
+
+  const [userGuid, setUserGuid] = useState('')
+
+  useEffect(() => {
+    setUserGuid(user.UserGuid)
+  }, [])
+
   return (
     <div className=" flex flex-wrap mb-12 py-5 px-7 /max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll z-[-1] rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
       {/* 取唯一一個id ！！！*/}
@@ -28,13 +41,15 @@ export default function PlanningTourStoreTours({
                 key={item.AttractionId}
                 className="w-[124px] h-[124px] cursor-default"
               >
-                <MdOutlineCancel
-                  className="absolute z-[1] text-white text-xl top-1 right-1 cursor-pointer"
-                  onClick={() => {
-                    setStoreTours(data.filter((item, i) => !(i === index)))
-                    setUnSaved(true)
-                  }}
-                />
+                {userGuid === CreaterGuid || userGuid === item.UserGuid ? (
+                  <MdOutlineCancel
+                    className="absolute z-[1] text-white text-xl top-1 right-1 cursor-pointer"
+                    onClick={() => {
+                      setStoreTours(data.filter((item, i) => !(i === index)))
+                      setUnSaved(true)
+                    }}
+                  />
+                ) : null}
                 <div className="absolute w-full text-white text-xl bottom-0 pb-1 left-[50%] -translate-x-[50%] z-10 hover:bg-white duration-200 group flex justify-center cursor-grab active:cursor-grabbing">
                   <BsList className="group-hover:text-black" />
                 </div>
