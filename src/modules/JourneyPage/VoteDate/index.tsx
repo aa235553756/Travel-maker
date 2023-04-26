@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { BsCalendar3 } from 'react-icons/bs'
 import { MdAdd, MdOutlineCancel, MdOutlineDateRange } from 'react-icons/md'
 import moment from 'moment'
 import { getCookie } from 'cookies-next'
+import { CustomModal } from '@/common/components/CustomModal'
 
 interface VoteDatesProp {
   VoteDateId: number
@@ -23,13 +24,21 @@ interface VoteDataProp {
 export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
   const [startDate, setStartDate] = useState<null | Date>(null)
   const [selectedDates, setSelectedDates] = useState(originData.VoteDates)
+  const datePickerRef = useRef<DatePicker>(null)
   const token = getCookie('auth')
+
+  // 點擊日期 ICON 可以選擇日期
+  const handleIconClick = () => {
+    if (datePickerRef.current) {
+      datePickerRef.current.setOpen(true)
+    }
+  }
 
   // 新增聚會日期
   const handleAddDate = async () => {
     try {
       if (startDate === null) {
-        alert('請選擇日期')
+        setDateConfirm(true)
         return
       }
 
@@ -39,13 +48,9 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
       })
 
       if (filterDate.includes(moment(startDate).format('YYYY-M-D'))) {
-        alert('此日期已在選項內，請重新選擇日期')
+        setDateRepeatConfirm(true)
         return
       }
-
-      console.log(filterDate);
-      console.log(moment(startDate).format('YYYY-M-D'));
-      
 
       if (startDate) {
         // 【API】主揪.被揪新增日期選項
@@ -80,10 +85,6 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
         setSelectedDates(renderAddDate)
         setStartDate(null)
       }
-
-      // if(startDate===selectedDates.value){
-      //   alert('已有此日期，請勿重複加入')
-      // }
     } catch (err) {
       alert(err)
     }
@@ -158,102 +159,142 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
     setSelectedDates((prev) => prev.filter((_, i) => i !== index))
   }
 
+  // 日期確認彈窗
+  const [dateConfirm, setDateConfirm] = useState(false)
+
+  // 日期重複輸入彈窗
+  const [dateRepeatConfirm, setDateRepeatConfirm] = useState(false)
+
   return (
-    <div className="w-full lg:w-1/3">
-      <h2 className="flex items-center space-x-2 mb-4">
-        <MdOutlineDateRange className="text-xl" />
-        <span className="text-xl">喬日期</span>
-      </h2>
+    <>
+      <div className="w-full lg:w-1/3">
+        <h2 className="flex items-center space-x-2 mb-4">
+          <MdOutlineDateRange className="text-xl" />
+          <span className="text-xl">喬日期</span>
+        </h2>
 
-      <div className="px-6 py-5 shadow-[1px_1px_15px_1px_rgba(1,1,15,0.15)] rounded-md mb-6 lg:mb-0">
-        <div className="flex space-x-4 mb-5 ">
-          <div className="relative w-full">
-            <DatePicker
-              dateFormat="yyyy-MM-dd"
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              className="relative border border-gray-D9 placeholder-gray-D9 bg-[#FBFBFB] rounded-md px-5 py-4 w-full focus:outline-none focus:bg-white focus:border-primary"
-              placeholderText="請選擇日期"
-              minDate={new Date()}
-              showDisabledMonthNavigation
-            />
-            <div className="absolute top-1/2 right-5 transform -translate-y-1/2">
-              <BsCalendar3 className="text-xl" />
-            </div>
-          </div>
-          <button
-            className="border border-gray-D9 text-black rounded-md p-4 hover:bg-primary hover:text-white hover:duration-500"
-            onClick={() => {
-              handleAddDate()
-            }}
-          >
-            <MdAdd className="text-2xl" />
-          </button>
-        </div>
-
-        <div className="h-[236px] overflow-y-auto flex flex-col space-y-4">
-          {selectedDates.map((item, index) => {
-            return (
+        <div className="px-6 py-5 shadow-[1px_1px_15px_1px_rgba(1,1,15,0.15)] rounded-md mb-6 lg:mb-0">
+          <div className="flex space-x-4 mb-5 ">
+            <div className="relative w-full">
+              <DatePicker
+                dateFormat="yyyy-MM-dd"
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                className="relative border border-gray-D9 placeholder-gray-D9 bg-[#FBFBFB] rounded-md px-5 py-4 w-full focus:outline-none focus:bg-white focus:border-primary"
+                placeholderText="請選擇日期"
+                minDate={new Date()}
+                showDisabledMonthNavigation
+                ref={datePickerRef}
+              />
               <div
-                className="border border-[#EAEAEA] p-4 rounded-md  hover:border-primary-dark hover:bg-primary-dark/10 hover:duration-500"
-                key={item.VoteDateId}
+                className="absolute top-1/2 right-5 transform -translate-y-1/2 cursor-pointer"
+                onClick={() => {
+                  handleIconClick()
+                }}
               >
-                <div className="flex justify-between">
-                  <div className="flex space-x-4">
-                    <input
-                      className="cursor-pointer"
-                      type="checkbox"
-                      id="dateCheckbox"
-                      value=""
-                      defaultChecked={item.IsVoted}
-                      onClick={() => {
-                        handleVoteDate(
-                          item.VoteDateId,
-                          item.Count,
-                          item.IsVoted
-                        )
-                      }}
-                    />
-                    <label htmlFor="dateCheckbox">
-                      {moment(item.Date).format('YYYY-MM-DD')}
-                    </label>
-                  </div>
+                <BsCalendar3 className="text-xl" />
+              </div>
+            </div>
+            <button
+              className="border border-gray-D9 text-black rounded-md p-4 hover:bg-primary hover:text-white hover:duration-500"
+              onClick={() => {
+                handleAddDate()
+              }}
+            >
+              <MdAdd className="text-2xl" />
+            </button>
+          </div>
 
-                  <div className="flex items-center space-x-4 cursor-pointer">
-                    <span>{item.Count}</span>
-                    {/* 若是主揪，執行前者，若非主揪，執行後者 */}
-                    {originData && originData.CreaterGuid === userGuid ? (
-                      // 若是主揪，則所有人顯示 Icon
-                      item.UserGuid === userGuid ? (
+          <div className="h-[236px] overflow-y-auto flex flex-col space-y-4">
+            {selectedDates.map((item, index) => {
+              return (
+                <div
+                  className="border border-[#EAEAEA] p-4 rounded-md  hover:border-primary-dark hover:bg-primary-dark/10 hover:duration-500"
+                  key={item.VoteDateId}
+                >
+                  <div className="flex justify-between">
+                    <div className="flex space-x-4">
+                      <input
+                        className="cursor-pointer"
+                        type="checkbox"
+                        id="dateCheckbox"
+                        value=""
+                        defaultChecked={item.IsVoted}
+                        onClick={() => {
+                          handleVoteDate(
+                            item.VoteDateId,
+                            item.Count,
+                            item.IsVoted
+                          )
+                        }}
+                      />
+                      <label htmlFor="dateCheckbox">
+                        {moment(item.Date).format('YYYY-MM-DD')}
+                      </label>
+                    </div>
+
+                    <div className="flex items-center space-x-4 cursor-pointer">
+                      <span>{item.Count}</span>
+                      {/* 若是主揪，執行前者，若非主揪，執行後者 */}
+                      {originData && originData.CreaterGuid === userGuid ? (
+                        // 若是主揪，則所有人顯示 Icon
+                        item.UserGuid === userGuid ? (
+                          <MdOutlineCancel
+                            onClick={() => {
+                              handleDelDate(index)
+                            }}
+                          />
+                        ) : (
+                          <MdOutlineCancel
+                            onClick={() => {
+                              handleDelDate(index)
+                            }}
+                          />
+                        )
+                      ) : item.UserGuid === userGuid ? (
+                        //  若是被揪，顯示登入者自己的 Icon
                         <MdOutlineCancel
                           onClick={() => {
                             handleDelDate(index)
                           }}
                         />
                       ) : (
-                        <MdOutlineCancel
-                          onClick={() => {
-                            handleDelDate(index)
-                          }}
-                        />
-                      )
-                    ) : item.UserGuid === userGuid ? (
-                      //  若是被揪，顯示登入者自己的 Icon
-                      <MdOutlineCancel
-                        onClick={() => {
-                          handleDelDate(index)
-                        }}
-                      />
-                    ) : (
-                      <div className="w-4 h-4"></div>
-                    )}
+                        <div className="w-4 h-4"></div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* 日期確認彈窗 */}
+      <CustomModal
+        modal={dateConfirm}
+        setModal={setDateConfirm}
+        typeConfirm
+        overflowOpen
+        typeConfirmWarnIcon
+        typeConfirmText={'請選擇日期'}
+        onConfirm={() => {
+          setDateConfirm(false)
+        }}
+      />
+
+      {/* 日期重複輸入彈窗 */}
+      <CustomModal
+        modal={dateRepeatConfirm}
+        setModal={setDateRepeatConfirm}
+        typeConfirm
+        overflowOpen
+        typeConfirmWarnIcon
+        typeConfirmText={'已有此日期選項'}
+        onConfirm={() => {
+          setDateRepeatConfirm(false)
+        }}
+      />
+    </>
   )
 }
