@@ -18,11 +18,13 @@ export default function AttractCard({
   type,
   onClick,
   onClick1,
+  hideCollectPlanning,
 }: {
   id?: number
   showSelect?: boolean
   showCollect?: boolean
   showDetail?: boolean
+  hideCollectPlanning?: boolean
   district: string
   attractName: string
   rating: number
@@ -43,10 +45,14 @@ export default function AttractCard({
         className="absolute w-full h-full z-10 cursor-pointer"
       ></a>
       {/* 收藏 & 加入行程 */}
+
       <div className="absolute top-5 right-5 flex space-x-3 z-30">
-        <CollectBtn onClick1={onClick1} showCollect={showCollect} />
+        {hideCollectPlanning ? null : (
+          <CollectBtn onClick1={onClick1} showCollect={showCollect} />
+        )}
         {showSelect && <AddTourBtn onClick={onClick} />}
       </div>
+
       {/* 景點圖片 */}
       <div className="relative w-full">
         <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md"></div>
