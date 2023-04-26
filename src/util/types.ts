@@ -28,6 +28,7 @@ export interface geoDefaultValueProp {
 
 
 export interface RoomAttractionsProp {
+  UserGuid?: string
   AttractionId: number
   AttractionName: string
   Elong: number
