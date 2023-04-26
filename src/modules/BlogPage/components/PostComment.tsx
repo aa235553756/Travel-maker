@@ -4,12 +4,30 @@ import EditBtn from '@/common/components/button/EditBtn'
 import DeleteBtn from '@/common/components/button/DeleteBtn'
 import MoreBtn from '@/common/components/button/MoreBtn'
 
+interface replyAryProps {
+  IsMyComment: boolean
+  BlogReplyId: number
+  UserGuid: string
+  UserName: string
+  InitDate: string
+  ProfilePicture: string
+  Reply: string
+}
+
 export default function PostComment({
   user,
-  comment,
+  userImageUrl,
+  userComment,
+  userTime,
+  isMyComment,
+  replyAry,
 }: {
   user: string
-  comment: string
+  userImageUrl: string
+  userComment: string
+  userTime: string
+  isMyComment: boolean
+  replyAry: replyAryProps[]
 }) {
   // 回覆
   const [isReply, setIsReply] = useState(false)
@@ -26,12 +44,12 @@ export default function PostComment({
   return (
     <div>
       <div className="flex flex-col space-y-6">
-        <div className="bg-[#d7d7d7] rounded-md px-5 py-4 w-full relative">
+        <div className="shadow-[1px_1px_15px_0px_rgba(0,0,0,0.08)] rounded-md px-5 py-4 w-full relative">
           <div className="flex justify-between items-center mb-2">
             <div className="flex items-center space-x-2">
               {/* 頭貼 */}
               <Image
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+                src={userImageUrl}
                 alt="圖片"
                 width={40}
                 height={40}
@@ -43,7 +61,7 @@ export default function PostComment({
                 <div className="flex space-x-5">
                   <p>{user}</p>
                   <a
-                    className="font-bold cursor-pointer"
+                    className="font-bold cursor-pointer text-gray-73"
                     onClick={() => {
                       replyState(true)
                     }}
@@ -51,23 +69,30 @@ export default function PostComment({
                     回覆
                   </a>
                 </div>
-                <p>2023.03.11</p>
+                <p className="text-gray-A8">{userTime}</p>
               </div>
             </div>
 
             {/* 編輯 & 刪除 */}
-            <div className="hidden md:flex md:space-x-2">
-              <EditBtn
-                onClick={() => {
-                  replyState(true)
-                }}
-              />
-              <DeleteBtn
-                onClick={() => {
-                  alert('確定要刪除，刪除後將無法復原?')
-                }}
-              />
-            </div>
+            {isMyComment && (
+              <div className="hidden md:flex md:space-x-5">
+                <div className="border border-primary rounded-full">
+                  <EditBtn
+                    onClick={() => {
+                      replyState(true)
+                    }}
+                  />
+                </div>
+                <div className="border border-primary rounded-full">
+                  <DeleteBtn
+                    onClick={() => {
+                      alert('確定要刪除，刪除後將無法復原?')
+                    }}
+                  />
+                </div>
+              </div>
+            )}
+
             <div className="md:hidden">
               <MoreBtn
                 onClick={() => {
@@ -104,24 +129,34 @@ export default function PostComment({
           </div>
 
           {/* 留言 */}
-          <div className="pl-[48px] mb-3">{comment}</div>
+          <div className="pl-[48px] mb-9">{userComment}</div>
 
           {/* 回覆 */}
-          <div className="flex items-center space-x-2 pl-12">
-            <Image
-              src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
-              alt="圖片"
-              width={40}
-              height={40}
-              className="rounded-full min-h-[40px]"
-            ></Image>
-            <div className="flex flex-col text-sm">
-              <div className="flex space-x-5">
-                <span>老頭阿迪</span>
-                <span>三天前</span>
-              </div>
-              <p>感謝留言，歡迎追蹤。</p>
-            </div>
+          <div className="flex-col space-y-5">
+            {' '}
+            {replyAry.map((item) => {
+              return (
+                <div
+                  className="flex items-center space-x-2 pl-12"
+                  key={item.BlogReplyId}
+                >
+                  <Image
+                    src={item.ProfilePicture}
+                    alt="圖片"
+                    width={40}
+                    height={40}
+                    className="rounded-full min-h-[40px]"
+                  ></Image>
+                  <div className="flex flex-col text-sm">
+                    <div className="flex space-x-5">
+                      <span>{item.UserName}</span>
+                      <span className="text-gray-A8">{item.InitDate}</span>
+                    </div>
+                    <p>{item.Reply}</p>
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
           {/* 回覆留言 input */}

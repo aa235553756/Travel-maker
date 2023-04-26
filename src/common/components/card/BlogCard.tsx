@@ -13,19 +13,21 @@ export default function BlogCard({
   poster,
   time,
   type,
-  imageUrl,
+  blogImage,
+  userImage,
   view,
   like,
   comment,
   onClick,
 }: {
-  id?: number|string
+  id?: number | string
   showCollect: boolean
   blogName: string
   poster: string
   time: string
   type: string[]
-  imageUrl: string
+  blogImage: string
+  userImage: string
   view: number
   like: number
   comment: number
@@ -52,7 +54,7 @@ export default function BlogCard({
         <div className="relative w-full p-5 pb-0 md:p-4 md:pb-0">
           <div className="absolute top-5 left-5 w-[calc(100%-40px)] h-9 bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md md:top-4 md:left-4 md:w-[calc(100%-32px)] md:h-[45px]"></div>
           <Image
-            src={imageUrl}
+            src={blogImage}
             alt="圖片"
             width={328}
             height={260}
@@ -65,7 +67,7 @@ export default function BlogCard({
           <div className="flex items-center space-x-3">
             <div className="flex item-center space-x-2">
               <Image
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+                src={userImage}
                 alt="圖片"
                 width={20}
                 height={20}
