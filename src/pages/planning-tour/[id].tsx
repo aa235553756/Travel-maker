@@ -35,7 +35,8 @@ import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useRouter } from 'next/router'
 import { getRandomTours } from '@/util/tourApi'
 import { getCookie } from 'cookies-next'
-// import { getCookie } from 'cookies-next'
+import PlanningTourSearchModal from '@/modules/PlanningTourSearchModal'
+import { BsXCircle } from 'react-icons/bs'
 
 interface VoteDatesProp {
   VoteDateId: number
@@ -56,10 +57,28 @@ interface PlanningTour {
   VoteDates: VoteDatesProp[]
 }
 
+interface Attractions {
+  IsCollect: boolean
+  AttractionId: number
+  AttractionName: string
+  CityDistrict: string
+  AverageScore: number
+  Category: string[]
+  ImageUrl: string
+}
+
+interface HotAttrProps {
+  TotalPages: number
+  TotalItem: number
+  Attractions: Attractions[]
+}
+
 export default function PlanningTour({
   data: originData,
+  hotAttrData,
 }: {
   data: PlanningTour
+  hotAttrData: HotAttrProps
 }) {
   const router = useRouter()
   const user = getCookie('user')
@@ -71,9 +90,11 @@ export default function PlanningTour({
   const [tabPos, setTabPos] = useState('備用景點')
   const [unSaved, setUnSaved] = useState(false)
 
-  // =========各種Modal的State=========
+  // =========各種Modal State=========
   const [isLoading, setIsLoading] = useState(false)
   const [loginConfirm, setLoginConfirm] = useState(false)
+  const [successConfirmModal, setSuccessConfirmModal] = useState(true)
+  const [successConfirmText, setSuccessConfirmText] = useState('')
 
   // ============sort拖拉State=========
   const [items, setItems] = useState([1, 2, 3, 4, 5, 6, 7, 8])
@@ -182,6 +203,7 @@ export default function PlanningTour({
   return (
     <div>
       <LoadingAnimate isLoading={isLoading} />
+      {/* ======登入提醒====== */}
       <CustomModal
         modal={loginConfirm}
         setModal={setLoginConfirm}
@@ -194,7 +216,42 @@ export default function PlanningTour({
           router.push('/login')
         }}
       />
-      <CustomModal wrapper modal={addTourModal} setModal={setAddTourModal} />
+      {/* ======新增景點 的 搜尋大Modal====== */}
+      <CustomModal
+        wrapper
+        top_50
+        modal={addTourModal}
+        setModal={setAddTourModal}
+      >
+        <button
+          className="cursor-pointer p-2 absolute text-2xl top-2 right-2 z-1 text-primary"
+          onClick={() => {
+            setAddTourModal(false)
+          }}
+        >
+          <BsXCircle />
+        </button>
+        <PlanningTourSearchModal
+          hotAttrData={hotAttrData}
+          storeTours={storeTours}
+          setStoreTours={setStoreTours}
+          setUnSaved={setUnSaved}
+          setSuccessConfirmModal={setSuccessConfirmModal}
+          setSuccessConfirmText={setSuccessConfirmText}
+        />
+      </CustomModal>
+      {/* ======成功modal====== */}
+      <CustomModal
+        modal={successConfirmModal}
+        setModal={setSuccessConfirmModal}
+        typeConfirm
+        overflowOpen
+        typeConfirmText={successConfirmText}
+        onConfirm={() => {
+          setSuccessConfirmModal(false)
+        }}
+      />
+      {/* ======拖拉主要邏輯====== */}
       <div className="container">
         <div className="block mt-4 lg:flex lg:space-x-6 lg:mb-20 md:mt-[80px]">
           <VoteDate data={originData} />
@@ -436,9 +493,6 @@ export default function PlanningTour({
       setItems((items) => {
         const oldIndex = items.indexOf(active.id)
         const newIndex = items.indexOf(over.id)
-        console.log('oldIndex', oldIndex)
-        console.log('newIndex', newIndex)
-
         return arrayMove(items, oldIndex, newIndex)
       })
       const oldIndex2 = items.indexOf(active.id) + 1
@@ -480,11 +534,16 @@ export default function PlanningTour({
       setIsLoading(true)
       // 缺geo,故先判斷鄰近值,在做函式返回newData
       const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
-      alert('這先留著' + JSON.stringify(newData))
       const res = await getRandomTours(newData)
+
+      // ===res.ok===
       if (res.ok) {
         const resJSON = await res.json()
-        console.log('resJSON', resJSON)
+        //==設置state==
+        setSuccessConfirmModal(true)
+        setSuccessConfirmText('行程取得成功')
+        setIsLoading(false)
+        setUnSaved(true)
 
         // ======setIsDropped======
         setIsDropped(() => {
@@ -496,7 +555,6 @@ export default function PlanningTour({
               }
               return false
             })
-          console.log('newData', newData)
           return newData
         })
 
@@ -514,7 +572,6 @@ export default function PlanningTour({
               return obj
             }
           )
-          console.log('newData', newData)
           return newData
         })
 
@@ -546,34 +603,26 @@ export default function PlanningTour({
                 return <></>
               }
             })
-          console.log('newDataDrag', newData)
           return newData
         })
 
-        // !======尚未完成 若景點id已在備用會導致兩個相同備用景點 異常======
-        setStoreTours((prev: RoomAttractionsProp[]) => {
-          const newResJSON = resJSON.map(
-            (item: RoomAttractionsProp, index: number) => {
-              const obj = {
-                AttractionId: item.AttractionId,
-                UserGuid: user.UserGuid,
-                AttractionName: item.AttractionName,
-                ImageUrl: item.ImageUrl,
-                Order: index + 1,
-              }
-              return obj
-            }
-          )
-          const newData = prev.concat(newResJSON)
-          console.log('1', newData)
-
-          return newData
-        })
-
-        // setGetRandomConfirm(true)
-        // setData(resJSON)
-        // setAnotherRandom(true)
-        setIsLoading(false)
+        // !======改為不做怕備用景點過多 尚未完成 若景點id已在備用會導致兩個相同備用景點 異常======
+        // setStoreTours((prev: RoomAttractionsProp[]) => {
+        //   const newResJSON = resJSON.map(
+        //     (item: RoomAttractionsProp, index: number) => {
+        //       const obj = {
+        //         AttractionId: item.AttractionId,
+        //         UserGuid: user.UserGuid,
+        //         AttractionName: item.AttractionName,
+        //         ImageUrl: item.ImageUrl,
+        //         Order: index + 1,
+        //       }
+        //       return obj
+        //     }
+        //   )
+        //   const newData = prev.concat(newResJSON)
+        //   return newData
+        // })
         return
       }
       throw new Error('錯誤,or沒找到景點')
@@ -610,6 +659,13 @@ export async function getServerSideProps({
   try {
     const { id } = params
     const token = getCookie('auth', { req, res })
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
+    }
+
+    if (token) {
+      headers.Authorization = `${token}`
+    }
 
     const response = await fetch(
       `https://travelmaker.rocket-coding.com/api/rooms/${id}`,
@@ -622,9 +678,19 @@ export async function getServerSideProps({
     const data = await response.json()
     // 以及知道這個連結的人會被加進來 (post token)
 
+    //==景點get
+    const resHotAttrData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/attractions/search?Page=1`,
+      {
+        method: 'GET',
+        headers,
+      }
+    )
+    const hotAttrData = await resHotAttrData.json()
+
     if (response.ok) {
       return {
-        props: { data },
+        props: { data: data, hotAttrData: hotAttrData },
       }
     }
     throw new Error('不知名錯誤')

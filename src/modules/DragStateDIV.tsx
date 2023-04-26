@@ -25,7 +25,7 @@ export default function DragStateDIV({ item }: { item: RoomAttractionsProp }) {
           height={180}
           className="object-cover w-full h-full"
           priority
-          blurDataURL="/Group 329.png"
+          blurDataURL="/blurLogo.png"
           placeholder="blur"
         />
       </div>

@@ -50,7 +50,7 @@ export default function PlanningTourStoreTours({
                   height={124}
                   className="object-cover w-full h-full"
                   priority
-                  blurDataURL="/Group 329.png"
+                  blurDataURL="/blurLogo.png"
                   placeholder="blur"
                 />
                 <div className="absolute bottom-0 w-[124px] h-[116px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
@@ -100,7 +100,7 @@ export default function PlanningTourStoreTours({
 //         // height={180}
 //         className="object-cover w-full h-full"
 //         // priority
-//         // blurDataURL="/Group 329.png"
+//         // blurDataURL="/blurLogo.png"
 //         // placeholder="blur"
 //       />
 
@@ -111,7 +111,7 @@ export default function PlanningTourStoreTours({
 //                 height={180}
 //                 className="object-cover w-full h-full"
 //                 priority
-//                 blurDataURL="/Group 329.png"
+//                 blurDataURL="/blurLogo.png"
 //                 placeholder="blur"
 //               /> */}
 //     </div>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { getRandomTours, getShareTours } from '@/util/tourApi'
 import RandamTourLayout from '@/modules/RandomTourLayout'
 import { randomTourProp } from '@/util/types'
@@ -7,15 +7,25 @@ import { saveTours } from '@/redux/randomTourSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { getIsQuery, setIsQuery } from '@/redux/isQuerySlice'
 
-export default function RandamTour({ data }: { data: randomTourProp[] }) {
+export default function RandamTour({
+  data,
+  isLink,
+}: {
+  data: randomTourProp[]
+  isLink?: boolean
+}) {
+  console.log(data)
+
   const dispatch = useDispatch()
   const isQuery = useSelector(getIsQuery)
 
-  if (isQuery) {
-    //===設定什麼時候要設置true 只有從Ｂanner過來的時候,或其他間接會回到這頁===
-    dispatch(saveTours(data))
-    dispatch(setIsQuery(false))
-  }
+  useEffect(() => {
+    if (isQuery || isLink) {
+      //===設定什麼時候要設置true 只有從Ｂanner過來的時候,或其他間接會回到這頁===
+      dispatch(saveTours(data))
+      dispatch(setIsQuery(false))
+    }
+  }, [])
 
   return (
     <>
@@ -62,6 +72,7 @@ export async function getServerSideProps(context: {
         return {
           props: {
             data: resJSON,
+            isLink: true,
           },
         }
       }
