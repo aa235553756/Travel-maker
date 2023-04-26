@@ -80,6 +80,7 @@ export default function MyBlog() {
               view={10}
               like={10}
               comment={10}
+              blogImage={''}
             />
             <BlogCard
               showCollect={false}
@@ -90,6 +91,7 @@ export default function MyBlog() {
               view={10}
               like={10}
               comment={10}
+              blogImage={''}
             />
             <BlogCard
               showCollect={false}
@@ -100,6 +102,7 @@ export default function MyBlog() {
               view={10}
               like={10}
               comment={10}
+              blogImage={''}
             />
           </div>
         )}

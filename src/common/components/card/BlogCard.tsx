@@ -26,7 +26,7 @@ export default function BlogCard({
   poster: string
   time: string
   type: string[]
-  blogImage?: string
+  blogImage: string
   userImage?: string
   view: number
   like: number
