@@ -208,7 +208,7 @@ export default function Blog({
                           poster={item.UserName}
                           time={item.InitDate}
                           type={item.Category}
-                          blogImage={item.Cover}
+                          blogImage={item.Cover?.toString() ?? ''}
                           userImage={item.ProfilePicture}
                           view={item.Sees}
                           like={item.Likes}
@@ -320,7 +320,7 @@ export default function Blog({
                           poster={item.UserName}
                           time={item.InitDate}
                           type={item.Category}
-                          blogImage={item.Cover}
+                          blogImage={item.Cover?.toString() ?? ''}
                           userImage={item.ProfilePicture}
                           view={item.Sees}
                           like={item.Likes}
