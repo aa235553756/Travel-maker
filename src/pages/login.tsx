@@ -1,4 +1,4 @@
-import { getCookie, getCookies, setCookie } from 'cookies-next'
+import { setCookie } from 'cookies-next'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { FaStarOfLife } from 'react-icons/fa'
@@ -68,8 +68,6 @@ export default function Login() {
   const loginAccountRef = useRef<HTMLInputElement | null>(null)
   const registerAccountRef = useRef<HTMLInputElement | null>(null)
 
-  const [modal, setModal] = useState(false)
-
   const router = useRouter()
 
   useEffect(() => {
@@ -79,15 +77,6 @@ export default function Login() {
 
   return (
     <div>
-      <button
-        onClick={() => {
-          setloginSuccess(!loginSuccess)
-        }}
-      >
-        modal按鈕
-      </button>
-
-      <CustomModal modal={modal} setModal={setModal} />
       <CustomModal modal={loginSuccess} setModal={setloginSuccess} wrapper>
         <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
           {success ? (
@@ -100,20 +89,7 @@ export default function Login() {
       </CustomModal>
 
       {isLoading ? <LoadingAnimate isLoading={isLoading} /> : null}
-      <button
-        onClick={() => {
-          console.log('auth的', getCookie('auth'))
-          console.log(
-            'user的',
-            getCookie('user')
-              ? JSON.parse(String(getCookie('user')))
-              : undefined
-          )
-          console.log('取得全部的(會包含亂碼)', getCookies())
-        }}
-      >
-        auth確認按鈕
-      </button>
+
       <div className="container">
         <div className="md:w-full lg:w-2/3 md:mx-auto">
           {/* 這是 Tab 按鈕 */}
