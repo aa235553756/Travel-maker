@@ -93,7 +93,7 @@ export default function PlanningTour({
   // =========各種Modal State=========
   const [isLoading, setIsLoading] = useState(false)
   const [loginConfirm, setLoginConfirm] = useState(false)
-  const [successConfirmModal, setSuccessConfirmModal] = useState(true)
+  const [successConfirmModal, setSuccessConfirmModal] = useState(false)
   const [successConfirmText, setSuccessConfirmText] = useState('')
 
   // ============sort拖拉State=========
