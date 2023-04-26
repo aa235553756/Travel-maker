@@ -310,6 +310,12 @@ export default function Banner() {
                       {...register('nearBy')}
                       onClick={() => {
                         setValue('DistrictName', [])
+                        navigator.geolocation.getCurrentPosition((data) => {
+                          const latitude = data.coords.latitude
+                          const longitude = data.coords.longitude
+                          console.log('緯度：', latitude)
+                          console.log('經度：', longitude)
+                        })
                       }}
                     />
                     鄰近
