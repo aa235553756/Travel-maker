@@ -49,7 +49,3 @@ export async function getServerSideProps(context: { query: { id: number } }) {
     }
   }
 }
-
-// todo
-// 更改行程名稱
-// 儲存後 詢問要新建or取代

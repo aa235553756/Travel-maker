@@ -93,15 +93,3 @@ export async function getServerSideProps(context: {
     }
   }
 }
-
-// todo 依照用戶這頁可以點擊的順序，來補全
-// 先拆嗎??
-// 手機版表單被iphone擋到
-// 手機版swiper 4個or2個
-// header z-index修正
-
-// ?其他
-// ServerSideProp 錯誤後如何處理?? (錯誤,體驗,重要) --目前先回傳空陣列
-// 切換至其他頁 並回原頁面，要儲存Redux (體驗,重要)
-// 並且 表單紀錄也要儲存redux (體驗,最後)
-// 沒有匹配到景點資料，請重新整理 可以做成彈窗(錯誤,體驗,最後)

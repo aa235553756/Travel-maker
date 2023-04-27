@@ -8,8 +8,15 @@ import 'slick-carousel/slick/slick-theme.css'
 import Header from './../common/components/Header'
 import Footer from './../common/components/Footer'
 import wrapper from '@/redux/wrapper'
+import { useEffect } from 'react'
 
 function App({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(() => {
+      return
+    })
+  }, [])
+
   return (
     <div>
       <Header />

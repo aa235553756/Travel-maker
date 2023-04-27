@@ -37,6 +37,7 @@ import { getRandomTours } from '@/util/tourApi'
 import { getCookie } from 'cookies-next'
 import PlanningTourSearchModal from '@/modules/PlanningTourSearchModal'
 import { BsXCircle } from 'react-icons/bs'
+import { geoPromise } from '@/util/constans'
 
 interface VoteDatesProp {
   VoteDateId: number
@@ -81,8 +82,6 @@ export default function PlanningTour({
   data: PlanningTour
   hotAttrData: HotAttrProps
 }) {
-  console.log(originData)
-
   const router = useRouter()
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
@@ -96,6 +95,7 @@ export default function PlanningTour({
   // =========各種Modal State=========
   const [isLoading, setIsLoading] = useState(false)
   const [loginConfirm, setLoginConfirm] = useState(false)
+  const [successConfirmWarn, setSuccessConfirmWarn] = useState(false)
   const [successConfirmModal, setSuccessConfirmModal] = useState(false)
   const [successConfirmText, setSuccessConfirmText] = useState('')
 
@@ -185,13 +185,13 @@ export default function PlanningTour({
   const formId = 'planning-tour-form'
 
   // =========useEffect=========
-  useEffect(() => {
-    console.log('items', items)
-    console.log('isDropped', isDropped)
-    console.log('draggableState', draggableState)
-    console.log('sortData', sortData)
-    console.log('storeTours', storeTours)
-  }, [isDropped, draggableState, sortData, storeTours, items])
+  // useEffect(() => {
+  //   console.log('items', items)
+  //   console.log('isDropped', isDropped)
+  //   console.log('draggableState', draggableState)
+  //   console.log('sortData', sortData)
+  //   console.log('storeTours', storeTours)
+  // }, [isDropped, draggableState, sortData, storeTours, items])
 
   useEffect(() => {
     const token = getCookie('auth')
@@ -249,6 +249,7 @@ export default function PlanningTour({
         modal={successConfirmModal}
         setModal={setSuccessConfirmModal}
         typeConfirm
+        typeConfirmWarnIcon={successConfirmWarn}
         overflowOpen
         typeConfirmText={successConfirmText}
         onConfirm={() => {
@@ -268,6 +269,7 @@ export default function PlanningTour({
           {/* 篩選器及其按鈕 */}
           <div className="mr-6 max-w-[264px] hidden md:block">
             <SelectSide
+              setIsLoading={setIsLoading}
               formId={formId}
               handleSubmit={handleSubmit}
               register={register}
@@ -404,6 +406,7 @@ export default function PlanningTour({
         setIsLoading(false)
         setUnSaved(false)
         // const resJSON = await res.json()
+        setSuccessConfirmWarn(false)
         setSuccessConfirmModal(true)
         setSuccessConfirmText('房間景點修改成功')
         return
@@ -535,11 +538,12 @@ export default function PlanningTour({
   }
 
   async function onSubmit(data: defaultValueProp) {
-    // 假設鎖1,2
+    setIsLoading(true)
     try {
-      setIsLoading(true)
       // 缺geo,故先判斷鄰近值,在做函式返回newData
-      const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
+      const newData = await (data.nearBy
+        ? handleNearBy(true)
+        : handleNearBy(false))
       const res = await getRandomTours(newData)
 
       // ===res.ok===
@@ -547,6 +551,8 @@ export default function PlanningTour({
         const resJSON = await res.json()
         //==設置state==
         setItems([1, 2, 3, 4, 5, 6, 7, 8])
+        setSuccessConfirmWarn(false)
+
         setSuccessConfirmModal(true)
         setSuccessConfirmText('行程取得成功')
         setIsLoading(false)
@@ -614,36 +620,34 @@ export default function PlanningTour({
         })
 
         // !======改為不做怕備用景點過多 尚未完成 若景點id已在備用會導致兩個相同備用景點 異常======
-        // setStoreTours((prev: RoomAttractionsProp[]) => {
-        //   const newResJSON = resJSON.map(
-        //     (item: RoomAttractionsProp, index: number) => {
-        //       const obj = {
-        //         AttractionId: item.AttractionId,
-        //         UserGuid: user.UserGuid,
-        //         AttractionName: item.AttractionName,
-        //         ImageUrl: item.ImageUrl,
-        //         Order: index + 1,
-        //       }
-        //       return obj
-        //     }
-        //   )
-        //   const newData = prev.concat(newResJSON)
-        //   return newData
-        // })
+
         return
       }
       throw new Error('錯誤,or沒找到景點')
     } catch (err) {
       setIsLoading(false)
-      alert(err)
+      setSuccessConfirmModal(true)
+      setSuccessConfirmWarn(true)
+      setSuccessConfirmText('錯誤，無相鄰景點')
     }
 
-    function handleNearBy(bool: boolean) {
+    // ======handleNearBy控制鄰近經緯 ======
+    async function handleNearBy(bool: boolean) {
       let newData
-      // 目前只有false狀態，尚缺true狀態
+      // 目前只有false狀態
       if (!bool) {
         // 取得google定位，設定經緯度
         newData = { Nlat: 0, Elong: 0, ...data }
+        // 取得鎖點(懶人頁較簡易）
+        newData.AttractionId = Array(4).fill(0)
+        //刪除鄰近
+        delete newData.nearBy
+      } else {
+        const res = await geoPromise
+        const Nlat = res.latitude
+        const Elong = res.longitude
+        // 取得google定位，設定經緯度
+        newData = { Nlat, Elong, ...data }
         // 取得鎖點(懶人頁較簡易）
         newData.AttractionId = Array(4).fill(0)
         //刪除鄰近

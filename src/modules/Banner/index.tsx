@@ -17,6 +17,7 @@ import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useDispatch } from 'react-redux'
 import { saveForm } from '@/redux/toursFormSlice'
 import { setIsQuery } from '@/redux/isQuerySlice'
+import { geoPromise } from '@/util/constans'
 
 export default function Banner() {
   const router = useRouter()
@@ -44,12 +45,14 @@ export default function Banner() {
   const formIdMobile = 'banner-form-mobile'
   // =========這邊打POST,取得隨機行程 (鄰近為true要處理經緯度)=========
   const onSubmit = async (data: defaultValueProp) => {
+    dispatch(saveForm(data))
     // 缺geo,故先判斷鄰近值,在做函式返回newData
-    const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
+    const newData = await (data.nearBy
+      ? handleNearBy(true)
+      : handleNearBy(false))
     // alert(JSON.stringify(newData))
     setIsLoading(!isLoading)
     // ===設置 Redux表單 & 避免重新獲取行程狀態===
-    dispatch(saveForm(newData))
     dispatch(setIsQuery(true))
 
     // ===這邊就算找不到景點也會導航到/random-tour===
@@ -61,12 +64,22 @@ export default function Banner() {
     })
 
     // ======handleNearBy控制鄰近經緯 p.s記得補======
-    function handleNearBy(bool: boolean) {
+    async function handleNearBy(bool: boolean) {
       let newData
       // 目前只有false狀態
       if (!bool) {
         // 取得google定位，設定經緯度
         newData = { Nlat: 0, Elong: 0, ...data }
+        // 取得鎖點(懶人頁較簡易）
+        newData.AttractionId = Array(4).fill(0)
+        //刪除鄰近
+        delete newData.nearBy
+      } else {
+        const res = await geoPromise
+        const Nlat = res.latitude
+        const Elong = res.longitude
+        // 取得google定位，設定經緯度
+        newData = { Nlat, Elong, ...data }
         // 取得鎖點(懶人頁較簡易）
         newData.AttractionId = Array(4).fill(0)
         //刪除鄰近
@@ -308,14 +321,19 @@ export default function Banner() {
                       type="checkbox"
                       className="hidden"
                       {...register('nearBy')}
-                      onClick={() => {
-                        setValue('DistrictName', [])
-                        navigator.geolocation.getCurrentPosition((data) => {
-                          const latitude = data.coords.latitude
-                          const longitude = data.coords.longitude
-                          console.log('緯度：', latitude)
-                          console.log('經度：', longitude)
-                        })
+                      onClick={async () => {
+                        setIsLoading(true)
+                        try {
+                          await geoPromise
+                          setValue('nearBy', true)
+                          setValue('DistrictName', [])
+                        } catch (err) {
+                          setValue('nearBy', false)
+                          setValue('DistrictName', ['不限'])
+                        } finally {
+                          setIsLoading(false)
+                        }
+                        return
                       }}
                     />
                     鄰近
@@ -397,32 +415,3 @@ export default function Banner() {
     </div>
   )
 }
-
-//todo
-// ?重要
-// 任務拆分
-// 寫出geo Promise，按下鄰近按鈕時取得or送出時
-// 測試 假資料 & 真資料版本
-// 重設selectData
-// 優化程式碼成 function (目的是newData後 送出表單)
-// 送出後跳轉至規劃並呈現三張圖 (首先確定路由)
-
-// ?次要
-// 限制最多三個選項
-// 按下ok或下一個後，把字印回下拉選單中 (使用者體驗，晚做)
-
-// !geoPromise
-// const geoPromise = new Promise<void>((reslove, reject) => {
-//   navigator.geolocation.getCurrentPosition(
-//     (data) => {
-//       const latitude = data.coords.latitude
-//       const longitude = data.coords.longitude
-//       console.log('緯度：', latitude)
-//       console.log('經度：', longitude)
-//       reslove()
-//     },
-//     () => {
-//       reject()
-//     }
-//   )
-// })

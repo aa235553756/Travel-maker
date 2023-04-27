@@ -29,6 +29,7 @@ import { CustomModal } from '@/common/components/CustomModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveForm, getToursForm } from '@/redux/toursFormSlice'
 import { getRandomTour, saveTours } from '@/redux/randomTourSlice'
+import { geoPromise } from '@/util/constans'
 
 export default function RandamTourLayout({
   data: originData,
@@ -52,8 +53,6 @@ export default function RandamTourLayout({
       : ''
 
   const URL = `${origin}`
-  console.log('URL', URL)
-  console.log('router', router.pathname)
 
   // =========Redux表單=========
   const formValue = useSelector(getToursForm)
@@ -97,9 +96,13 @@ export default function RandamTourLayout({
 
   const [postConfirm, setPostConfirm] = useState(false)
   const [modifyConfirm, setModifyConfirm] = useState(false)
-  const [getRandomConfirm, setGetRandomConfirm] = useState(false)
   const [changeNameConfirm, setChangeNameConfirm] = useState(false)
   const [loginConflirm, setLoginConflirm] = useState(false)
+
+  //===取得行程系列
+  const [getRandomConfirm, setGetRandomConfirm] = useState(false)
+  const [getRandomConfirmWarn, setGetRandomConfirmWarn] = useState(false)
+  const [getRandomConfirmText, setGetRandomConfirmText] = useState('')
 
   const [collectModal, setCollectModal] = useState(false)
   // ===unSaved state===
@@ -247,8 +250,9 @@ export default function RandamTourLayout({
         modal={getRandomConfirm}
         setModal={setGetRandomConfirm}
         typeConfirm
+        typeConfirmWarnIcon={getRandomConfirmWarn}
         overflowOpen
-        typeConfirmText={'行程取得成功'}
+        typeConfirmText={getRandomConfirmText}
         onConfirm={() => {
           setGetRandomConfirm(false)
         }}
@@ -324,7 +328,7 @@ export default function RandamTourLayout({
         <div className="w-[552px] h-[392px] pt-7 bg-white rounded-xl flex flex-col ">
           {/* 標頭 */}
           <div className="flex flex-col items-center mb-12">
-            <div className="flex justify-center items-center mb-6">
+            <div className="flex justify-center items-center mb-6 text-2xl">
               <BsFillPeopleFill className="text-[50px] text-primary mr-4" />
               邀請朋友
             </div>
@@ -562,6 +566,7 @@ export default function RandamTourLayout({
           {/* 篩選器 */}
           <div className="mr-6 hidden lg:block">
             <SelectSide
+              setIsLoading={setIsLoading}
               formId={formId}
               handleSubmit={handleSubmit}
               onSubmit={onSubmit}
@@ -713,15 +718,15 @@ export default function RandamTourLayout({
   )
 
   async function onSubmit(data: defaultValueProp) {
+    setIsLoading(true)
     try {
-      setIsLoading(true)
+      dispatch(saveForm(data))
 
       // 缺geo,故先判斷鄰近值,在做函式返回newData
-      const newData = data.nearBy ? handleNearBy(true) : handleNearBy(false)
+      const newData = await (data.nearBy
+        ? handleNearBy(true)
+        : handleNearBy(false))
       // alert('這先留著' + JSON.stringify(newData))
-
-      // ===設置 Redux表單 ===
-      dispatch(saveForm(newData))
 
       // ===打post===
       const res = await getRandomTours(newData)
@@ -736,6 +741,9 @@ export default function RandamTourLayout({
           dispatch(saveTours(resJSON))
         }
 
+        setGetRandomConfirmWarn(false)
+        setGetRandomConfirmText('行程取得成功')
+
         setIsHidden(true)
         setGetRandomConfirm(true)
         setAnotherRandom(true)
@@ -746,17 +754,30 @@ export default function RandamTourLayout({
       // ===throw Error===
       throw new Error('錯誤,or沒找到景點')
     } catch (err) {
+      setGetRandomConfirm(true)
+      setGetRandomConfirmWarn(true)
+      setGetRandomConfirmText('錯誤，無相鄰景點')
       setIsLoading(false)
-      alert(err)
+      // alert(err)
     }
 
-    // ======handleNearBy控制鄰近經緯 p.s記得補======
-    function handleNearBy(bool: boolean) {
+    // ======handleNearBy控制鄰近經緯 ======
+    async function handleNearBy(bool: boolean) {
       let newData
-      // 目前只有false狀態，尚缺true狀態
+      // 目前只有false狀態
       if (!bool) {
         // 取得google定位，設定經緯度
         newData = { Nlat: 0, Elong: 0, ...data }
+        // 取得鎖點(懶人頁較簡易）
+        newData.AttractionId = Array(4).fill(0)
+        //刪除鄰近
+        delete newData.nearBy
+      } else {
+        const res = await geoPromise
+        const Nlat = res.latitude
+        const Elong = res.longitude
+        // 取得google定位，設定經緯度
+        newData = { Nlat, Elong, ...data }
         // 取得鎖點(懶人頁較簡易）
         newData.AttractionId = Array(4).fill(0)
         //刪除鄰近
@@ -800,7 +821,6 @@ export default function RandamTourLayout({
 
       setIsLoading(true)
       const res = await postTours(String(token), String(TourName), AttractionId)
-      console.log(res.status)
 
       if (res.ok) {
         setIsLoading(false)
