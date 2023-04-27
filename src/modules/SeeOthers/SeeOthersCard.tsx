@@ -29,7 +29,7 @@ export function SeeOthersCard({
 
   return (
     <li
-      id={TourId}
+      id={TourId.toString()}
       className="mr-4 mb-4 even:mr-0 md:mr-0 w-[calc(50%-8px)] md:w-full rounded-xl"
       onMouseEnter={() => handleMouseEnter(TourId)}
       onMouseLeave={() => {
