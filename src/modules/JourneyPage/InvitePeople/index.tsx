@@ -6,6 +6,7 @@ import { RiGlobalLine } from 'react-icons/ri'
 import Image from 'next/image'
 import { RoomAttractionsProp } from '@/util/types'
 import { FaCrown } from 'react-icons/fa'
+import { CustomModal } from '@/common/components/CustomModal'
 
 interface UsersProp {
   ProfilePicture: string
@@ -101,7 +102,7 @@ export default function InvitePeople({
           !validate.test(memberInputRef.current?.value) ||
           memberInputRef.current?.value === ''
         ) {
-          alert('請輸入正確的帳號格式')
+          setAccountConfirm(true)
           return
         }
       }
@@ -124,8 +125,6 @@ export default function InvitePeople({
         }
       )
       const roomMemberData = await resRoomMemberData.json()
-      console.log(roomMemberData)
-      console.log(resRoomMemberData)
 
       if (resRoomMemberData.ok) {
         if (memberInputRef.current) {
@@ -137,6 +136,11 @@ export default function InvitePeople({
           }
         }
         addNewAccount(roomMemberData)
+      }
+
+      if (!resRoomMemberData.ok) {
+        setNotMemberMessage(roomMemberData.Message)
+        setNotMember(true)
       }
     } catch (err) {
       alert(err)
@@ -152,104 +156,137 @@ export default function InvitePeople({
     })
   }
 
-  return (
-    <div className="w-full lg:w-2/3">
-      <h2 className="flex items-center space-x-2 mb-4">
-        <BsPersonFillAdd className="text-xl" />
-        <span className="text-xl">揪人去</span>
-      </h2>
-      <div className="shadow-[1px_1px_15px_1px_rgba(1,1,15,0.15)] rounded-md px-6 py-5 mb-6 lg:mb-0">
-        <div className="flex space-x-4 mb-5">
-          <input
-            type="text"
-            placeholder="請輸入夥伴帳號"
-            ref={memberInputRef}
-            // value={memberValue}
-            // onChange={(e) => setMemberValue(e.target.value)}
-            className="border border-gray-D9 placeholder-gray-D9 bg-[#FBFBFB] rounded-md px-5 py-4 flex-grow focus:outline-none focus:bg-white focus:border-primary"
-          />
-          <button
-            className="border border-gray-D9 text-black rounded-md p-4 hover:bg-primary hover:text-white hover:duration-500"
-            onClick={() => {
-              addAccount()
-            }}
-          >
-            <MdAdd className="text-2xl" />
-          </button>
-        </div>
+  // 帳號驗證彈窗
+  const [accountConfirm, setAccountConfirm] = useState(false)
 
-        <div className="bg-[#EAEAEA] border-b border-[#E8E8E8] p-4 rounded-t-md">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-1">
-              <RiGlobalLine />
-              <span>共同編輯</span>
+  // 尚未成為平台會員彈窗
+  const [notMember, setNotMember] = useState(false)
+  const [notMemberMessage, setNotMemberMessage] = useState('')
+
+  return (
+    <>
+      <div className="w-full lg:w-2/3">
+        <h2 className="flex items-center space-x-2 mb-4">
+          <BsPersonFillAdd className="text-xl" />
+          <span className="text-xl">揪人去</span>
+        </h2>
+        <div className="shadow-[1px_1px_15px_1px_rgba(1,1,15,0.15)] rounded-md px-6 py-5 mb-6 lg:mb-0">
+          <div className="flex space-x-4 mb-5">
+            <input
+              type="text"
+              placeholder="請輸入夥伴帳號"
+              ref={memberInputRef}
+              className="border border-gray-D9 placeholder-gray-D9 bg-[#FBFBFB] rounded-md px-5 py-4 flex-grow focus:outline-none focus:bg-white focus:border-primary"
+            />
+            <button
+              className="border border-gray-D9 text-black rounded-md p-4 hover:bg-primary hover:text-white hover:duration-500"
+              onClick={() => {
+                addAccount()
+              }}
+            >
+              <MdAdd className="text-2xl" />
+            </button>
+          </div>
+
+          <div className="bg-[#EAEAEA] border-b border-[#E8E8E8] p-4 rounded-t-md">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-1">
+                <RiGlobalLine />
+                <span>共同編輯</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="h-[180px] min-h-[180px] overflow-y-auto">
-          <ul className="bg-[#F7F7F7] flex flex-wrap p-3 rounded-b-md">
-            {account?.map(
-              (
-                item: {
-                  UserGuid: string
-                  ProfilePicture: string
-                  UserName: string
-                },
-                index: number
-              ) => {
-                const pic =
-                  item.ProfilePicture === ''
-                    ? '/userDefault.png'
-                    : `${item.ProfilePicture}`
+          <div className="h-[180px] min-h-[180px] overflow-y-auto">
+            <ul className="bg-[#F7F7F7] flex flex-wrap p-3 rounded-b-md">
+              {account?.map(
+                (
+                  item: {
+                    UserGuid: string
+                    ProfilePicture: string
+                    UserName: string
+                  },
+                  index: number
+                ) => {
+                  const pic =
+                    item.ProfilePicture === ''
+                      ? '/userDefault.png'
+                      : `${item.ProfilePicture}`
 
-                return (
-                  <li
-                    className="text-center relative w-[100px] mr-2 mb-4"
-                    key={index}
-                  >
-                    <Image
-                      width="48"
-                      height="48"
-                      src={pic}
-                      alt="圖片"
-                      style={{ border: `2px solid ${colorAry[index]}` }}
-                      className={`block mx-auto w-12 h-12 rounded-full bg-[#ccc] border-2 mb-2`}
-                    ></Image>
-                    <p className="inline-block overflow-hidden text-ellipsis line-clamp-1 w-[100px]">
-                      {item.UserName}
-                    </p>
-                    {item.UserGuid === originData.CreaterGuid ? (
-                      <FaCrown className="absolute top-0 right-2 text-secondary rotate-45" />
-                    ) : null}
+                  return (
+                    <li
+                      className="text-center relative w-[100px] mr-2 mb-4"
+                      key={index}
+                    >
+                      <Image
+                        width="48"
+                        height="48"
+                        src={pic}
+                        alt="圖片"
+                        style={{ border: `2px solid ${colorAry[index]}` }}
+                        className={`block mx-auto w-12 h-12 rounded-full bg-[#ccc] border-2 mb-2`}
+                      ></Image>
+                      <p className="inline-block overflow-hidden text-ellipsis line-clamp-1 w-[100px]">
+                        {item.UserName}
+                      </p>
+                      {item.UserGuid === originData.CreaterGuid ? (
+                        <FaCrown className="absolute top-0 right-2 text-secondary rotate-45" />
+                      ) : null}
 
-                    {/* 若是主揪，執行前者，若非主揪，執行後者 */}
-                    {originData && originData.CreaterGuid === userGuid ? (
-                      // 若是主揪，則其餘人顯示 Icon
-                      item.UserGuid !== userGuid && (
+                      {/* 若是主揪，執行前者，若非主揪，執行後者 */}
+                      {originData && originData.CreaterGuid === userGuid ? (
+                        // 若是主揪，則其餘人顯示 Icon
+                        item.UserGuid !== userGuid && (
+                          <MdOutlineCancel
+                            className="absolute top-0 right-2 text-gray-A8"
+                            onClick={() => {
+                              deleteAccount(index)
+                            }}
+                          />
+                        )
+                      ) : item.UserGuid === userGuid ? (
+                        //  若是被揪，顯示登入者自己的 Icon
                         <MdOutlineCancel
                           className="absolute top-0 right-2 text-gray-A8"
                           onClick={() => {
                             deleteAccount(index)
                           }}
                         />
-                      )
-                    ) : item.UserGuid === userGuid ? (
-                      //  若是被揪，顯示登入者自己的 Icon
-                      <MdOutlineCancel
-                        className="absolute top-0 right-2 text-gray-A8"
-                        onClick={() => {
-                          deleteAccount(index)
-                        }}
-                      />
-                    ) : null}
-                  </li>
-                )
-              }
-            )}
-          </ul>
+                      ) : null}
+                    </li>
+                  )
+                }
+              )}
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
+
+      {/* 輸入帳號格式驗證 */}
+      <CustomModal
+        modal={accountConfirm}
+        setModal={setAccountConfirm}
+        typeConfirm
+        overflowOpen
+        typeConfirmWarnIcon
+        typeConfirmText={'請輸入正確的帳號格式'}
+        onConfirm={() => {
+          setAccountConfirm(false)
+        }}
+      />
+      
+      {/* 帳號非平台會員 */}
+      <CustomModal
+        modal={notMember}
+        setModal={setNotMember}
+        typeConfirm
+        overflowOpen
+        typeConfirmWarnIcon
+        typeConfirmText={notMemberMessage}
+        onConfirm={() => {
+          setNotMember(false)
+        }}
+      />
+    </>
   )
 }
