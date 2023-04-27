@@ -1,65 +1,92 @@
-import CustomLink from '@/modules/AttrPage/CustomLink'
 import CommentForm from '@/modules/AttrPage/CommentForm'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import AttrImageContainer from '@/common/components/AttrImageContainer'
 import AttrIntro from '@/modules/AttrPage/AttrIntro'
 import OthersComment from '@/modules/AttrPage/OthersComment/index'
 import AttrArounds from '@/modules/AttrPage/AttrArounds'
 import InfoList from '@/modules/AttrPage/InfoList'
+import { getCookie } from 'cookies-next'
+import { MdBookmark, MdBookmarkBorder } from 'react-icons/md'
+import { changeCollectApi, getAttractions } from '@/util/attrApi'
+import { CustomModal } from '@/common/components/CustomModal'
+import { BsBookmarkCheck, BsBookmarkX } from 'react-icons/bs'
+import CustomLink from '@/modules/AttrPage/CustomLink'
+import { Attraction, paramsProp } from '@/util/attrTypes'
+import { useRouter } from 'next/router'
 
-interface paramsProp {
-  id: number
-}
-interface AttrAroundsProp {
-  AttractionId: string
-  ImageUrl: string
-  AttractionName: string
-  City: string
-}
-interface Attraction {
-  AttractionData: {
-    IsCollect: boolean
-    AttractionId: number
-    AttractionName: string
-    Introduction: string
-    Address: string
-    Tel: string
-    Email: string
-    OfficialSite: string
-    Facebook: string
-    OpenTime: string
-    ImageUrl: string[]
-  }
-  CommentData: {
-    AverageScore: number
-    Comments: CommentsProp[]
-  }
-  MoreAttractions: AttrAroundsProp[]
-}
+export default function AttractionsId({
+  data: originData,
+}: {
+  data: Attraction
+}) {
+  console.log(originData)
 
-interface CommentsProp {
-  AttractionCommentId: number
-  ProfilePicture: string
-  UserName: string
-  Score: number
-  InitDate: string
-  Comment: string
-}
+  const router = useRouter()
+  const { query } = useRouter()
+  const [token, setToken] = useState('')
 
-// !不同token下會顯示不同UI，尚缺
-// !修改評論and登入評論and取得更多評論and收藏按鈕and評論排序
-// !圖片輪播
-export default function AttractionsId({ data }: { data: Attraction }) {
-  console.log(data)
+  const [data, setData] = useState(originData)
+
+  const newImageUrl = [...data.AttractionData.ImageUrl].filter(
+    (item, index) => {
+      return index !== 1
+    }
+  )
+  const [isCollect, setIsCollect] = useState(data.AttractionData.IsCollect)
+  const [collectDisabled, setCollectDisabled] = useState(false)
+  const [collectModal, setCollectModal] = useState(false)
+  const [collectModalText, setCollectModalText] = useState('')
+  const commentDIVRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setToken(String(getCookie('auth')))
+  }, [])
+
+  useEffect(() => {
+    setData(originData)
+  }, [query])
+
+  useEffect(() => {
+    setIsCollect(data.AttractionData.IsCollect)
+  }, [data])
 
   return (
     <div className="container pt-9 pb-[100px] md:pb-[160px]">
+      {/* 景點收藏成功提醒 Modal */}
+      <CustomModal modal={collectModal} setModal={setCollectModal} wrapper>
+        <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
+          {isCollect ? (
+            <BsBookmarkCheck className="text-[64px] text-[#74c041]" />
+          ) : (
+            <BsBookmarkX className="text-[64px] text-highlight" />
+          )}
+          <p className="text-2xl">{collectModalText}</p>
+        </div>
+      </CustomModal>
+
       <CustomLink AttractionName={data.AttractionData.AttractionName} />
 
       {/* 圖片 */}
-      <div className="lg:w-2/3 mx-auto">
+      <div className="lg:w-2/3 mx-auto relative">
+        <div className="absolute top-4 right-4 z-10">
+          <button
+            disabled={collectDisabled}
+            type="button"
+            className="bg-glass text-primary rounded-full p-2 w-[36px] h-[36px] z-20"
+            onClick={async () => {
+              setCollectDisabled(true)
+              isCollect ? handleCollect('DELETE') : handleCollect('POST')
+            }}
+          >
+            {isCollect ? (
+              <MdBookmark className="text-primary text-xl" />
+            ) : (
+              <MdBookmarkBorder className="text-xl" />
+            )}
+          </button>
+        </div>
         <AttrImageContainer
-          ImageUrl={data.AttractionData.ImageUrl}
+          ImageUrl={newImageUrl}
           className="flex flex-col justify-center mb-10 relative min-w-full min-h-[208px] bg-black md:aspect-[16/9] rounded-md"
         />
 
@@ -70,37 +97,78 @@ export default function AttractionsId({ data }: { data: Attraction }) {
         <AttrIntro Introduction={data.AttractionData.Introduction} />
 
         {/* 圖片 */}
-        <AttrImageContainer
-          ImageUrl={data.AttractionData.ImageUrl}
-          className="flex flex-col justify-center relative min-w-full min-h-[208px] bg-black md:aspect-[16/9] mb-[62px] md:mb-[68px] rounded-md"
-        />
+        {data.AttractionData.ImageUrl.length === 1 ? null : (
+          <AttrImageContainer
+            ImageUrl={[data.AttractionData.ImageUrl[1]]}
+            className="flex flex-col justify-center relative min-w-full min-h-[208px] bg-black md:aspect-[16/9] mb-[62px] md:mb-[68px] rounded-md"
+          />
+        )}
       </div>
 
       {/* 其他評論區 */}
-      <div className="pb-[60px] border-b mb-10">
+      <div className="pb-[60px] border-b mb-10" ref={commentDIVRef}>
         <div className="lg:w-2/3 mx-auto ">
-          <OthersComment CommentData={data.CommentData} />
+          <OthersComment
+            CommentData={data.CommentData}
+            AttractionId={data.AttractionData.AttractionId}
+          />
         </div>
       </div>
 
       {/* 撰寫評論區 */}
       <div className="md:mb-[80px] pb-[72px] md:pb-120px md:border-b">
-        <CommentForm />
+        <CommentForm
+          setData={setData}
+          AttractionId={data.AttractionData.AttractionId}
+          commentDIVRef={commentDIVRef}
+        />
       </div>
       {/* 周邊景點列表 */}
 
       <AttrArounds MoreAttractions={data.MoreAttractions} />
     </div>
   )
+  async function handleCollect(method: string) {
+    try {
+      const res = await changeCollectApi(
+        data.AttractionData.AttractionId,
+        method,
+        token,
+        isCollect
+      )
+
+      //==res ok==
+      if (res.ok) {
+        setCollectModal(true)
+        setIsCollect(!isCollect)
+        setCollectModal(true)
+        setCollectModalText(method === 'POST' ? '收藏景點成功' : '取消收藏景點')
+        return
+      }
+
+      //==else throw error==
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      router.push('/login')
+    } finally {
+      setCollectDisabled(false)
+    }
+  }
 }
 
-export async function getServerSideProps({ params }: { params: paramsProp }) {
+export async function getServerSideProps({
+  params,
+  res,
+  req,
+}: {
+  params: paramsProp
+  res: undefined
+  req: undefined
+}) {
   const { id } = params
-  const res = await fetch(
-    `https://travelmaker.rocket-coding.com/api/attractions/${id}`
-    // 記得換token
-  )
-  const data = await res.json()
+  const token = getCookie('auth', { res, req })
+  const response = await getAttractions(id, token ? token : null)
+  const data = await response.json()
   return {
     props: { data },
   }
