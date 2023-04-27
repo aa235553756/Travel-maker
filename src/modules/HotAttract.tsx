@@ -29,7 +29,7 @@ export default function HotAttract({ hotAttrData }: HotAttrDataProps) {
               return (
                 <div
                   key={index}
-                  className="max-w-[328px] md:[&:nth-child(3)]:hidden lg:[&:nth-child(3)]:block"
+                  className="max-w-[328px] w-[328px] md:[&:nth-child(3)]:hidden lg:[&:nth-child(3)]:block"
                 >
                   <AttrCard
                     id={item.AttractionId}

@@ -7,13 +7,17 @@ export default function ExploreCarousel() {
       <Marquee speed={70} gradientWidth={20} play={true}>
         {imagesSlides.map((item, index) => {
           return (
-            <a href="" key={index} className="mr-5 group relative rounded-md">
-              <div className="absolute w-full h-full group-hover:backdrop-blur-sm group-hover:bg-[rgba(0,0,0,0.5)] rounded-md"></div>
+            <div key={index} className="mr-5 group relative rounded-md">
               {item}
-              <div className="hidden text-lg lg:text-xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] group-hover:block">
-                AttrTitle
-              </div>
-            </a>
+            </div>
+            // 這邊是探索的景點連結 hover 效果
+            // <a href="" key={index} className="mr-5 group relative rounded-md">
+            //   <div className="absolute w-full h-full group-hover:backdrop-blur-sm group-hover:bg-[rgba(0,0,0,0.5)] rounded-md"></div>
+            //   {item}
+            //   <div className="hidden text-lg lg:text-xl text-white absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] group-hover:block">
+            //     AttrTitle
+            //   </div>
+            // </a>
           )
         })}
       </Marquee>
