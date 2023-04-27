@@ -1,33 +1,21 @@
 import AttrCard from '@/common/components/card/AttrCard'
 import React from 'react'
 
-export default function HotAttract() {
-  const hotAttr = [
-    {
-      guid: 446,
-      attractName: '社子島迎星碼頭',
-      district: '台北市士林區',
-      rating: 4,
-      imagesUrl: '/attr1.jpg',
-      type: ['城市走走', '親子互動'],
-    },
-    {
-      guid: 224,
-      attractName: '南機場夜市',
-      district: '台北市中正區',
-      rating: 2,
-      imagesUrl: '/attr2.jpg',
-      type: ['夜間首選'],
-    },
-    {
-      guid: 121,
-      attractName: '五指山系_金面山親山步道',
-      district: '台北市內湖區',
-      rating: 4,
-      imagesUrl: '/attr3.jpg',
-      type: ['冒險活潑'],
-    },
-  ]
+interface AttractionDetails {
+  IsCollect: boolean
+  AttractionId: number
+  AttractionName: string
+  CityDistrict: string
+  AverageScore: number
+  Category: string[]
+  ImageUrl: string
+}
+
+interface HotAttrDataProps {
+  hotAttrData: AttractionDetails[]
+}
+
+export default function HotAttract({ hotAttrData }: HotAttrDataProps) {
   return (
     <div>
       <div className="container">
@@ -37,19 +25,20 @@ export default function HotAttract() {
             尚夯ㄟ景點
           </h2>
           <ul className="flex flex-col md:flex-row space-y-10 md:space-y-0 md:space-x-8 lg:space-x-0 items-center justify-between cursor-pointer">
-            {hotAttr.map((item, index) => {
+            {hotAttrData.map((item, index) => {
               return (
                 <div
                   key={index}
                   className="max-w-[328px] md:[&:nth-child(3)]:hidden lg:[&:nth-child(3)]:block"
                 >
                   <AttrCard
-                    id={item.guid}
-                    attractName={item.attractName}
-                    district={item.district}
-                    rating={item.rating}
-                    imagesUrl={item.imagesUrl}
-                    type={item.type}
+                    id={item.AttractionId}
+                    attractName={item.AttractionName}
+                    district={item.CityDistrict}
+                    rating={item.AverageScore}
+                    imagesUrl={item.ImageUrl}
+                    type={item.Category}
+                    hideCollectPlanning
                   />
                 </div>
               )

@@ -5,10 +5,91 @@ import WhereIGO from '@/modules/WhereIGO'
 import Explore from '@/modules/Explore'
 import Feature from '@/modules/Feature'
 import Banner from '@/modules/Banner'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+
+interface AttractionDataProps {
+  AttractionId: number
+  AttractionName: string
+  ImageUrl: string
+}
+
+interface TryDataProps {
+  Category: string
+  AttractionData: AttractionDataProps[]
+}
+
+interface Attraction {
+  AttractionName: string
+  Elong: number
+  Nlat: number
+}
+
+interface Tour {
+  TourId: number
+  TourName: string
+  ImageUrl: string
+  Category: string
+  Likes: number
+  IsLike: boolean
+  Attractions: Attraction[]
+}
+
+interface AttractionDetails {
+  IsCollect: boolean
+  AttractionId: number
+  AttractionName: string
+  CityDistrict: string
+  AverageScore: number
+  Category: string[]
+  ImageUrl: string
+}
+
+interface HotData {
+  Tours: Tour[]
+  Attractions: AttractionDetails[]
+}
+
+export async function getStaticProps() {
+  // 【API】試玩行程
+  const resTryData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/tours/try`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const tryData = await resTryData.json()
+
+  // 【API】首頁 - 取得熱門行程及熱門景點
+  const resHotData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/tours/homepage`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const hotData = await resHotData.json()
+
+  return {
+    props: {
+      tryData,
+      hotData,
+    },
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default function Home({ data }: { data: undefined }) {
+export default function Home({
+  tryData,
+  hotData,
+}: {
+  tryData: TryDataProps
+  hotData: HotData
+}) {
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((data) => {
       const latitude = data.coords.latitude
@@ -17,6 +98,36 @@ export default function Home({ data }: { data: undefined }) {
       console.log('經度：', longitude)
     })
   }, [])
+
+  // 試玩行程種類 state
+  const [tryPlayCategoryData, setTryPlayCategoryData] = useState(
+    tryData.Category
+  )
+
+  // 試玩行程景點 state
+  const [tryPlayData, setTryPlayData] = useState(tryData.AttractionData)
+
+  // 點擊換一組
+  const handleTry = async () => {
+    const resTryData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/tours/try`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+
+    const newData = await resTryData.json()
+    setTryPlayCategoryData(newData.Category)
+    setTryPlayData(newData.AttractionData)
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [hotTourData, setHotTourData] = useState(hotData.Tours)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [hotAttrData, setHotAttrData] = useState(hotData.Attractions)
 
   return (
     <>
@@ -28,17 +139,17 @@ export default function Home({ data }: { data: undefined }) {
       </Head>
       <div>
         <Banner />
-        <WhereIGO />
+        <WhereIGO
+          tryPlayCategoryData={tryPlayCategoryData}
+          tryPlayData={tryPlayData}
+          onClick={() => handleTry()}
+        />
         <Feature />
         <Explore />
-        <SeeOthers TourName={''} CategoryId={0} Like={0} ImageUrl={''} />
-        <HotAttract />
+        {/* <SeeOthers TourName={''} CategoryId={0} Like={0} ImageUrl={''} /> */}
+        <SeeOthers hotTourData={hotTourData} />
+        <HotAttract hotAttrData={hotAttrData} />
       </div>
     </>
   )
-}
-export async function getStaticProps() {
-  return {
-    props: { data: '' },
-  }
 }

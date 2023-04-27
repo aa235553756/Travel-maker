@@ -1,4 +1,5 @@
 import Marquee from 'react-fast-marquee'
+import Image from 'next/image'
 
 export default function ExploreCarousel() {
   return (
@@ -21,54 +22,62 @@ export default function ExploreCarousel() {
 }
 
 const imagesSlides = [
-  <img
+  <Image
+    width={250}
+    height={376}
     key={0}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/image/222058/?r=1637650550884"
-    alt=""
-  />,
-  <img
+    src="/explore1.jpg"
+    alt="圖片"
+  ></Image>,
+  <Image
+    width={250}
+    height={376}
     key={1}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/content/images/attractions/282180/1024x768_attractions-image--rznjhetiuoqnzoyqppjgw.jpg"
-    alt=""
-  />,
-  <img
+    src="/explore2.jpg"
+    alt="圖片"
+  ></Image>,
+  <Image
+    width={250}
+    height={376}
     key={2}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/content/images/attractions/282359/1024x768_attractions-image-fqzciehrqkgic0eigurzvg.jpg"
-    alt=""
-  />,
-  <img
+    src="/explore3.jpg"
+    alt="圖片"
+  ></Image>,
+  <Image
+    width={250}
+    height={376}
     key={3}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/content/images/attractions/64607/1024x768_attractions-image-jjmofe2wt0calhfnw2cfca.jpg"
-    alt=""
-  />,
-  <img
+    src="/explore4.jpg"
+    alt="圖片"
+  ></Image>,
+  <Image
+    width={250}
+    height={376}
     key={4}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/image/222058/?r=1637650550884"
-    alt=""
-  />,
-  <img
+    src="/explore5.jpg"
+    alt="圖片"
+  ></Image>,
+  <Image
+    width={250}
+    height={376}
     key={5}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/content/images/attractions/282180/1024x768_attractions-image--rznjhetiuoqnzoyqppjgw.jpg"
-    alt=""
-  />,
-  <img
+    src="/explore6.jpg"
+    alt="圖片"
+  ></Image>,
+  <Image
+    width={250}
+    height={376}
     key={6}
     className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/content/images/attractions/282359/1024x768_attractions-image-fqzciehrqkgic0eigurzvg.jpg"
-    alt=""
-  />,
-  <img
-    key={7}
-    className="object-cover !w-[250px] !h-[376px] block rounded-md"
-    src="https://www.travel.taipei/content/images/attractions/64607/1024x768_attractions-image-jjmofe2wt0calhfnw2cfca.jpg"
-    alt=""
-  />,
+    src="/explore7.jpg"
+    alt="圖片"
+  ></Image>,
 ]
 
 // todo
