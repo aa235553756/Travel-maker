@@ -119,7 +119,7 @@ export default function OtherComment({
                 body: JSON.stringify({
                   AttractionId,
                   // 控制由最高排序or最低排序
-                  Order: 'string',
+                  Order: 'higher',
                   Page: page,
                 }),
               }
