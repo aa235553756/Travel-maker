@@ -36,7 +36,7 @@ export default function AttrArounds({
             // </div>
             <li
               key={index}
-              className={`shadow-lg flex-grow w-full relative rounded-md ${
+              className={`shadow-lg flex-grow w-full relative rounded-md hover:opacity-80 hover:duration-500 hover:-translate-y-1 ${
                 index === 2 ? `md:hidden lg:block` : null
               }`}
             >
