@@ -41,9 +41,9 @@ function ExploreOutlineBtn({}) {
   return (
     <Link
       href="/hot-topics"
-      className="inline-block text-lg lg:text-base py-2 px-5 border border-primary text-primary rounded-md"
+      className="inline-block text-lg lg:text-base py-2 px-5 border border-primary text-primary rounded-md hover:duration-300 hover:bg-primary hover:text-white"
     >
-      更多行程
+      更多景點
     </Link>
   )
 }
