@@ -38,7 +38,7 @@ export default function SeeOthers({ hotTourData }: hotTourDataProps) {
         {showMap === hotTourData[0].TourId && (
           <div
             className="bg-gray-E7 h-[324px] mb-6 order-1 flex-grow rounded-xl md:mb-0 md:h-auto"
-            id={hotTourData[0].TourId}
+            id={hotTourData[0].TourId.toString()}
           >
             <iframe
               src={`https://www.google.com/maps/embed/v1/directions?key=${
@@ -59,7 +59,7 @@ export default function SeeOthers({ hotTourData }: hotTourDataProps) {
         {showMap === hotTourData[1].TourId && (
           <div
             className="bg-gray-E7 h-[324px] mb-6 order-1 flex-grow rounded-xl md:mb-0 md:h-auto"
-            id={hotTourData[0].TourId}
+            id={hotTourData[0].TourId.toString()}
           >
             <iframe
               src={`https://www.google.com/maps/embed/v1/directions?key=${
@@ -80,7 +80,7 @@ export default function SeeOthers({ hotTourData }: hotTourDataProps) {
         {showMap === hotTourData[2].TourId && (
           <div
             className="bg-gray-E7 h-[324px] mb-6 order-1 flex-grow rounded-xl md:mb-0 md:h-auto"
-            id={hotTourData[0].TourId}
+            id={hotTourData[0].TourId.toString()}
           >
             <iframe
               src={`https://www.google.com/maps/embed/v1/directions?key=${
@@ -101,7 +101,7 @@ export default function SeeOthers({ hotTourData }: hotTourDataProps) {
         {showMap === hotTourData[3].TourId && (
           <div
             className="bg-gray-E7 h-[324px] mb-6 order-1 flex-grow rounded-xl md:mb-0 md:h-auto"
-            id={hotTourData[0].TourId}
+            id={hotTourData[0].TourId.toString()}
           >
             <iframe
               src={`https://www.google.com/maps/embed/v1/directions?key=${
