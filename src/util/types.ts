@@ -1,3 +1,5 @@
+import { Attraction } from "./attrTypes"
+
 export interface defaultValueProp {
   CategoryId: string[]
   AttrCounts: string
@@ -37,3 +39,14 @@ export interface RoomAttractionsProp {
   Order: number
 }
 
+
+export interface MoreTourProp {
+  TourId: number
+  TourName: string
+  ImageUrl: string[]
+  AttrCounts: number
+  Category: string
+  Likes: number
+  IsLike: boolean
+  Attractions: Attraction[]
+}

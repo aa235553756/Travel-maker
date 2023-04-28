@@ -5,7 +5,7 @@ import WhereIGO from '@/modules/WhereIGO'
 import Explore from '@/modules/Explore'
 import Feature from '@/modules/Feature'
 import Banner from '@/modules/Banner'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 interface AttractionDataProps {
   AttractionId: number
@@ -90,15 +90,6 @@ export default function Home({
   tryData: TryDataProps
   hotData: HotData
 }) {
-  useEffect(() => {
-    navigator.geolocation.getCurrentPosition((data) => {
-      const latitude = data.coords.latitude
-      const longitude = data.coords.longitude
-      console.log('緯度：', latitude)
-      console.log('經度：', longitude)
-    })
-  }, [])
-
   // 試玩行程種類 state
   const [tryPlayCategoryData, setTryPlayCategoryData] = useState(
     tryData.Category

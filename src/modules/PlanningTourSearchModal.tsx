@@ -72,6 +72,7 @@ export default function PlanningTourSearchModal({
   setUnSaved,
   setSuccessConfirmModal,
   setSuccessConfirmText,
+  setSuccessConfirmWarn,
 }: {
   hotAttrData: HotAttrProps
   storeTours: storeTourProp[]
@@ -79,6 +80,7 @@ export default function PlanningTourSearchModal({
   setUnSaved: React.Dispatch<boolean>
   setSuccessConfirmModal: React.Dispatch<boolean>
   setSuccessConfirmText: React.Dispatch<string>
+  setSuccessConfirmWarn: React.Dispatch<boolean>
 }) {
   // ======use Cookies=========
   const user = getCookie('user')
@@ -224,6 +226,7 @@ export default function PlanningTourSearchModal({
                         setStoreTours([...storeTours, obj])
                         setUnSaved(true)
                         setSuccessConfirmModal(true)
+                        setSuccessConfirmWarn(false)
                         setSuccessConfirmText('新增備用景點成功')
                       }}
                       // setModal(!modal)

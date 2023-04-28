@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { getRandomTours, getShareTours } from '@/util/tourApi'
 import RandamTourLayout from '@/modules/RandomTourLayout'
-import { randomTourProp } from '@/util/types'
+import { MoreTourProp, randomTourProp } from '@/util/types'
 import Head from 'next/head'
 import { saveTours } from '@/redux/randomTourSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,12 +10,12 @@ import { getIsQuery, setIsQuery } from '@/redux/isQuerySlice'
 export default function RandamTour({
   data,
   isLink,
+  moreData,
 }: {
   data: randomTourProp[]
   isLink?: boolean
+  moreData: MoreTourProp[]
 }) {
-  console.log(data)
-
   const dispatch = useDispatch()
   const isQuery = useSelector(getIsQuery)
 
@@ -36,7 +36,7 @@ export default function RandamTour({
         <link rel="icon" href="/Group 340.png" />
       </Head>
       <div>
-        <RandamTourLayout data={data} />
+        <RandamTourLayout data={data} moreData={moreData} />
       </div>
     </>
   )
@@ -46,15 +46,21 @@ export async function getServerSideProps(context: {
   query: { data: string; id: number[] }
 }) {
   try {
+    const resMore = await fetch(
+      'https://travelmaker.rocket-coding.com/api/tours/hot'
+    )
     // 由首頁送來表單data
     if (context.query.hasOwnProperty('data')) {
       const data = JSON.parse(context.query.data)
       const res = await getRandomTours(data)
-      if (res.ok) {
+
+      if (res.ok && resMore.ok) {
+        const resMoreJSON = await resMore.json()
         const resJSON = await res.json()
         return {
           props: {
             data: resJSON,
+            moreData: resMoreJSON,
           },
         }
       }
@@ -67,18 +73,24 @@ export async function getServerSideProps(context: {
         })
         .join('&')
       const res = await getShareTours(data)
-      if (res.ok) {
+      if (res.ok && resMore.ok) {
+        const resMoreJSON = await resMore.json()
         const resJSON = await res.json()
         return {
           props: {
             data: resJSON,
             isLink: true,
+            moreData: resMoreJSON,
           },
         }
       }
     }
     throw new Error('不知名錯誤')
   } catch (err) {
+    const resMore = await fetch(
+      'https://travelmaker.rocket-coding.com/api/tours/hot'
+    )
+    const resMoreJSON = await resMore.json()
     return {
       props: {
         data: Array(8)
@@ -89,19 +101,8 @@ export async function getServerSideProps(context: {
               AttractionName: '景點名稱',
             }
           }),
+        moreData: resMoreJSON,
       },
     }
   }
 }
-
-// todo 依照用戶這頁可以點擊的順序，來補全
-// 先拆嗎??
-// 手機版表單被iphone擋到
-// 手機版swiper 4個or2個
-// header z-index修正
-
-// ?其他
-// ServerSideProp 錯誤後如何處理?? (錯誤,體驗,重要) --目前先回傳空陣列
-// 切換至其他頁 並回原頁面，要儲存Redux (體驗,重要)
-// 並且 表單紀錄也要儲存redux (體驗,最後)
-// 沒有匹配到景點資料，請重新整理 可以做成彈窗(錯誤,體驗,最後)

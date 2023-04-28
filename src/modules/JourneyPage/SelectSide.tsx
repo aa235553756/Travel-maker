@@ -15,6 +15,13 @@ import {
 } from 'react-hook-form'
 import { defaultValueProp } from '@/util/types'
 
+// import { geoPromise } from '@/util/constans'
+
+interface PositionData {
+  latitude: number
+  longitude: number
+}
+
 interface SelectSideProp {
   formId: string
   register: UseFormRegister<defaultValueProp>
@@ -22,6 +29,7 @@ interface SelectSideProp {
   onSubmit: SubmitHandler<defaultValueProp>
   setValue: UseFormSetValue<defaultValueProp>
   watch: UseFormWatch<defaultValueProp>
+  setIsLoading: React.Dispatch<boolean>
 }
 
 export default function SelectSide({
@@ -31,6 +39,7 @@ export default function SelectSide({
   onSubmit,
   setValue,
   watch,
+  setIsLoading,
 }: SelectSideProp) {
   // 這邊會有兩頁共用此元件,故RHF往外擺
   return (
@@ -50,7 +59,12 @@ export default function SelectSide({
           <div className="py-1 px-4 bg-gray-F3">選擇交通工具</div>
           <LableTransport register={register} />
           <div className="py-1 px-4 bg-gray-F3">選擇地區（複選）</div>
-          <LableArea register={register} setValue={setValue} watch={watch} />
+          <LableArea
+            register={register}
+            setValue={setValue}
+            watch={watch}
+            setIsLoading={setIsLoading}
+          />
         </form>
       </div>
     </>
@@ -164,10 +178,12 @@ function LableArea({
   register,
   setValue,
   watch,
+  setIsLoading,
 }: {
   register: UseFormRegister<defaultValueProp>
   setValue: UseFormSetValue<defaultValueProp>
   watch: UseFormWatch<defaultValueProp>
+  setIsLoading: React.Dispatch<boolean>
 }) {
   return (
     <div className="flex flex-wrap px-4 pt-2 pb-5 space-y-3">
@@ -199,8 +215,32 @@ function LableArea({
                   type="checkbox"
                   {...register('nearBy')}
                   className="mr-2"
-                  onClick={() => {
-                    setValue('DistrictName', [])
+                  onClick={async () => {
+                    const geoPromise = new Promise<PositionData>(
+                      (reslove, reject) => {
+                        navigator.geolocation.getCurrentPosition(
+                          (position: GeolocationPosition) => {
+                            const { latitude, longitude } = position.coords
+                            reslove({ latitude, longitude })
+                          },
+                          () => {
+                            reject()
+                          }
+                        )
+                      }
+                    )
+                    setIsLoading(true)
+                    try {
+                      await geoPromise
+                      setValue('nearBy', true)
+                      setValue('DistrictName', [])
+                    } catch (err) {
+                      setValue('nearBy', false)
+                      setValue('DistrictName', ['不限'])
+                    } finally {
+                      setIsLoading(false)
+                    }
+                    return
                   }}
                 />
                 鄰近
