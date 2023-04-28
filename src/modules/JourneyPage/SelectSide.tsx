@@ -14,7 +14,13 @@ import {
   UseFormWatch,
 } from 'react-hook-form'
 import { defaultValueProp } from '@/util/types'
-import { geoPromise } from '@/util/constans'
+
+// import { geoPromise } from '@/util/constans'
+
+interface PositionData {
+  latitude: number
+  longitude: number
+}
 
 interface SelectSideProp {
   formId: string
@@ -210,6 +216,19 @@ function LableArea({
                   {...register('nearBy')}
                   className="mr-2"
                   onClick={async () => {
+                    const geoPromise = new Promise<PositionData>(
+                      (reslove, reject) => {
+                        navigator.geolocation.getCurrentPosition(
+                          (position: GeolocationPosition) => {
+                            const { latitude, longitude } = position.coords
+                            reslove({ latitude, longitude })
+                          },
+                          () => {
+                            reject()
+                          }
+                        )
+                      }
+                    )
                     setIsLoading(true)
                     try {
                       await geoPromise

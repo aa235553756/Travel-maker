@@ -17,7 +17,12 @@ import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useDispatch } from 'react-redux'
 import { saveForm } from '@/redux/toursFormSlice'
 import { setIsQuery } from '@/redux/isQuerySlice'
-import { geoPromise } from '@/util/constans'
+// import { geoPromise } from '@/util/constans'
+
+interface PositionData {
+  latitude: number
+  longitude: number
+}
 
 export default function Banner() {
   const router = useRouter()
@@ -65,6 +70,17 @@ export default function Banner() {
 
     // ======handleNearBy控制鄰近經緯 p.s記得補======
     async function handleNearBy(bool: boolean) {
+      const geoPromise = new Promise<PositionData>((reslove, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (position: GeolocationPosition) => {
+            const { latitude, longitude } = position.coords
+            reslove({ latitude, longitude })
+          },
+          () => {
+            reject()
+          }
+        )
+      })
       let newData
       // 目前只有false狀態
       if (!bool) {
@@ -322,6 +338,19 @@ export default function Banner() {
                       className="hidden"
                       {...register('nearBy')}
                       onClick={async () => {
+                        const geoPromise = new Promise<PositionData>(
+                          (reslove, reject) => {
+                            navigator.geolocation.getCurrentPosition(
+                              (position: GeolocationPosition) => {
+                                const { latitude, longitude } = position.coords
+                                reslove({ latitude, longitude })
+                              },
+                              () => {
+                                reject()
+                              }
+                            )
+                          }
+                        )
                         setIsLoading(true)
                         try {
                           await geoPromise

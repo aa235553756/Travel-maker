@@ -31,6 +31,11 @@ import { saveForm, getToursForm } from '@/redux/toursFormSlice'
 import { getRandomTour, saveTours } from '@/redux/randomTourSlice'
 // import { geoPromise } from '@/util/constans'
 
+interface PositionData {
+  latitude: number
+  longitude: number
+}
+
 export default function RandamTourLayout({
   data: originData,
   IsTourId,
@@ -765,6 +770,17 @@ export default function RandamTourLayout({
 
     // ======handleNearBy控制鄰近經緯 ======
     async function handleNearBy(bool: boolean) {
+      const geoPromise = new Promise<PositionData>((reslove, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (position: GeolocationPosition) => {
+            const { latitude, longitude } = position.coords
+            reslove({ latitude, longitude })
+          },
+          () => {
+            reject()
+          }
+        )
+      })
       let newData
       // 目前只有false狀態
       if (!bool) {
@@ -775,12 +791,11 @@ export default function RandamTourLayout({
         //刪除鄰近
         delete newData.nearBy
       } else {
-        return
-        // const res = await geoPromise
-        // const Nlat = res.latitude
-        // const Elong = res.longitude
+        const res = await geoPromise
+        const Nlat = res.latitude
+        const Elong = res.longitude
         // 取得google定位，設定經緯度
-        // newData = { Nlat, Elong, ...data }
+        newData = { Nlat, Elong, ...data }
         // 取得鎖點(懶人頁較簡易）
         newData.AttractionId = Array(4).fill(0)
         //刪除鄰近

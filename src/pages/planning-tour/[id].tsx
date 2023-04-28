@@ -41,7 +41,7 @@ import { getRandomTours } from '@/util/tourApi'
 import { getCookie } from 'cookies-next'
 import PlanningTourSearchModal from '@/modules/PlanningTourSearchModal'
 import { BsXCircle } from 'react-icons/bs'
-import { geoPromise } from '@/util/constans'
+// import { geoPromise } from '@/util/constans'
 
 interface VoteDatesProp {
   VoteDateId: number
@@ -49,6 +49,11 @@ interface VoteDatesProp {
   Count: number
   IsVoted: boolean
   UserGuid?: string
+}
+
+interface PositionData {
+  latitude: number
+  longitude: number
 }
 
 interface paramsProp {
@@ -639,6 +644,17 @@ export default function PlanningTour({
 
     // ======handleNearBy控制鄰近經緯 ======
     async function handleNearBy(bool: boolean) {
+      const geoPromise = new Promise<PositionData>((reslove, reject) => {
+        navigator.geolocation.getCurrentPosition(
+          (position: GeolocationPosition) => {
+            const { latitude, longitude } = position.coords
+            reslove({ latitude, longitude })
+          },
+          () => {
+            reject()
+          }
+        )
+      })
       let newData
       // 目前只有false狀態
       if (!bool) {
