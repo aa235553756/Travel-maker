@@ -17,6 +17,7 @@ import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useDispatch } from 'react-redux'
 import { saveForm } from '@/redux/toursFormSlice'
 import { setIsQuery } from '@/redux/isQuerySlice'
+import { CustomModal } from '@/common/components/CustomModal'
 // import { geoPromise } from '@/util/constans'
 
 interface PositionData {
@@ -121,30 +122,38 @@ export default function Banner() {
     setIsToggle(false)
   }
 
+  //=========modal State=========
+  const [confirmModal, setConfirmModal] = useState(false)
+  const [confirmText, setConfirmText] = useState('')
+
   //=========RHF 錯誤捕捉alert 電腦版 p.s之後換modal=========
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
-      alert('錯誤，表單填寫不完整 區域')
+      setConfirmModal(true)
+      setConfirmText('填寫不完整 (區域)')
       e.preventDefault()
       return
     }
     // 判斷有無沒填寫
     if (Object.keys(errors).length) {
-      alert('錯誤，表單填寫不完整 Type')
+      setConfirmModal(true)
+      setConfirmText('填寫不完整 (行程類別)')
     }
   }
   //=========RHF 錯誤捕捉alert 手機版 之後換modal=========
   const handleErrors2 = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch2('nearBy') && !watch2('DistrictName').length) {
-      alert('錯誤，表單填寫不完整 區域')
+      setConfirmModal(true)
+      setConfirmText('填寫不完整 (區域)')
       e.preventDefault()
       return
     }
     // 判斷有無沒填寫
     if (Object.keys(errors2).length) {
-      alert('錯誤，表單填寫不完整 Type')
+      setConfirmModal(true)
+      setConfirmText('填寫不完整 (行程類別)')
     }
   }
 
@@ -161,6 +170,17 @@ export default function Banner() {
       {/* <div className="bg-banner mt-[-64px] pt-[64px] md:pt-[120px] md:mt-[-120px] lg:h-screen xl:h-auto min-[1920px]:bg-cover min-[1920px]:bg-[0_50%] bg-right bg-no-repeat"> */}
       {/* 上面原本長??  & loading動畫示範 */}
       {isLoading && <LoadingAnimate isLoading={isLoading} />}
+      <CustomModal
+        modal={confirmModal}
+        setModal={setConfirmModal}
+        typeConfirm
+        typeConfirmWarnIcon
+        overflowOpen
+        typeConfirmText={confirmText}
+        onConfirm={() => {
+          setConfirmModal(false)
+        }}
+      />
 
       <div className="container">
         <div className="w-full lg:w-2/3 mx-auto pt-16 xl:pt-20 pb-16 md:pb-36">
@@ -218,7 +238,7 @@ export default function Banner() {
             {/* 電腦版開始規劃按鈕 */}
             <button
               form={formId}
-              className="w-1/5 ml-6 bg-primary text-white px-4 block rounded-md md:text-xl"
+              className="w-1/5 ml-6 bg-primary text-white px-4 block rounded-md md:text-xl hover:bg-primary/75 active:bg-primary-tint duration-100"
               onClick={handleErrors}
             >
               開始規劃

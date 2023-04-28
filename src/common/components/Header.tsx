@@ -95,13 +95,18 @@ export default function Header() {
             </Link>
             <div className="flex space-x-5 items-center">
               {/* 搜尋bar */}
-              <div className="relative max-w-full w-[228px] h-10 group">
+              <div className=" relative max-w-full w-[228px] h-10 group">
                 <input
                   className="group-hover:ring-1 absolute border-b placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass focus-visible:bg-white"
                   placeholder="搜尋"
                 />
                 <div className="absolute top-3 right-5">
-                  <BsSearch className="opacity-50 group-hover:opacity-100 cursor-pointer" />
+                  <BsSearch
+                    className="opacity-50 group-hover:opacity-100 cursor-pointer "
+                    onClick={() => {
+                      router.push('/hot-topics')
+                    }}
+                  />
                 </div>
               </div>
               {/* 功能 */}
