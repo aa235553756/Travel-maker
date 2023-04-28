@@ -82,13 +82,20 @@ export default function Tour({
   const [activeTab, setActiveTab] = useState(1)
 
   // 無資料時
-  const [isNo, setIsNo] = useState(false)
+  const [noData, setNoData] = useState(false)
+  useEffect(() => {
+    if (tourData.Message === '已無我的行程') {
+      setNoData(true)
+    }
+    if (roomData.Message === '已無我的房間') {
+      setNoData(true)
+    }
+  }, [])
 
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
-    setIsNo(!isNo)
   }, [countData])
 
   // 刪除提醒
@@ -236,56 +243,66 @@ export default function Tour({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-col space-y-6">
-                  {moreTourData?.map((item) => {
-                    return (
-                      <TourCard
-                        key={item.TourId}
-                        id={item.TourId}
-                        likes={item.Likes}
-                        showLike
-                        countAttr={item.AttrCounts}
-                        tourName={item.TourName}
-                        isLike={true}
-                        creator={''}
-                        showCreator={false}
-                        imagesUrl={item.ImageUrl}
-                        showDelete
-                        onClick={() => {
-                          setDeleteConfirm(!deleteConfirm)
-                        }}
-                      />
-                    )
-                  })}
-                  {isNo && (
-                    <p className="text-lg text-center text-gray-B8">無資料</p>
+                  {noData ? (
+                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  ) : (
+                    moreTourData?.map((item) => {
+                      return (
+                        <div
+                          key={item.TourId}
+                          className="w-full py-3 cursor-pointer z-0 lg:w-1/2 lg:px-3"
+                        >
+                          <TourCard
+                            id={item.TourId}
+                            likes={item.Likes}
+                            countAttr={item.AttrCounts}
+                            tourName={item.TourName}
+                            isLike={true}
+                            showLike
+                            creator={''}
+                            showCreator={false}
+                            imagesUrl={item.ImageUrl}
+                            showDelete
+                            onClick={() => {
+                              setDeleteConfirm(!deleteConfirm)
+                            }}
+                          />
+                        </div>
+                      )
+                    })
                   )}
                 </div>
               )}
               {activeTab === 2 && (
                 <div className="flex flex-col space-y-10">
-                  {moreRoomData?.map((item) => {
-                    return (
-                      <TourCard
-                        key={parseInt(item.RoomGuid)}
-                        likes={0}
-                        tourName={item.RoomName}
-                        countAttr={item.AttrCounts}
-                        isLike={false}
-                        showLike={false}
-                        creator={item.CreaterName}
-                        showCreator={true}
-                        imagesUrl={item.ImageUrl}
-                        room={true}
-                        roomId={item.RoomGuid}
-                        showDelete
-                        onClick={() => {
-                          setDeleteConfirm(!deleteConfirm)
-                        }}
-                      />
-                    )
-                  })}
-                  {isNo && (
-                    <p className="text-lg text-center text-gray-B8">無資料</p>
+                  {noData ? (
+                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  ) : (
+                    moreRoomData?.map((item) => {
+                      return (
+                        <div
+                          key={item.RoomGuid}
+                          className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
+                        >
+                          <TourCard
+                            likes={0}
+                            tourName={item.RoomName}
+                            countAttr={item.AttrCounts}
+                            isLike={false}
+                            showLike={false}
+                            creator={item.CreaterName}
+                            showCreator
+                            imagesUrl={item.ImageUrl}
+                            room={true}
+                            roomId={item.RoomGuid}
+                            showDelete
+                            onClick={() => {
+                              setDeleteConfirm(!deleteConfirm)
+                            }}
+                          />
+                        </div>
+                      )
+                    })
                   )}
                 </div>
               )}
@@ -378,32 +395,35 @@ export default function Tour({
               </div>
               {/* tab 內容 */}
               {activeTab === 1 && (
-                <div className="flex flex-wrap justify-center -my-3 mb-[60px] lg:-mx-3">
-                  {moreTourData?.map((item) => {
-                    return (
-                      <div
-                        key={item.TourId}
-                        className="w-full py-3 cursor-pointer z-0 lg:w-1/2 lg:px-3"
-                      >
-                        <TourCard
-                          id={item.TourId}
-                          likes={item.Likes}
-                          countAttr={item.AttrCounts}
-                          tourName={item.TourName}
-                          isLike={true}
-                          showLike
-                          creator={''}
-                          showCreator={false}
-                          imagesUrl={item.ImageUrl}
-                          showDelete
-                          onClick={() => {
-                            setDeleteConfirm(!deleteConfirm)
-                          }}
-                        />
-                      </div>
-                    )
-                  })}
-                  {isNo && <p className="text-lg text-gray-B8">無資料</p>}
+                <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
+                  {noData ? (
+                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  ) : (
+                    moreTourData?.map((item) => {
+                      return (
+                        <div
+                          key={item.TourId}
+                          className="w-full py-3 cursor-pointer z-0 lg:w-1/2 lg:px-3"
+                        >
+                          <TourCard
+                            id={item.TourId}
+                            likes={item.Likes}
+                            countAttr={item.AttrCounts}
+                            tourName={item.TourName}
+                            isLike={true}
+                            showLike
+                            creator={''}
+                            showCreator={false}
+                            imagesUrl={item.ImageUrl}
+                            showDelete
+                            onClick={() => {
+                              setDeleteConfirm(!deleteConfirm)
+                            }}
+                          />
+                        </div>
+                      )
+                    })
+                  )}
                   {/* GoToTop */}
                   {toTop && (
                     <button
@@ -423,32 +443,35 @@ export default function Tour({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-wrap justify-center -my-3 mb-[60px] lg:-mx-3">
-                  {moreRoomData?.map((item) => {
-                    return (
-                      <div
-                        key={item.RoomGuid}
-                        className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
-                      >
-                        <TourCard
-                          likes={0}
-                          tourName={item.RoomName}
-                          countAttr={item.AttrCounts}
-                          isLike={false}
-                          showLike={false}
-                          creator={item.CreaterName}
-                          showCreator
-                          imagesUrl={item.ImageUrl}
-                          room={true}
-                          roomId={item.RoomGuid}
-                          showDelete
-                          onClick={() => {
-                            setDeleteConfirm(!deleteConfirm)
-                          }}
-                        />
-                      </div>
-                    )
-                  })}
-                  {isNo && <p className="text-lg text-gray-B8">無資料</p>}
+                  {noData ? (
+                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  ) : (
+                    moreRoomData?.map((item) => {
+                      return (
+                        <div
+                          key={item.RoomGuid}
+                          className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
+                        >
+                          <TourCard
+                            likes={0}
+                            tourName={item.RoomName}
+                            countAttr={item.AttrCounts}
+                            isLike={false}
+                            showLike={false}
+                            creator={item.CreaterName}
+                            showCreator
+                            imagesUrl={item.ImageUrl}
+                            room={true}
+                            roomId={item.RoomGuid}
+                            showDelete
+                            onClick={() => {
+                              setDeleteConfirm(!deleteConfirm)
+                            }}
+                          />
+                        </div>
+                      )
+                    })
+                  )}
                   {/* GoToTop */}
                   {toTop && (
                     <button

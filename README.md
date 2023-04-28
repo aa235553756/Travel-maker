@@ -69,8 +69,7 @@ my-react-app/
 ├── src/
 │   ├── components/
 │   │   ├── button
-│   │   ├── card
-│   │   └── other
+│   │   └── card
 │   ├── modules/
 │   │   ├── AttrPage
 │   │   ├── Banner
@@ -78,8 +77,7 @@ my-react-app/
 │   │   ├── JourneyPage
 │   │   ├── MemberCenterPage
 │   │   ├── RandomTourLayout
-│   │   ├── SeeOthers
-│   │   └── ...
+│   │   └── SeeOthers
 │   ├── pages/
 │   │   ├── blog
 │   │   ├── hot-topic
@@ -137,9 +135,9 @@ my-react-app/
 
 ## 🔗 相關連結
 - [設計稿](https://www.figma.com/file/DZ5QXoX44UbjjTDgwoUa7e/%E5%B0%88%E9%A1%8C?node-id=2014-30653&t=FV51kesPtkZeFxNo-0)
-- [簡報](記得放連結!!!!!!!!!!!)
+- [簡報](https://www.canva.com/design/DAFhQyi7JYw/BxoS65MG3_egKIXvCpfe0g/edit?analyticsCorrelationId=a5e9010c-684f-4ea6-93af-8df4fda5c00c)
 - [Pull Request](https://github.com/aa235553756/travel-maker/pulse)
-- [Demo](記得補連結阿阿阿)
+- [Demo](https://travel-maker.vercel.app/)
 
 
 ## 🛠 技術工具
@@ -161,7 +159,6 @@ my-react-app/
 ![Vercel](https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white)
 ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)
 ![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
-![Airbnb](https://img.shields.io/badge/Airbnb-%23ff5a5f.svg?style=for-the-badge&logo=Airbnb&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-4B3263?style=for-the-badge&logo=eslint&logoColor=white)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)

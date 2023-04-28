@@ -58,13 +58,21 @@ export default function Comment({
   memberCountData: MemberCountProps
 }) {
   // 無資料時
-  const [isNo, setIsNo] = useState(false)
+  const [noData, setNoData] = useState(false)
+  useEffect(() => {
+    if (commentData.Message === '已無我的景點評論') {
+      setNoData(true)
+      console.log(commentData);
+      
+    }
+  }, [])
+
+
 
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
-    setIsNo(!isNo)
   }, [countData])
 
   // 將評論資料往 CommentCard 傳
@@ -105,21 +113,22 @@ export default function Comment({
             {/* 詳細資訊區 */}
             <div className="flex flex-col">
               <div className="flex flex-col space-y-6 md:space-y-10">
-                {commentData?.CommentData?.map((item) => {
-                  return (
-                    <CommentCard
-                      key={item.AttractionCommentId}
-                      id={item.AttractionCommentId}
-                      user={userName}
-                      attraction={item.AttractionName}
-                      comment={item.Comment}
-                      time={item.InitDate}
-                      star={item.Score}
-                    />
-                  )
-                })}
-                {isNo && (
+                {noData ? (
                   <p className="text-lg text-center text-gray-B8">無資料</p>
+                ) : (
+                  commentData?.CommentData?.map((item) => {
+                    return (
+                      <CommentCard
+                        key={item.AttractionCommentId}
+                        id={item.AttractionCommentId}
+                        user={userName}
+                        attraction={item.AttractionName}
+                        comment={item.Comment}
+                        time={item.InitDate}
+                        star={item.Score}
+                      />
+                    )
+                  })
                 )}
               </div>
             </div>
@@ -167,23 +176,26 @@ export default function Comment({
             </div>
             {/* 詳細資訊區 */}
             <div className="justify-center md:items-center md:flex md:flex-col md:space-y-10  md:mb-[60px] lg:flex-row lg:flex-wrap">
-              {commentData?.CommentData?.map((item) => {
-                return (
-                  <CommentCard
-                    key={item.AttractionCommentId}
-                    id={item.AttractionCommentId}
-                    user={userName}
-                    attraction={item.AttractionName}
-                    comment={item.Comment}
-                    time={item.InitDate}
-                    star={item.Score}
-                    onClick={() => {
-                      setDeleteConfirm(!deleteConfirm)
-                    }}
-                  />
-                )
-              })}
-              {isNo && <p className="text-lg text-gray-B8">無資料</p>}
+              {noData ? (
+                <p className="text-lg text-gray-B8">無資料</p>
+              ) : (
+                commentData?.CommentData?.map((item) => {
+                  return (
+                    <CommentCard
+                      key={item.AttractionCommentId}
+                      id={item.AttractionCommentId}
+                      user={userName}
+                      attraction={item.AttractionName}
+                      comment={item.Comment}
+                      time={item.InitDate}
+                      star={item.Score}
+                      onClick={() => {
+                        setDeleteConfirm(!deleteConfirm)
+                      }}
+                    />
+                  )
+                })
+              )}
             </div>
             {/* {isLoading && <p className="text-lg text-center">loading...</p>} */}
           </div>

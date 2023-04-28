@@ -13,6 +13,7 @@ export interface MemberCountProps {
   BlogCounts: number
   FollowCounts: number
   AttCommentCounts: number
+  Message?: string
 }
 
 export interface TourData {
@@ -27,6 +28,7 @@ export interface TourDataProps {
   TourCounts: number
   RoomCounts: number
   TourData: TourData[]
+  Message?: string
 }
 
 export interface RoomData {
@@ -44,6 +46,7 @@ export interface RoomDataProps {
   TourCounts: number
   RoomCounts: number
   RoomData: RoomData[]
+  Message?: string
 }
 
 export interface AttractionData {
@@ -58,6 +61,7 @@ export interface AttractionData {
 export interface AttrDataProps {
   AttCounts: number
   AttractionData: AttractionData[]
+  Message?: string
 }
 
 export interface BlogData {
@@ -78,6 +82,7 @@ export interface BlogDataProps {
   DraftCounts: number
   CollectCounts: number
   BlogData: BlogData[]
+  Message?: string
 }
 
 export interface CommentData {
@@ -93,4 +98,5 @@ export interface CommentDataProps {
   CommentData: CommentData[]
   editCommentData?: CommentData
   setEditCommentData?: React.Dispatch<React.SetStateAction<CommentData>>
+  Message?: string
 }

@@ -5,8 +5,8 @@ import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import BlogCard from '@/common/components/card/BlogCard'
 import BlogDraftCard from '@/modules/MemberCenterPage/components/BlogDraftCard'
 import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
-import { CustomModal } from '@/common/components/CustomModal'
-import { BsXCircle } from 'react-icons/bs'
+// import { CustomModal } from '@/common/components/CustomModal'
+// import { BsXCircle } from 'react-icons/bs'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
 
@@ -64,13 +64,17 @@ export default function Blog({
   const [activeTab, setActiveTab] = useState(1)
 
   // 無資料時
-  const [isNo, setIsNo] = useState(false)
+  const [noData, setNoData] = useState(false)
+  useEffect(() => {
+    if (blogData.Message === '已無我的收藏遊記') {
+      setNoData(true)
+    }
+  }, [])
 
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
-    setIsNo(!isNo)
   }, [countData])
 
   // 獲取更多資料
@@ -78,7 +82,6 @@ export default function Blog({
   const [moreBlogData, setMoreBlogData] = useState(blogData.BlogData)
   const [page, setPage] = useState(2)
   const [isLoading, setIsLoading] = useState(false)
-  const [noData, setNoData] = useState(false)
   const [toTop, setToTop] = useState(false)
 
   const [no, setNo] = useState(false)
@@ -198,28 +201,31 @@ export default function Blog({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-col space-y-6">
-                  {blogData?.BlogData?.map((item) => {
-                    console.log(item.Cover)
+                  {noData ? (
+                    <p className="text-lg text-gray-B8">無資料</p>
+                  ) : (
+                    blogData?.BlogData?.map((item) => {
+                      console.log(item.Cover)
 
-                    return (
-                      <div key={item.BlogGuid}>
-                        <BlogCard
-                          id={parseInt(item.BlogGuid)}
-                          showCollect={true}
-                          blogName={item.Title}
-                          poster={item.UserName}
-                          time={item.InitDate}
-                          type={item.Category}
-                          blogImage={item.Cover}
-                          userImage={item.ProfilePicture}
-                          view={item.Sees}
-                          like={item.Likes}
-                          comment={item.Comments}
-                        />
-                      </div>
-                    )
-                  })}
-                  {isNo && <p className="text-lg text-gray-B8">無資料</p>}
+                      return (
+                        <div key={item.BlogGuid}>
+                          <BlogCard
+                            id={parseInt(item.BlogGuid)}
+                            showCollect={true}
+                            blogName={item.Title}
+                            poster={item.UserName}
+                            time={item.InitDate}
+                            type={item.Category}
+                            blogImage={item.Cover}
+                            userImage={item.ProfilePicture}
+                            view={item.Sees}
+                            like={item.Likes}
+                            comment={item.Comments}
+                          />
+                        </div>
+                      )
+                    })
+                  )}
                 </div>
               )}
               {activeTab === 2 && (
@@ -237,7 +243,6 @@ export default function Blog({
                         />
                       )
                     })}
-                  {isNo && <p className="text-lg text-gray-B8">無資料</p>}
                 </div>
               )}
             </div>
@@ -245,14 +250,14 @@ export default function Blog({
         </div>
         {/* 電腦版 */}
         {/* 無行程提醒 */}
-        <CustomModal modal={noData} setModal={setNoData} wrapper>
+        {/* <CustomModal modal={noData} setModal={setNoData} wrapper>
           <div className="w-[300px] p-7 bg-white rounded-xl">
             <div className="flex flex-col items-center space-y-4">
               <BsXCircle className="text-5xl text-highlight" />
               <span className="text-2xl">已無行程</span>
             </div>
           </div>
-        </CustomModal>
+        </CustomModal> */}
 
         <MemberLayout
           path="Blog"
@@ -309,30 +314,32 @@ export default function Blog({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
-                  {moreBlogData?.map((item) => {
-                    return (
-                      <div
-                        key={item.BlogGuid}
-                        className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
-                      >
-                        <BlogCard
-                          id={parseInt(item.BlogGuid)}
-                          showCollect={true}
-                          blogName={item.Title}
-                          poster={item.UserName}
-                          time={item.InitDate}
-                          type={item.Category}
-                          blogImage={item.Cover?.toString() ?? ''}
-                          userImage={item.ProfilePicture?.toString() ?? ''}
-                          view={item.Sees}
-                          like={item.Likes}
-                          comment={item.Comments}
-                        />
-                      </div>
-                    )
-                  })}
-
-                  {isNo && <p className="text-lg text-gray-B8">無資料</p>}
+                  {noData ? (
+                    <p className="text-lg text-gray-B8">無資料</p>
+                  ) : (
+                    moreBlogData?.map((item) => {
+                      return (
+                        <div
+                          key={item.BlogGuid}
+                          className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
+                        >
+                          <BlogCard
+                            id={parseInt(item.BlogGuid)}
+                            showCollect={true}
+                            blogName={item.Title}
+                            poster={item.UserName}
+                            time={item.InitDate}
+                            type={item.Category}
+                            blogImage={item.Cover?.toString() ?? ''}
+                            userImage={item.ProfilePicture?.toString() ?? ''}
+                            view={item.Sees}
+                            like={item.Likes}
+                            comment={item.Comments}
+                          />
+                        </div>
+                      )
+                    })
+                  )}
                   {/* GoToTop */}
                   {toTop && (
                     <button
@@ -369,7 +376,6 @@ export default function Blog({
                         </div>
                       )
                     })}
-                  {isNo && <p className="text-lg text-gray-B8">無資料</p>}
                 </div>
               )}
               {isLoading && <p className="text-lg text-center">loading...</p>}
