@@ -46,21 +46,21 @@ export async function getServerSideProps(context: {
   query: { data: string; id: number[] }
 }) {
   try {
-    const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
-    )
+    // const resMore = await fetch(
+    //   'https://travelmaker.rocket-coding.com/api/tours/hot'
+    // )
     // 由首頁送來表單data
     if (context.query.hasOwnProperty('data')) {
       const data = JSON.parse(context.query.data)
       const res = await getRandomTours(data)
 
-      if (res.ok && resMore.ok) {
-        const resMoreJSON = await resMore.json()
+      if (res.ok) {
+        // const resMoreJSON = await resMore.json()
         const resJSON = await res.json()
         return {
           props: {
             data: resJSON,
-            moreData: resMoreJSON,
+            // moreData: resMoreJSON,
           },
         }
       }
@@ -73,24 +73,24 @@ export async function getServerSideProps(context: {
         })
         .join('&')
       const res = await getShareTours(data)
-      if (res.ok && resMore.ok) {
-        const resMoreJSON = await resMore.json()
+      if (res.ok) {
+        // const resMoreJSON = await resMore.json()
         const resJSON = await res.json()
         return {
           props: {
             data: resJSON,
             isLink: true,
-            moreData: resMoreJSON,
+            // moreData: resMoreJSON,
           },
         }
       }
     }
     throw new Error('不知名錯誤')
   } catch (err) {
-    const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
-    )
-    const resMoreJSON = await resMore.json()
+    // const resMore = await fetch(
+    //   'https://travelmaker.rocket-coding.com/api/tours/hot'
+    // )
+    // const resMoreJSON = await resMore.json()
     return {
       props: {
         data: Array(8)
@@ -101,7 +101,7 @@ export async function getServerSideProps(context: {
               AttractionName: '景點名稱',
             }
           }),
-        moreData: resMoreJSON,
+        // moreData: resMoreJSON,
       },
     }
   }
