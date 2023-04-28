@@ -13,6 +13,14 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'travelmaker.rocket-coding.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fakeimg.pl',
+      },
     ],
   },
 }

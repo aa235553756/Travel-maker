@@ -1,7 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import DeleteBtn from '../../../common/components/button/DeleteBtn'
+import DeleteBtn from '@/common/components/button/DeleteBtn'
 
 export default function BlogDraftCard({
   showDelete,
@@ -15,8 +15,9 @@ export default function BlogDraftCard({
   time: string
 }) {
   return (
-    <div className="border rounded-md w-full relative lg:w-[calc(50%-12px)] lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
-      <div className="absolute top-5 right-5 flex space-x-2 z-10">
+    <div className="border border-gray-E7 shadow-[1px_1px_15px_1px_rgba(0,0,0,0.08)] rounded-md relative">
+      {/* 刪除遊記 */}
+      <div className="absolute top-5 right-5 flex space-x-2 z-30">
         {showDelete && (
           <DeleteBtn
             onClick={() => {
@@ -25,9 +26,10 @@ export default function BlogDraftCard({
           />
         )}
       </div>
-
       <Link href="../blog/view-blog/1">
-        <div className="w-full">
+        {/* 遊記圖片 */}
+        <div className="relative w-full">
+          <div className="absolute top-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(15,11,11,1)] to-[rgba(2,0,0,0)] rounded-md"></div>
           <Image
             src="https://www.travel.taipei/content/images/attractions/222058/1024x768_attractions-image-hbt3wz-7l0yeewd968btkw.jpg"
             alt="圖片"
@@ -36,7 +38,8 @@ export default function BlogDraftCard({
             className="w-full min-h-[260px] rounded-t-md"
           ></Image>
         </div>
-        <div className="p-4 flex flex-col space-y-3">
+        {/* 遊記資訊 */}
+        <div className="px-4 py-3 md:py-6 flex flex-col space-y-2 md:space-y-3">
           <p className="text-lg">{blogName}</p>
           <div className="flex items-center space-x-3">
             <div className="flex item-center space-x-2">
@@ -47,9 +50,9 @@ export default function BlogDraftCard({
                 height={20}
                 className="rounded-full"
               ></Image>
-              <span className="text-sm">{poster}</span>
+              <span className="text-sm text-[rgba(0,0,0,0.45)]">{poster}</span>
             </div>
-            <span className="text-sm">{time}</span>
+            <span className="text-sm text-gray-D9">{time}</span>
           </div>
         </div>
       </Link>

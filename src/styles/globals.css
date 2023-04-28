@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,11 +7,12 @@
 @layer base {
   body {
     font-family: 'Noto Sans TC', sans-serif;
+    scroll-behavior: smooth;
   }
 
   input,
   textarea {
-    font-size: initial !important
+    font-size: initial !important;
   }
 
   /* total width */
@@ -42,10 +43,65 @@
 }
 
 @layer utilities {
+  .Roboto {
+    font-family: 'Roboto';
+  }
+
   .select-bg {
     background-size: 18px;
     background-position: right 0.7rem top 50%;
   }
 
- 
+  .custom-shadow {
+    box-shadow: 1px 2px 10px 0px #00000040;
+  }
+
+  .seletSide-shadow {
+    box-shadow: 1px 2px 15px 0px #00000026;
+  }
+
+  .typeLabel-shadow {
+    box-shadow: 2px 2px 2px 0px #00000040;
+  }
+
+  .openFormBtn-shadow {
+    box-shadow: 1px 1px 3px 0px #00000014;
+  }
+
+  .input-style {
+    background-color: #fafafa;
+    border: #f5f5f5 1px solid;
+    padding: 16px 12px;
+  }
+
+  .member-shadow {
+    box-shadow: 1px 1px 15px 0px rgba(0, 0, 0, 0.08);
+  }
+
+  .input-style::placeholder {
+    color: #9f9f9f;
+  }
+
+  .line-clamp-1 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  /* 字數過多隱藏(2行) */
+  .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  /* 字數過多隱藏(3行) */
+  .line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
 }

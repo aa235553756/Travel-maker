@@ -14,8 +14,8 @@ export default function FollowUserCard({
   followers: number
 }) {
   return (
-    <div className="w-full border rounded-md lg:w-[calc(50%-12px)] lg:[&:nth-child(2)]:!mt-0 lg:odd:!ml-0">
-      <div className="bg-[#ccc] h-[240px] rounded-t-md">
+    <div className="shadow-[1px_1px_15px_1px_rgba(1,1,15,0.08)] rounded-md">
+      <div className="h-[240px] rounded-t-md">
         <div className="p-10">
           <div className="flex flex-col items-center space-y-9">
             <div className="flex justify-center items-center space-x-7">
@@ -30,15 +30,15 @@ export default function FollowUserCard({
             </div>
             <FollowBtn />
           </div>
-        </div>
+        </div> 
       </div>
-      <div className="py-10">
-        <ul className="flex justify-center">
+      <div className="border border-gray-E9 bg-gray-FA py-10">
+        <ul className="flex justify-center text-gray-73">
           <li className="text-center px-10">
             <p>{posts}</p>
             <p>遊記</p>
           </li>
-          <li className="text-center border-x-[1px] px-10">
+          <li className="text-center border-x-[1px] border-gray-E9 px-10">
             <p>{fans}</p>
             <p>粉絲</p>
           </li>

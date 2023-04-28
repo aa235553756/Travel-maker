@@ -1,7 +1,7 @@
 // 有這個不用寫defaultChecked
 // nearBy值會經處理轉換經緯度，再傳給後端
 export const defaultValues = {
-  CategoryId: ['1'],
+  CategoryId: ['0'],
   AttrCounts: '4',
   Transports: '不限',
   nearBy: false,
@@ -10,36 +10,36 @@ export const defaultValues = {
 export const CategoryId = [
   {
     name: '隨心所欲',
-    value: '1',
+    value: '0',
     checked: true,
   },
   {
     name: '城市走走',
-    value: '2',
+    value: '1',
   },
   {
     name: '拍照聖地',
-    value: '3',
+    value: '2',
   },
   {
     name: '放鬆療癒',
-    value: '4',
+    value: '3',
   },
   {
     name: '夜間首選',
-    value: '5',
+    value: '4',
   },
   {
     name: '文藝青年',
-    value: '6',
+    value: '5',
   },
   {
     name: '親子互動',
-    value: '7',
+    value: '6',
   },
   {
     name: '冒險活潑',
-    value: '8',
+    value: '7',
   },
 ]
 export const AttrCounts = [
@@ -55,7 +55,6 @@ export const Transports = [
 ]
 export const DistrictName = [
   '不限',
-  '鄰近',
   '中山區',
   '大安區',
   '信義區',

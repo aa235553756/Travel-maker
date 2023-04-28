@@ -1,10 +1,14 @@
 import React from 'react'
-import { MdContentCopy } from 'react-icons/md'
+import { IoCopyOutline } from 'react-icons/io5'
 
-export default function CopyBtn() {
+export default function CopyBtn({ onClick }: { onClick?: () => void }) {
   return (
-    <button type="button" className="border border-black rounded-full p-2 w-[34px] h-[34px]">
-      <MdContentCopy />
+    <button
+      type="button"
+      className="bg-glass text-primary rounded-full p-2 w-[36px] h-[36px] hover:bg-primary hover:text-white hover:duration-500"
+      onClick={onClick}
+    >
+      <IoCopyOutline className="text-xl" />
     </button>
   )
 }
