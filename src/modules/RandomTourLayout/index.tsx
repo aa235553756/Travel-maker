@@ -52,6 +52,7 @@ export default function RandamTourLayout({
   moreData: MoreTourProp[]
 }) {
   const router = useRouter()
+  const { query } = useRouter()
   const currentUrl = router.asPath
   const dispatch = useDispatch()
   const origin =
@@ -124,6 +125,8 @@ export default function RandamTourLayout({
   const newTourNameInputRef = useRef<HTMLInputElement>(null)
   const TourNameInputRef = useRef<HTMLInputElement>(null)
   const roomNameInputRef = useRef<HTMLInputElement>(null)
+  const sliderRef = useRef<Slider>(null)
+  const sliderMobileRef = useRef<Slider>(null)
 
   // ========= RHF 表單 =========
   const formId = 'random-tour-form'
@@ -198,6 +201,16 @@ export default function RandamTourLayout({
     // user.UserGuid為cookies內的guid 之後會判斷是否與傳進來的行程創建guid是否吻合
     setUserGuid(user?.UserGuid)
   }, [user?.UserGuid])
+
+  useEffect(() => {
+    setIdData(originData)
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(0)
+    }
+    if (sliderMobileRef.current) {
+      sliderMobileRef.current.slickGoTo(0)
+    }
+  }, [query])
 
   return (
     <div className="container lg:pt-20 pt-12 pb-[160px]">
@@ -421,7 +434,7 @@ export default function RandamTourLayout({
         >
           隨機產生行程
         </button>
-        <Slider {...settings2}>
+        <Slider {...settings2} ref={sliderMobileRef}>
           {(IsTourId ? idData : data)?.map((item, i) => {
             return (
               <div
@@ -593,7 +606,7 @@ export default function RandamTourLayout({
           <div className="flex-grow max-w-[840px]">
             {/* Swiper圖片 */}
             <div className="hidden lg:block max-h-[180px] mb-8">
-              <Slider {...settings}>
+              <Slider {...settings} ref={sliderRef}>
                 {(IsTourId ? idData : data)?.map((item, i) => {
                   return (
                     <div
