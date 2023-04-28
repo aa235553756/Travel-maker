@@ -365,7 +365,7 @@ export default function PlanningTour({
                     setUnSaved={setUnSaved}
                   />
                 ) : (
-                  <TourMap />
+                  <TourMap data={sortData} />
                 ) //塞data
               }
               <button

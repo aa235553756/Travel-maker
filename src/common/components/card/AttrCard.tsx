@@ -1,6 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
-import { useRouter } from 'next/router'
+// import { useRouter } from 'next/router'
 import CollectBtn from '@/common/components/button/CollectBtn'
 import AddTourBtn from '@/common/components/button/AddTourBtn'
 import TypeTag from '@/common/components/TypeTag'
@@ -33,15 +33,17 @@ export default function AttractCard({
   onClick?: () => void
   onClick1?: () => void
 }) {
-  const router = useRouter()
+  // const router = useRouter()
 
   return (
     <div className="shadow-[0px_4px_16px_0px_rgba(0,0,0,0.25)] rounded-md relative hover:opacity-80 hover:duration-500 hover:-translate-y-1">
       <a
-        onClick={(e) => {
-          e.preventDefault()
-          router.push(`/hot-topics/attractions/${id}`)
-        }}
+        target="_blank"
+        href={`/hot-topics/attractions/${id}`}
+        // onClick={(e) => {
+        //   e.preventDefault()
+        //   router.push(`/hot-topics/attractions/${id}`)
+        // }}
         className="absolute w-full h-full z-10 cursor-pointer"
       ></a>
       {/* 收藏 & 加入行程 */}
