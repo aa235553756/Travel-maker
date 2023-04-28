@@ -6,7 +6,7 @@ import {
 import Slider from 'react-slick'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
-import { defaultValueProp, randomTourProp } from '@/util/types'
+import { defaultValueProp, MoreTourProp, randomTourProp } from '@/util/types'
 import React, { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { BsLink45Deg, BsPlusLg, BsListCheck } from 'react-icons/bs'
@@ -37,12 +37,14 @@ export default function RandamTourLayout({
   TourName: originTourName,
   UserGuid,
   TourId,
+  moreData,
 }: {
   data: randomTourProp[]
   IsTourId?: boolean
   TourName?: string
   UserGuid?: string
   TourId?: number
+  moreData: MoreTourProp[]
 }) {
   const router = useRouter()
   const currentUrl = router.asPath
@@ -713,7 +715,7 @@ export default function RandamTourLayout({
         </div>
       </div>
       {/* 更多行程 */}
-      <MoreJourney />
+      <MoreJourney moreData={moreData} />
     </div>
   )
 

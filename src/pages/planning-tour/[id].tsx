@@ -8,7 +8,11 @@ import InvitePeople from '@/modules/JourneyPage/InvitePeople'
 import MoreJourney from '@/modules/JourneyPage/MoreJourney'
 import SelectSide from '@/modules/JourneyPage/SelectSide'
 import { MdOutlineCancel, MdSave } from 'react-icons/md'
-import { defaultValueProp, RoomAttractionsProp } from '@/util/types'
+import {
+  defaultValueProp,
+  MoreTourProp,
+  RoomAttractionsProp,
+} from '@/util/types'
 import { useForm } from 'react-hook-form'
 import { defaultValues } from '@/util/selectData'
 
@@ -78,9 +82,11 @@ interface HotAttrProps {
 export default function PlanningTour({
   data: originData,
   hotAttrData,
+  moreData,
 }: {
   data: PlanningTour
   hotAttrData: HotAttrProps
+  moreData: MoreTourProp[]
 }) {
   const router = useRouter()
   const user = getCookie('user')
@@ -380,7 +386,7 @@ export default function PlanningTour({
             </div>
           </DndContext>
         </div>
-        <MoreJourney />
+        <MoreJourney moreData={moreData} />
       </div>
     </div>
   )
@@ -699,9 +705,15 @@ export async function getServerSideProps({
     )
     const hotAttrData = await resHotAttrData.json()
 
-    if (response.ok) {
+    const resMore = await fetch(
+      'https://travelmaker.rocket-coding.com/api/tours/hot'
+    )
+
+    const resMoreJSON = await resMore.json()
+
+    if (response.ok && resMore.ok) {
       return {
-        props: { data: data, hotAttrData: hotAttrData },
+        props: { data: data, hotAttrData: hotAttrData, moreData: resMoreJSON },
       }
     }
     throw new Error('不知名錯誤')

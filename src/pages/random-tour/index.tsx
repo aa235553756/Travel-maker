@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { getRandomTours, getShareTours } from '@/util/tourApi'
 import RandamTourLayout from '@/modules/RandomTourLayout'
-import { randomTourProp } from '@/util/types'
+import { MoreTourProp, randomTourProp } from '@/util/types'
 import Head from 'next/head'
 import { saveTours } from '@/redux/randomTourSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,11 +10,13 @@ import { getIsQuery, setIsQuery } from '@/redux/isQuerySlice'
 export default function RandamTour({
   data,
   isLink,
+  moreData,
 }: {
   data: randomTourProp[]
   isLink?: boolean
+  moreData: MoreTourProp[]
 }) {
-  console.log(data)
+  console.log('moreData', moreData)
 
   const dispatch = useDispatch()
   const isQuery = useSelector(getIsQuery)
@@ -36,7 +38,7 @@ export default function RandamTour({
         <link rel="icon" href="/Group 340.png" />
       </Head>
       <div>
-        <RandamTourLayout data={data} />
+        <RandamTourLayout data={data} moreData={moreData} />
       </div>
     </>
   )
@@ -46,15 +48,21 @@ export async function getServerSideProps(context: {
   query: { data: string; id: number[] }
 }) {
   try {
+    const resMore = await fetch(
+      'https://travelmaker.rocket-coding.com/api/tours/hot'
+    )
     // 由首頁送來表單data
     if (context.query.hasOwnProperty('data')) {
       const data = JSON.parse(context.query.data)
       const res = await getRandomTours(data)
-      if (res.ok) {
+
+      if (res.ok && resMore.ok) {
+        const resMoreJSON = await resMore.json()
         const resJSON = await res.json()
         return {
           props: {
             data: resJSON,
+            moreData: resMoreJSON,
           },
         }
       }
@@ -67,18 +75,24 @@ export async function getServerSideProps(context: {
         })
         .join('&')
       const res = await getShareTours(data)
-      if (res.ok) {
+      if (res.ok && resMore.ok) {
+        const resMoreJSON = await resMore.json()
         const resJSON = await res.json()
         return {
           props: {
             data: resJSON,
             isLink: true,
+            moreData: resMoreJSON,
           },
         }
       }
     }
     throw new Error('不知名錯誤')
   } catch (err) {
+    const resMore = await fetch(
+      'https://travelmaker.rocket-coding.com/api/tours/hot'
+    )
+    const resMoreJSON = await resMore.json()
     return {
       props: {
         data: Array(8)
@@ -89,6 +103,7 @@ export async function getServerSideProps(context: {
               AttractionName: '景點名稱',
             }
           }),
+        moreData: resMoreJSON,
       },
     }
   }

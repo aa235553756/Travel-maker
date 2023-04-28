@@ -1,5 +1,5 @@
 import RandomTourLayout from '@/modules/RandomTourLayout'
-import { randomTourProp } from '@/util/types'
+import { MoreTourProp, randomTourProp } from '@/util/types'
 import React from 'react'
 
 export interface randomTourIdProp {
@@ -9,13 +9,22 @@ export interface randomTourIdProp {
   UserGuid: string
 }
 
-export default function randomTourId({ data }: { data: randomTourIdProp }) {
+export default function randomTourId({
+  data,
+  moreData,
+}: {
+  data: randomTourIdProp
+  moreData: MoreTourProp[]
+}) {
   // 同random-index
+  console.log(moreData)
+
   return (
     <div>
       {!data.TourId ? '！錯誤，沒有此行程' : null}
 
       <RandomTourLayout
+        moreData={moreData}
         data={data.Attractions}
         IsTourId
         TourName={data.TourName}
@@ -32,11 +41,18 @@ export async function getServerSideProps(context: { query: { id: number } }) {
     const res = await fetch(
       `https://travelmaker.rocket-coding.com/api/tours/${id}`
     )
+    const resMore = await fetch(
+      'https://travelmaker.rocket-coding.com/api/tours/hot'
+    )
+
     const resJSON = await res.json()
-    if (res.ok) {
+    const resMoreJSON = await resMore.json()
+
+    if (res.ok && resMore.ok) {
       return {
         props: {
           data: resJSON,
+          moreData: resMoreJSON,
         },
       }
     }
