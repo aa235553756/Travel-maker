@@ -14,12 +14,12 @@ export default function MoreJourney({
         <TbMapSearch className="text-xl" />
         <span className="text-xl">更多隨心所欲行程</span>
       </h2>
-      <div className="flex flex-col space-y-5 mb-[100px] md:flex-row md:space-y-0 md:space-x-6 md:mb-[160px]">
+      <div className="flex flex-wrap lg:space-x-6 max-lg:space-y-8">
         {moreData.map((item: MoreTourProp) => {
           return (
             <div
               key={item.TourId}
-              className="w-[calc(33%-16px)] flex-grow flex-shrink-0"
+              className="lg:w-[calc(33%-16px)] w-full flex-grow flex-shrink-0"
             >
               <TourCard
                 id={item.TourId}

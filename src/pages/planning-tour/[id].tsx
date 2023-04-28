@@ -407,7 +407,9 @@ export default function PlanningTour({
               </div>
             </DndContext>
           </div>
-          <MoreJourney moreData={moreData} />
+          <div className="pb-[160px]">
+            <MoreJourney moreData={moreData} />
+          </div>
         </div>
       </div>
     </>
@@ -755,7 +757,7 @@ export async function getServerSideProps({
     const hotAttrData = await resHotAttrData.json()
 
     const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
+      'https://travelmaker.rocket-coding.com/api/tours/hot/0'
     )
 
     const resMoreJSON = await resMore.json()

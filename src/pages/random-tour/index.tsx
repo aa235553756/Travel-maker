@@ -47,7 +47,7 @@ export async function getServerSideProps(context: {
 }) {
   try {
     const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
+      'https://travelmaker.rocket-coding.com/api/tours/hot/0'
     )
     // 由首頁送來表單data
     if (context.query.hasOwnProperty('data')) {
@@ -88,7 +88,7 @@ export async function getServerSideProps(context: {
     throw new Error('不知名錯誤')
   } catch (err) {
     const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
+      'https://travelmaker.rocket-coding.com/api/tours/hot/0'
     )
     const resMoreJSON = await resMore.json()
     return {
