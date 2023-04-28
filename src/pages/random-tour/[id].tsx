@@ -17,7 +17,6 @@ export default function randomTourId({
   moreData: MoreTourProp[]
 }) {
   // 同random-index
-  console.log(moreData)
 
   return (
     <div>

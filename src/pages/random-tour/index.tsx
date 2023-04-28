@@ -16,8 +16,6 @@ export default function RandamTour({
   isLink?: boolean
   moreData: MoreTourProp[]
 }) {
-  console.log('moreData', moreData)
-
   const dispatch = useDispatch()
   const isQuery = useSelector(getIsQuery)
 
