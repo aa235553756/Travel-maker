@@ -29,7 +29,7 @@ import { CustomModal } from '@/common/components/CustomModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveForm, getToursForm } from '@/redux/toursFormSlice'
 import { getRandomTour, saveTours } from '@/redux/randomTourSlice'
-import { geoPromise } from '@/util/constans'
+// import { geoPromise } from '@/util/constans'
 
 export default function RandamTourLayout({
   data: originData,
@@ -775,6 +775,7 @@ export default function RandamTourLayout({
         //刪除鄰近
         delete newData.nearBy
       } else {
+        return
         const res = await geoPromise
         const Nlat = res.latitude
         const Elong = res.longitude
