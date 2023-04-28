@@ -29,7 +29,7 @@ import { CustomModal } from '@/common/components/CustomModal'
 import { useDispatch, useSelector } from 'react-redux'
 import { saveForm, getToursForm } from '@/redux/toursFormSlice'
 import { getRandomTour, saveTours } from '@/redux/randomTourSlice'
-import { geoPromise } from '@/util/constans'
+// import { geoPromise } from '@/util/constans'
 
 export default function RandamTourLayout({
   data: originData,
@@ -775,11 +775,12 @@ export default function RandamTourLayout({
         //刪除鄰近
         delete newData.nearBy
       } else {
-        const res = await geoPromise
-        const Nlat = res.latitude
-        const Elong = res.longitude
+        return
+        // const res = await geoPromise
+        // const Nlat = res.latitude
+        // const Elong = res.longitude
         // 取得google定位，設定經緯度
-        newData = { Nlat, Elong, ...data }
+        // newData = { Nlat, Elong, ...data }
         // 取得鎖點(懶人頁較簡易）
         newData.AttractionId = Array(4).fill(0)
         //刪除鄰近
