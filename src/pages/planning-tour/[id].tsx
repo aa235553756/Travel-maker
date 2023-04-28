@@ -253,6 +253,7 @@ export default function PlanningTour({
           setUnSaved={setUnSaved}
           setSuccessConfirmModal={setSuccessConfirmModal}
           setSuccessConfirmText={setSuccessConfirmText}
+          setSuccessConfirmWarn={setSuccessConfirmWarn}
         />
       </CustomModal>
       {/* ======成功modal====== */}
