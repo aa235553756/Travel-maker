@@ -190,9 +190,13 @@ export default function PlanningTour({
   )
 
   // ============React Hook Form============
-  const { register, handleSubmit, setValue, watch } = useForm<defaultValueProp>(
-    { defaultValues }
-  )
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<defaultValueProp>({ defaultValues })
   // ============表單ID============
   const formId = 'planning-tour-form'
 
@@ -300,6 +304,7 @@ export default function PlanningTour({
               <button
                 form={formId}
                 className="text-lg font-bold lg:text-xl py-2 lg:py-3 w-full bg-primary text-white rounded-md hover:bg-primary-tint duration-100"
+                onClick={handleErrors}
               >
                 隨機產生行程
               </button>
@@ -402,7 +407,9 @@ export default function PlanningTour({
               </div>
             </DndContext>
           </div>
-          <MoreJourney moreData={moreData} />
+          <div className="pb-[160px]">
+            <MoreJourney moreData={moreData} />
+          </div>
         </div>
       </div>
     </>
@@ -690,6 +697,22 @@ export default function PlanningTour({
       return newData
     }
   }
+  // ========= RHF 錯誤捕捉 p.s alert記得關 =========
+  function handleErrors(e: { preventDefault: () => void }) {
+    // 判斷2個都為false時
+    if (!watch('nearBy') && !watch('DistrictName').length) {
+      setSuccessConfirmModal(true)
+      setSuccessConfirmText('填寫不完整 (區域)')
+      setSuccessConfirmWarn(true)
+      e.preventDefault()
+      return
+    }
+    if (Object.keys(errors).length) {
+      setSuccessConfirmModal(true)
+      setSuccessConfirmText('填寫不完整 (行程類別)')
+      setSuccessConfirmWarn(true)
+    }
+  }
 }
 
 export async function getServerSideProps({
@@ -734,7 +757,7 @@ export async function getServerSideProps({
     const hotAttrData = await resHotAttrData.json()
 
     const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
+      'https://travelmaker.rocket-coding.com/api/tours/hot/0'
     )
 
     const resMoreJSON = await resMore.json()

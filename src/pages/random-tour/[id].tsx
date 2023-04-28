@@ -50,7 +50,7 @@ export async function getServerSideProps(context: { query: { id: number } }) {
       `https://travelmaker.rocket-coding.com/api/tours/${id}`
     )
     const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot'
+      `https://travelmaker.rocket-coding.com/api/tours/hot/${id}`
     )
 
     const resJSON = await res.json()
