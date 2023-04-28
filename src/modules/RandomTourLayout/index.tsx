@@ -852,8 +852,8 @@ export default function RandamTourLayout({
       throw new Error('不知名錯誤')
     } catch (err) {
       // 請登入
-      alert('錯誤')
-      alert(err)
+      // alert('錯誤')
+      // alert(err)
       router.push('/login')
     }
   }
@@ -896,14 +896,14 @@ export default function RandamTourLayout({
 
       // 請登入
       if (res.status === 401) {
-        alert('請重新登入')
+        // alert('請重新登入')
         router.push('/login')
         return
       }
 
       throw new Error('不知名錯誤')
     } catch (err) {
-      alert(err)
+      // alert(err)
       setIsLoading(false)
     }
   }
@@ -942,7 +942,7 @@ export default function RandamTourLayout({
 
       throw new Error('不知名錯誤')
     } catch (err) {
-      alert(err)
+      // alert(err)
       setIsLoading(false)
     }
   }
@@ -978,7 +978,7 @@ export default function RandamTourLayout({
       }
       throw new Error('不知名錯誤')
     } catch (err) {
-      alert(err)
+      // alert(err)
       setIsLoading(false)
     }
   }
