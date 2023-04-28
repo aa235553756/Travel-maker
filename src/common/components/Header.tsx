@@ -173,7 +173,7 @@ export default function Header() {
                             <AiOutlineSetting />
                           </div>
                         </Link>
-                        <hr className="mx-[-20px]" />
+                        <hr />
                         <Link
                           href="/social-media"
                           className="block px-5 py-4 hover:bg-gray-100"
@@ -184,7 +184,7 @@ export default function Header() {
                         >
                           我的社群
                         </Link>
-                        <hr className="mx-[-20px]" />
+                        <hr />
                         <button
                           className="block w-full text-left px-5 py-4 hover:bg-gray-100"
                           role="menuitem"
