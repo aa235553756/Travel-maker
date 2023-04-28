@@ -52,6 +52,7 @@ export default function RandamTourLayout({
   moreData: MoreTourProp[]
 }) {
   const router = useRouter()
+  const { query } = useRouter()
   const currentUrl = router.asPath
   const dispatch = useDispatch()
   const origin =
@@ -98,6 +99,9 @@ export default function RandamTourLayout({
   const [isLoading, setIsLoading] = useState(false)
   const [isChangeTourName, setIsChangeTourName] = useState(false)
 
+  const [handleErrorConfirm, setHandleErrorConfirm] = useState(false)
+  const [handleErrorConfirmText, setHandleErrorConfirmText] = useState('')
+
   const [tourName, setTourName] = useState(originTourName)
   const [modal, setModal] = useState(false)
 
@@ -124,6 +128,8 @@ export default function RandamTourLayout({
   const newTourNameInputRef = useRef<HTMLInputElement>(null)
   const TourNameInputRef = useRef<HTMLInputElement>(null)
   const roomNameInputRef = useRef<HTMLInputElement>(null)
+  const sliderRef = useRef<Slider>(null)
+  const sliderMobileRef = useRef<Slider>(null)
 
   // ========= RHF 表單 =========
   const formId = 'random-tour-form'
@@ -152,12 +158,14 @@ export default function RandamTourLayout({
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
-      alert('錯誤，表單填寫不完整 區域')
+      setHandleErrorConfirm(true)
+      setHandleErrorConfirmText('填寫不完整 (區域)')
       e.preventDefault()
       return
     }
     if (Object.keys(errors).length) {
-      alert('錯誤，表單填寫不完整 Type')
+      setHandleErrorConfirm(true)
+      setHandleErrorConfirmText('填寫不完整 (行程類別)')
     }
   }
 
@@ -199,8 +207,29 @@ export default function RandamTourLayout({
     setUserGuid(user?.UserGuid)
   }, [user?.UserGuid])
 
+  useEffect(() => {
+    setIdData(originData)
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(0)
+    }
+    if (sliderMobileRef.current) {
+      sliderMobileRef.current.slickGoTo(0)
+    }
+  }, [query])
+
   return (
     <div className="container lg:pt-20 pt-12 pb-[160px]">
+      {/* 重構請用這個Modal */}
+      <CustomModal
+        modal={handleErrorConfirm}
+        setModal={setHandleErrorConfirm}
+        typeConfirm
+        typeConfirmWarnIcon
+        typeConfirmText={handleErrorConfirmText}
+        onConfirm={() => {
+          setHandleErrorConfirm(false)
+        }}
+      />
       <CustomModal
         modal={loginConflirm}
         setModal={setLoginConflirm}
@@ -421,7 +450,7 @@ export default function RandamTourLayout({
         >
           隨機產生行程
         </button>
-        <Slider {...settings2}>
+        <Slider {...settings2} ref={sliderMobileRef}>
           {(IsTourId ? idData : data)?.map((item, i) => {
             return (
               <div
@@ -593,7 +622,7 @@ export default function RandamTourLayout({
           <div className="flex-grow max-w-[840px]">
             {/* Swiper圖片 */}
             <div className="hidden lg:block max-h-[180px] mb-8">
-              <Slider {...settings}>
+              <Slider {...settings} ref={sliderRef}>
                 {(IsTourId ? idData : data)?.map((item, i) => {
                   return (
                     <div
