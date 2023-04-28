@@ -236,8 +236,7 @@ export default function PlanningTourSearchModal({
 
                       // 收藏景點
                       onClick1={() => {
-                        alert('收藏')
-
+                        // alert('收藏')
                         // if (item.IsCollect) {
                         //   setCollectModal(!collectModal)
                         //   setCollectContent(!collectContent)

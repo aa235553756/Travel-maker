@@ -152,12 +152,12 @@ export default function RandamTourLayout({
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
-      alert('錯誤，表單填寫不完整 區域')
+      // alert('錯誤，表單填寫不完整 區域')
       e.preventDefault()
       return
     }
     if (Object.keys(errors).length) {
-      alert('錯誤，表單填寫不完整 Type')
+      // alert('錯誤，表單填寫不完整 Type')
     }
   }
 
@@ -407,13 +407,13 @@ export default function RandamTourLayout({
             const handleErrors2 = (e: { preventDefault: () => void }) => {
               // 判斷2個都為false時
               if (!watch2('nearBy') && !watch2('DistrictName').length) {
-                alert('錯誤，表單填寫不完整 區域')
+                // alert('錯誤，表單填寫不完整 區域')
                 e.preventDefault()
                 return
               }
               // 判斷有無沒填寫
               if (Object.keys(errors2).length) {
-                alert('錯誤，表單填寫不完整 Type')
+                // alert('錯誤，表單填寫不完整 Type')
               }
             }
             handleErrors2(e)
@@ -852,8 +852,8 @@ export default function RandamTourLayout({
       throw new Error('不知名錯誤')
     } catch (err) {
       // 請登入
-      alert('錯誤')
-      alert(err)
+      // alert('錯誤')
+      // alert(err)
       router.push('/login')
     }
   }
@@ -896,14 +896,14 @@ export default function RandamTourLayout({
 
       // 請登入
       if (res.status === 401) {
-        alert('請重新登入')
+        // alert('請重新登入')
         router.push('/login')
         return
       }
 
       throw new Error('不知名錯誤')
     } catch (err) {
-      alert(err)
+      // alert(err)
       setIsLoading(false)
     }
   }
@@ -942,7 +942,7 @@ export default function RandamTourLayout({
 
       throw new Error('不知名錯誤')
     } catch (err) {
-      alert(err)
+      // alert(err)
       setIsLoading(false)
     }
   }
@@ -978,7 +978,7 @@ export default function RandamTourLayout({
       }
       throw new Error('不知名錯誤')
     } catch (err) {
-      alert(err)
+      // alert(err)
       setIsLoading(false)
     }
   }

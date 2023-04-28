@@ -40,7 +40,7 @@ export default function BannerSelectorMobile({
   const handleErrors = (e: { preventDefault: () => void }) => {
     // 判斷2個都為false時
     if (!watch('nearBy') && !watch('DistrictName').length) {
-      alert('錯誤，表單填寫不完整 區域')
+      // alert('錯誤，表單填寫不完整 區域')
       e.preventDefault()
       return
     }
@@ -50,7 +50,7 @@ export default function BannerSelectorMobile({
     // }
 
     if (Object.keys(errors).length) {
-      alert('錯誤，表單填寫不完整 Type')
+      // alert('錯誤，表單填寫不完整 Type')
     }
   }
   return (
