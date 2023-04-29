@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import Image from 'next/image'
 import Head from 'next/head'
+import { useRouter } from 'next/router'
+import { CustomModal } from '@/common/components/CustomModal'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
 
 type Inputs = {
   pwd: string
@@ -10,15 +13,56 @@ type Inputs = {
 
 // 尚缺alert
 export default function ForgotPwd() {
+  const router = useRouter()
+  const { token } = router.query
+
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors, isDirty, isValid },
+    reset,
   } = useForm<Inputs>({
     mode: 'onChange',
   })
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  //=========modal state=========
+  const [modal, setModal] = useState(false)
+  const [modalText, setModalText] = useState('')
+  const [isWarnIconModal, setIsWarnIconModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    setIsLoading(true)
+
+    try {
+      const res = await fetch(
+        'https://travelmaker.rocket-coding.com/api/users/resetPassword',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + token,
+          },
+          body: JSON.stringify({ NewPassword: data.pwd }),
+        }
+      )
+
+      if (res.ok) {
+        setModal(true)
+        setIsWarnIconModal(false)
+        setModalText('密碼重新設定成功')
+        reset()
+        return
+      }
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      setModal(true)
+      setIsWarnIconModal(true)
+      setModalText(String(err))
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <>
@@ -29,6 +73,19 @@ export default function ForgotPwd() {
         <link rel="icon" href="/Group 340.png" />
       </Head>
       <div className="container">
+        {modal && (
+          <CustomModal
+            modal={modal}
+            setModal={setModal}
+            onConfirm={() => {
+              setModal(false)
+            }}
+            typeConfirm={true}
+            typeConfirmWarnIcon={isWarnIconModal}
+            typeConfirmText={modalText}
+          />
+        )}
+        {isLoading && <LoadingAnimate isLoading />}
         <div className="pt-[44px] pb-[100px] md:pt-[118px] md:pb-[160px] md:flex md:justify-center lg:px-6">
           {/* 這是圖片 */}
           <Image
