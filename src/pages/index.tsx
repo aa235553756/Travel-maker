@@ -88,12 +88,12 @@ export default function Home({
 
   // 點擊換一組
   const handleTry = async () => {
+    setIsLoading(true)
+
     const resTryData = await fetch(
       `https://travelmaker.rocket-coding.com/api/tours/try`
     )
     const newData = await resTryData.json()
-
-    setIsLoading(true)
 
     setTimeout(() => {
       if (resTryData.ok) {
