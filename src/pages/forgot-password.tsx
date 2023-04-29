@@ -1,8 +1,10 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import Image from 'next/image'
 import Head from 'next/head'
+import { CustomModal } from '@/common/components/CustomModal'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
 
 type Inputs = {
   email: string
@@ -10,6 +12,7 @@ type Inputs = {
 
 // 尚缺alert
 export default function ForgotPwd() {
+  // =========RHF=========
   const {
     register,
     handleSubmit,
@@ -17,7 +20,48 @@ export default function ForgotPwd() {
   } = useForm<Inputs>({
     mode: 'onChange',
   })
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data)
+  //=========onSubmit=========
+  const onSubmit: SubmitHandler<Inputs> = async ({ email: Account }) => {
+    setIsLoading(true)
+    try {
+      const res = await fetch(
+        'https://travelmaker.rocket-coding.com/api/users/forgotPassword',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ Account }),
+        }
+      )
+      //==res ok==
+      if (res.ok) {
+        // const resJSON = await res.json()
+        setModal(true)
+        setIsWarnIconModal(false)
+        setModalText('連結已寄送，請查看信箱')
+        return
+      }
+      if (res.status === 400) {
+        setModal(true)
+        setIsWarnIconModal(true)
+        setModalText('此帳號未註冊')
+        return
+      }
+
+      // ==throw Error
+      throw new Error('不知名錯誤')
+    } catch (err) {
+      setModal(true)
+      setIsWarnIconModal(true)
+      setModalText(String(err))
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  //=========modal state=========
+  const [modal, setModal] = useState(false)
+  const [modalText, setModalText] = useState('')
+  const [isWarnIconModal, setIsWarnIconModal] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   return (
     <>
@@ -28,6 +72,19 @@ export default function ForgotPwd() {
         <link rel="icon" href="/Group 340.png" />
       </Head>
       <div className="container">
+        {modal && (
+          <CustomModal
+            modal={modal}
+            setModal={setModal}
+            onConfirm={() => {
+              setModal(false)
+            }}
+            typeConfirm={true}
+            typeConfirmWarnIcon={isWarnIconModal}
+            typeConfirmText={modalText}
+          />
+        )}
+        {isLoading && <LoadingAnimate isLoading />}
         <div className="pt-[44px] pb-[100px] md:py-[160px] md:flex md:justify-center lg:px-6">
           {/* 這是圖片 */}
           <Image
@@ -43,7 +100,7 @@ export default function ForgotPwd() {
               忘記密碼？
             </h2>
             <h3 className="text-xl lg:text-[24px] mb-10 md:mb-10">
-              將寄出重設密碼至你的信箱
+              將寄出重設密碼連結至你的信箱
             </h3>
             <form className="flex flex-col" onSubmit={handleSubmit(onSubmit)}>
               <label className="text-lg md:text-xl mb-6 font-bold md:mb-5">
