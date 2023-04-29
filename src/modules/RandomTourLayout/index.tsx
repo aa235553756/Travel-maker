@@ -80,16 +80,17 @@ export default function RandamTourLayout({
   const waypoint =
     (IsTourId ? idData.length : data.length) >= 2
       ? '&waypoints=' +
-        (IsTourId ? idData : data)
-          .filter((item, i) => {
-            if (i === 0 || i === data.length - 1) {
-              return false
-            }
-            return item.AttractionName
-          })
-          .map((item) => item.AttractionName)
-          .join(' 台北市|') +
-        ' 台北市'
+        (
+          (IsTourId ? idData : data)
+            .filter((item, i) => {
+              if (i === 0 || i === data.length - 1) {
+                return false
+              }
+              return item.AttractionName
+            })
+            .map((item) => item.AttractionName)
+            .join(' 台北市|') + ' 台北市'
+        ).replace(/&/g, ' ')
       : null
 
   // =========手機版表單state=========
@@ -465,7 +466,7 @@ export default function RandamTourLayout({
                   target="_blank"
                   href={`${URL}`}
                   rel="noopener noreferrer"
-                  className="cursor-pointer absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white "
+                  className="cursor-pointer absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white hover:underline hover:text-primary-tint active:text-primary "
                 >
                   {item.AttractionName}
                 </a>
@@ -638,7 +639,7 @@ export default function RandamTourLayout({
                       <a
                         target="_blank"
                         href={`/hot-topics/attractions/${item.AttractionId}`}
-                        className="cursor-pointer hover:text-primary-tint absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 "
+                        className="cursor-pointer hover:underline hover:text-primary-tint active:text-primary  absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 "
                       >
                         {item.AttractionName}
                       </a>
@@ -659,15 +660,15 @@ export default function RandamTourLayout({
                 <iframe
                   src={`https://www.google.com/maps/embed/v1/directions?key=${
                     process.env.NEXT_PUBLIC_YANG_GOOGLE_KEY
-                  }&origin=${
+                  }&origin=${(
                     (IsTourId ? idData[0] : data[0]).AttractionName + ' 台北市'
-                  }${waypoint}
-                  &destination=${
+                  ).replace(/&/g, ' ')}${waypoint}
+                  &destination=${(
                     (IsTourId
                       ? idData[idData.length - 1]
                       : data[data.length - 1]
                     ).AttractionName + ' 台北市'
-                  }`}
+                  ).replace(/&/g, ' ')}`}
                   // &mode=${'walking'}
                   className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
                   loading="lazy"

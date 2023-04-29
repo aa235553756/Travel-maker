@@ -98,7 +98,7 @@ export async function getServerSideProps(context: {
           .map(() => {
             return {
               ImageUrl: '/blurLogo.png',
-              AttractionName: '景點名稱',
+              AttractionName: '',
             }
           }),
         moreData: resMoreJSON,
