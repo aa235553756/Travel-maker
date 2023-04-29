@@ -20,7 +20,7 @@ export default function ChangeButton({
   md:mr-0
   lg:ml-0
   rounded-md
-  lg:text-2xl hover:bg-primary-tint hover:duration-500
+  lg:text-2xl hover:bg-primary-tint hover:duration-300 hover:-translate-y-1
     `
 
   return (

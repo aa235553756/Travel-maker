@@ -238,7 +238,7 @@ export default function Banner() {
             {/* 電腦版開始規劃按鈕 */}
             <button
               form={formId}
-              className="w-1/5 ml-6 bg-primary text-white px-4 block rounded-md md:text-xl hover:bg-primary/75 active:bg-primary-tint duration-100"
+              className="w-1/5 ml-6 bg-primary text-white px-4 block rounded-md md:text-xl  hover:bg-primary/50 active:bg-primary/75 duration-500"
               onClick={handleErrors}
             >
               開始規劃
