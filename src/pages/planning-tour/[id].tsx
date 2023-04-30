@@ -289,7 +289,14 @@ export default function PlanningTour({
           {/* 中間拖拉 & 篩選區塊 */}
           <div className="flex flex-wrap mb-[200px] min-w-[1128px]">
             {/* 排行程 & 行程名稱 寬100% */}
-            <PlanningTourTitle RoomName={data.RoomName} />
+            <PlanningTourTitle
+              RoomName={data.RoomName}
+              CreaterGuid={data.CreaterGuid}
+              setSuccessConfirmWarn={setSuccessConfirmWarn}
+              setSuccessConfirmModal={setSuccessConfirmModal}
+              setSuccessConfirmText={setSuccessConfirmText}
+              setIsLoading={setIsLoading}
+            />
             {/* 篩選器及其按鈕 */}
             <div className="mr-6 max-w-[264px] hidden md:block">
               <SelectSide
