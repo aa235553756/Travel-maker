@@ -15,7 +15,9 @@ export default function TourMap({ data }: { data: RoomAttractionsProp[] }) {
             }
             return item.AttractionName
           })
-          .map((item: RoomAttractionsProp) => item.AttractionName)
+          .map((item: RoomAttractionsProp) =>
+            item.AttractionName.replace(/&/g, ' ')
+          )
           .join(' 台北市|') +
         ' 台北市'
       : ''
@@ -25,13 +27,13 @@ export default function TourMap({ data }: { data: RoomAttractionsProp[] }) {
       <iframe
         src={`https://www.google.com/maps/embed/v1/directions?key=${
           process.env.NEXT_PUBLIC_YANG_GOOGLE_KEY
-        }&origin=${
-          newData[0] ? newData[0]?.AttractionName + ' 台北市' : '台北市'
-        }${waypoint}&destination=${
-          newData[0]
-            ? newData[newData.length - 1]?.AttractionName + ' 台北市'
-            : '台北市'
-        }`}
+        }&origin=${(newData[0]
+          ? newData[0]?.AttractionName + ' 台北市'
+          : '台北市'
+        ).replace(/&/g, ' ')}${waypoint}&destination=${(newData[0]
+          ? newData[newData.length - 1]?.AttractionName + ' 台北市'
+          : '台北市'
+        ).replace(/&/g, ' ')}`}
         // &mode=${'walking'}
         className="w-full h-full  rounded-md"
         loading="lazy"
