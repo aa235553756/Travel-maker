@@ -162,6 +162,10 @@ export default function PlanningTourSearchModal({
         </div>
         <SearchButton
           onClick={() => {
+            attrCardDIVRef?.current?.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            })
             handleAttrPageClick({ selected: 0 })
           }}
         />
@@ -229,27 +233,6 @@ export default function PlanningTourSearchModal({
                         setSuccessConfirmWarn(false)
                         setSuccessConfirmText('新增備用景點成功')
                       }}
-                      // setModal(!modal)
-                      // handleGetRoomData(item.AttractionId)
-                      // setRoomData(roomData)
-                      // setAddAttrId(item.AttractionId)
-
-                      // 收藏景點
-                      onClick1={() => {
-                        // alert('收藏')
-                        // if (item.IsCollect) {
-                        //   setCollectModal(!collectModal)
-                        //   setCollectContent(!collectContent)
-                        // } else if (!item.IsCollect) {
-                        //   setCollectModal(!collectModal)
-                        //   setCollectContent(!collectContent)
-                        // }
-                        // handleCollectAttr(
-                        //   item.AttractionId,
-                        //   item.IsCollect,
-                        //   index
-                        // )
-                      }}
                     />
                   </div>
                 )
@@ -285,40 +268,12 @@ export default function PlanningTourSearchModal({
                     top: 0,
                     behavior: 'smooth',
                   })
-                  // window.scrollTo({
-                  //   top: 0,
-                  //   behavior: 'smooth',
-                  // })
                 }}
               />
             </div>
           </div>
         )}
       </div>
-
-      {/* 景點收藏成功提醒 Modal */}
-      {/* <CustomModal
-    modal={attrCollectSuccess}
-    setModal={setAttrCollectSuccess}
-    wrapper
-  >
-    <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
-      <BsBookmarkCheck className="text-[64px] text-[#74c041]" />
-      <p className="text-2xl">收藏景點成功</p>
-    </div>
-  </CustomModal> */}
-
-      {/* 景點取消收藏提醒 Modal */}
-      {/* <CustomModal
-    modal={attrCollectCancel}
-    setModal={setAttrCollectCancel}
-    wrapper
-  >
-    <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
-      <BsBookmarkX className="text-[64px] text-highlight" />
-      <p className="text-2xl">取消收藏景點</p>
-    </div>
-  </CustomModal> */}
     </div>
   )
   // ======handle搜尋按鈕or點擊頁面======
