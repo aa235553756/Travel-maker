@@ -437,13 +437,13 @@ export default function RandamTourLayout({
             const handleErrors2 = (e: { preventDefault: () => void }) => {
               // 判斷2個都為false時
               if (!watch2('nearBy') && !watch2('DistrictName').length) {
-                alert('錯誤，表單填寫不完整 區域')
+                alert('填寫不完整 (區域)')
                 e.preventDefault()
                 return
               }
               // 判斷有無沒填寫
               if (Object.keys(errors2).length) {
-                alert('錯誤，表單填寫不完整 Type')
+                alert('填寫不完整 (行程類別)')
               }
             }
             handleErrors2(e)
