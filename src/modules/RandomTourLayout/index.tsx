@@ -523,8 +523,7 @@ export default function RandamTourLayout({
                     ref={TourNameInputRef}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
-                        setTourName(TourNameInputRef?.current?.value)
-                        setChangeNameConfirm(true)
+                        handleChangeName()
                         if (TourNameInputRef.current) {
                           TourNameInputRef.current.blur()
                         }
@@ -539,12 +538,7 @@ export default function RandamTourLayout({
                   />
                   <button
                     className="py-1 px-8 text-white bg-primary rounded-md"
-                    onClick={() => {
-                      if (TourNameInputRef?.current?.value !== '') {
-                        setTourName(TourNameInputRef?.current?.value)
-                        setChangeNameConfirm(true)
-                      }
-                    }}
+                    onClick={handleChangeName}
                   >
                     儲存
                   </button>
@@ -1009,6 +1003,32 @@ export default function RandamTourLayout({
       throw new Error('不知名錯誤')
     } catch (err) {
       // alert(err)
+      setIsLoading(false)
+    }
+  }
+  async function handleChangeName() {
+    setIsLoading(true)
+    const newName = TourNameInputRef?.current?.value
+    try {
+      if (newName !== '' && newName !== undefined) {
+        const res = await fetch(
+          `https://travelmaker.rocket-coding.com/api/tours/${query.id}/rename`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: String(token),
+            },
+            body: JSON.stringify(newName),
+          }
+        )
+        if (res.ok) {
+          setTourName(newName)
+          setChangeNameConfirm(true)
+        }
+      }
+    } catch (err) {
+    } finally {
       setIsLoading(false)
     }
   }
