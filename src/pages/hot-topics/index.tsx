@@ -1,5 +1,5 @@
 import SearchButton from '@/common/components/searchButton'
-import React, {  useState } from 'react'
+import React, { useRef, useState } from 'react'
 import Select from 'react-select'
 import TourCard from '@/common/components/card/TourCard'
 import ReactPaginate from 'react-paginate'
@@ -8,12 +8,17 @@ import {
   BsBookmarkX,
   BsChevronLeft,
   BsChevronRight,
+  BsFillCheckCircleFill,
+  BsFillXCircleFill,
 } from 'react-icons/bs'
 import { getCookie } from 'cookies-next'
 import AttrCard from '@/common/components/card/AttrCard'
 import BlogCard from '@/common/components/card/BlogCard'
 import { CustomModal } from '@/common/components/CustomModal'
 import Head from 'next/head'
+import router from 'next/router'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
+import Image from 'next/image'
 
 interface Attractions {
   IsCollect: boolean
@@ -76,55 +81,72 @@ interface HotBlogProps {
 export async function getServerSideProps({
   req,
   res,
+  query,
 }: {
   req: undefined
   res: undefined
+  query: { Keyword: string }
 }) {
-  const token = getCookie('auth', { res, req })
-  const headers: { [key: string]: string } = {
-    'Content-Type': 'application/json',
-  }
-
-  if (token) {
-    headers.Authorization = `${token}`
-  }
-
-  // 【API】給參數搜尋行程
-  const resHotTourData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/search?Page=1`,
-    {
-      method: 'GET',
-      headers,
+  try {
+    const token = getCookie('auth', { res, req })
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
     }
-  )
-  const hotTourData = await resHotTourData.json()
 
-  // 【API】給參數搜尋景點
-  const resHotAttrData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/attractions/search?Page=1`,
-    {
-      method: 'GET',
-      headers,
+    if (token) {
+      headers.Authorization = `${token}`
     }
-  )
-  const hotAttrData = await resHotAttrData.json()
 
-  // 【API】給參數搜尋遊記
-  const resHotBlogData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/search?Page=1`,
-    {
-      method: 'GET',
-      headers,
+    // 【API】給參數搜尋行程
+    const resHotTourData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/tours/search?&Keyword=${
+        query.Keyword ? query.Keyword : ''
+      }&Page=1`,
+      {
+        headers,
+      }
+    )
+    const hotTourData = await resHotTourData.json()
+
+    // 【API】給參數搜尋景點
+    const resHotAttrData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/attractions/search?&Keyword=${
+        query.Keyword ? query.Keyword : ''
+      }&Page=1`,
+      {
+        headers,
+      }
+    )
+    const hotAttrData = await resHotAttrData.json()
+
+    // 【API】給參數搜尋遊記
+    const resHotBlogData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/blogs/search?&Keyword=${
+        query.Keyword ? query.Keyword : ''
+      }&Page=1`,
+      {
+        headers,
+      }
+    )
+    const hotBlogData = await resHotBlogData.json()
+
+    if (resHotTourData.ok && resHotAttrData.ok && resHotBlogData.ok) {
+      return {
+        props: {
+          hotTourData,
+          hotAttrData,
+          hotBlogData,
+          query,
+        },
+      }
     }
-  )
-  const hotBlogData = await resHotBlogData.json()
-
-  return {
-    props: {
-      hotTourData,
-      hotAttrData,
-      hotBlogData,
-    },
+    throw new Error('不知名錯誤')
+  } catch (error) {
+    return {
+      props: {
+        data: {},
+      },
+    }
   }
 }
 
@@ -136,6 +158,7 @@ export default function HotTopics({
   hotTourData: HotTourProps
   hotAttrData: HotAttrProps
   hotBlogData: HotBlogProps
+  Keyword: string
 }) {
   // 搜尋 Select
   const TypeOptions = [
@@ -173,62 +196,277 @@ export default function HotTopics({
     headers.Authorization = `${token}`
   }
 
+  //  ----------------- 有關搜尋 -----------------
+  const [tourData, setTourData] = useState(
+    hotTourData?.Tours ? hotTourData?.Tours : []
+  )
+  const [attrData, setAttrData] = useState(
+    hotAttrData?.Attractions ? hotAttrData?.Attractions : []
+  )
+  const [blogData, setBlogData] = useState(
+    hotBlogData?.Tours ? hotBlogData?.Tours : []
+  )
+  const [tourNoData, setTourNoData] = useState(false)
+  const [attrNoData, setAttrNoData] = useState(false)
+  const [blogNoData, setBlogNoData] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
-  //  ----------------- 有關景點的分隔線 -----------------
-  const [attrData, setAttrData] = useState(hotAttrData.Attractions)
-  console.log('attrData', attrData)
+  // hotTourData.Tours ? hotTourData.Tours : ''
 
-  // 給參數搜尋景點
+  // 取得景點下一頁資訊
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentPage, setCurrentPage] = useState(0)
+  const [tourPage, setTourPage] = useState(hotTourData?.TotalPages)
+  const [attrPage, setAttrPage] = useState(hotAttrData?.TotalPages)
+  const [blogPage, setBlogPage] = useState(hotBlogData?.TotalPages)
+
+  // 搜尋條件
   const [selectedType, setSelectedType] = useState<string[]>([])
   const [selectedDistrict, setSelectedDistrict] = useState<string[]>([])
-  const [keyWordValue, setKeyWordValue] = useState('')
 
+  const baseTourUrl = 'https://travelmaker.rocket-coding.com/api/tours/search'
   const baseAttrUrl =
     'https://travelmaker.rocket-coding.com/api/attractions/search'
+  const baseBlogUrl = 'https://travelmaker.rocket-coding.com/api/blogs/search'
 
-  // 将 type 和 district 的值轉為 &=
+  // 關鍵字搜尋
+  const refKeyWord = useRef<HTMLInputElement>(null)
+
+  // 接 API 用，将 type 和 district 的值轉為 &=
   const typeParams = selectedType
     .map((type) => `Type=${encodeURIComponent(type)}`)
     .join('&')
   const districtParams = selectedDistrict
     .map((district) => `District=${encodeURIComponent(district)}`)
     .join('&')
-  const keyWordParams = keyWordValue
-    ? `&Keyword=${encodeURIComponent(keyWordValue)}`
-    : ''
 
-  const queryParams = `?&${typeParams}&${districtParams}&${keyWordParams}`
+  const queryParams = `?&${typeParams}&${districtParams}`
 
-  // 取得景點下一頁資訊
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentPage, setCurrentPage] = useState(0)
-  const [attrPage, setAttrPage] = useState(hotAttrData.TotalPages)
+  // 控制換頁 & 輸入條件搜尋
+  const handleSearchClick = async (data: { selected: number }) => {
+    setIsLoading(true)
 
-  const [noData, setNoData] = useState(false)
+    const keyWordValue = refKeyWord.current?.value
 
-  // 控制換頁 & 點擊搜尋查詢景點
-  const handleAttrPageClick = async (data: { selected: number }) => {
-      //【API】給參數搜尋景點
-    const resSearchAttrData = await fetch(
-      `${baseAttrUrl}${queryParams}&Page=${data.selected + 1}`,
+    // 搜尋時更改路由
+    const Type = selectedType ?? ''
+    const District = selectedDistrict ?? ''
+    const Keyword = keyWordValue === '' ? '' : keyWordValue
+    const Page = data.selected + 1
+    router.push({
+      pathname: '/hot-topics',
+      query: { Type, District, Keyword, Page },
+    })
+
+    // 【API】給參數搜尋行程
+    const resSearchTourData = await fetch(
+      `${baseTourUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
+        data.selected + 1
+      }`,
       {
-        method: 'GET',
+        headers,
+      }
+    )
+    const searchTourData = await resSearchTourData.json()
+
+    // 【API】給參數搜尋景點
+    const resSearchAttrData = await fetch(
+      `${baseAttrUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
+        data.selected + 1
+      }`,
+      {
         headers,
       }
     )
     const searchAttrData = await resSearchAttrData.json()
 
-    if (resSearchAttrData.ok) {
+    // 【API】給參數搜尋景點
+    const resSearchBlogData = await fetch(
+      `${baseBlogUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
+        data.selected + 1
+      }`,
+      {
+        headers,
+      }
+    )
+    const searchBlogData = await resSearchBlogData.json()
+
+    if (resSearchTourData.ok) {
       setAttrData(searchAttrData.Attractions)
       setAttrPage(searchAttrData.TotalPages)
       setCurrentPage(data.selected)
-      setNoData(false)
+      setTourNoData(false)
     }
+
+    if (resSearchAttrData.ok) {
+      setTourData(searchTourData.Tours)
+      setTourPage(searchTourData.TotalPages)
+      setCurrentPage(data.selected)
+      setAttrNoData(false)
+    }
+
+    if (resSearchBlogData.ok) {
+      setBlogData(searchBlogData.Tours)
+      setBlogPage(searchBlogData.TotalPages)
+      setCurrentPage(data.selected)
+      setBlogNoData(false)
+    }
+    if (!resSearchTourData.ok) {
+      setTourNoData(true)
+    }
+
     if (!resSearchAttrData.ok) {
-      setNoData(true)
+      setAttrNoData(true)
+    }
+
+    if (!resSearchBlogData.ok) {
+      setBlogNoData(true)
+    }
+
+    setIsLoading(false)
+
+    console.log(tourData);
+    console.log(attrData);
+    
+  }
+
+  // 控制換頁& 點擊搜尋查詢行程
+  // const handleTourPageClick = async (data: { selected: number }) => {
+  //   // 【API】給參數搜尋行程
+  //   const resSearchTourData = await fetch(
+  //     `${baseTourUrl}${queryParams}&Page=${data.selected + 1}`,
+  //     {
+  //       method: 'GET',
+  //       headers,
+  //     }
+  //   )
+  //   const searchTourData = await resSearchTourData.json()
+
+  //   if (resSearchTourData.ok) {
+  //     setTourData(searchTourData.Tours)
+  //     setTourPage(searchTourData.TotalPages)
+  //     setCurrentPage(data.selected)
+  //     setNoData(false)
+  //   }
+
+  //   if (!resSearchTourData.ok) {
+  //     setNoData(true)
+  //   }
+  // }
+
+  // 控制換頁 & 點擊搜尋查詢景點
+  // const handleAttrPageClick = async (data: { selected: number }) => {
+  //   //【API】給參數搜尋景點
+  //   const resSearchAttrData = await fetch(
+  //     `${baseAttrUrl}${queryParams}&Page=${data.selected + 1}`,
+  //     {
+  //       method: 'GET',
+  //       headers,
+  //     }
+  //   )
+  //   const searchAttrData = await resSearchAttrData.json()
+
+  //   if (resSearchAttrData.ok) {
+  //     setAttrData(searchAttrData.Attractions)
+  //     setAttrPage(searchAttrData.TotalPages)
+  //     setCurrentPage(data.selected)
+  //     setNoData(false)
+  //   }
+  //   if (!resSearchAttrData.ok) {
+  //     setNoData(true)
+  //   }
+  // }
+
+  // 控制換頁& 點擊搜尋查詢遊記
+  // const handleBlogPageClick = async (data: { selected: number }) => {
+  //   // 【API】給參數搜尋景點
+  //   const resSearchBlogData = await fetch(
+  //     `${baseBlogUrl}${queryParams}&Page=${data.selected + 1}`,
+  //     {
+  //       method: 'GET',
+  //       headers,
+  //     }
+  //   )
+  //   const searchBlogData = await resSearchBlogData.json()
+
+  //   if (resSearchBlogData.ok) {
+  //     setBlogData(searchBlogData.Tours)
+  //     setBlogPage(searchBlogData.TotalPages)
+  //     setCurrentPage(data.selected)
+  //     setNoData(false)
+  //   }
+
+  //   if (!resSearchBlogData.ok) {
+  //     setNoData(true)
+  //   }
+  // }
+
+  //  ----------------- 有關行程的分隔線 -----------------
+  // 複製行程
+  const [loginConflirm, setLoginConflirm] = useState(false)
+  const [copySuccess, setCopySuccess] = useState(false)
+  // 對行程按愛心或取消愛心
+  const handleClickLiked = async (IsLike: boolean, TourId: number) => {
+    if (!IsLike) {
+      //【API】用戶把行程按愛心
+      fetch(`https://travelmaker.rocket-coding.com/api/tours/${TourId}/like`, {
+        method: 'POST',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      const newTours = tourData.map((item) => {
+        if (item.TourId === TourId) {
+          return { ...item, Likes: item.Likes + 1 }
+        } else {
+          return item
+        }
+      })
+      setTourData(newTours)
+    } else if (IsLike) {
+      //【API】用戶取消行程愛心
+      fetch(`https://travelmaker.rocket-coding.com/api/tours/${TourId}/like`, {
+        method: 'DELETE',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      const newTours = tourData.map((item) => {
+        if (item.TourId === TourId) {
+          return { ...item, Likes: item.Likes - 1 }
+        } else {
+          return item
+        }
+      })
+      setTourData(newTours)
     }
   }
 
+  // 複製行程
+  const handleCopyTour = async (TourId: number) => {
+    //【API】用戶複製行程
+    const resCopyTourData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/tours/${TourId}/duplicate`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify('未命名的行程'),
+      }
+    )
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const copyTourData = await resCopyTourData.json()
+
+    if (resCopyTourData.ok && token) {
+      setCopySuccess(true)
+    }
+  }
+
+  //  ----------------- 有關景點的分隔線 -----------------
   // 收藏 & 加入行程 彈窗
   const [modal, setModal] = useState(false)
   const [collectModal, setCollectModal] = useState(false)
@@ -243,10 +481,6 @@ export default function HotTopics({
     IsCollect: boolean,
     index: number
   ) => {
-    if (!token) {
-      alert('請先登入，自動跳轉中...')
-      return
-    }
     if (!IsCollect) {
       //【API】收藏景點
       const resCollectAttrData = await fetch(
@@ -305,11 +539,13 @@ export default function HotTopics({
 
   // 取得房間名稱
   const [roomData, setRoomData] = useState<RoomDataProp[] | undefined>([])
+  const [success, setSuccess] = useState(true)
+  const [modalText, setModalText] = useState('登入成功，自動跳轉...')
+  const [addTourSuccess, setAddTourSuccess] = useState(false)
+
   const handleGetRoomData = async (AttractionId: number) => {
-    if (!token) {
-      alert('請先登入，自動跳轉中...')
-      return
-    }
+    setRoomData([])
+
     // 【API】主揪.被揪加景點進房間前需要get所在的房間
     const resGetRoomData = await fetch(
       `https://travelmaker.rocket-coding.com/api/rooms/getRooms/${AttractionId}`,
@@ -328,10 +564,6 @@ export default function HotTopics({
   // 加景點進房間
   const [addAttrId, setAddAttrId] = useState(0)
   const handleAddAttr = async (RoomGuid: string, addAttrId: number) => {
-    if (!token) {
-      alert('請先登入，自動跳轉中...')
-      return
-    }
     //【API】主揪.被揪加景點進房間
     const resAddAttrData = await fetch(
       `https://travelmaker.rocket-coding.com/api/rooms/addAttractions`,
@@ -352,141 +584,19 @@ export default function HotTopics({
 
     if (resAddAttrData.ok) {
       handleGetRoomData(addAttrId)
-      alert(addAttrData.Message)
+      setAddTourSuccess(true)
+      setSuccess(true)
+      setModalText(addAttrData.Message)
     }
 
     if (!resAddAttrData.ok) {
-      alert(addAttrData.Message)
-    }
-  }
-
-  //  ----------------- 有關行程的分隔線 -----------------
-  const [tourData, setTourData] = useState(hotTourData.Tours)
-  console.log('tourData', tourData)
-
-  const baseTourUrl = 'https://travelmaker.rocket-coding.com/api/tours/search'
-
-  // 取得行程下一頁資訊
-  const [tourPage, setTourPage] = useState(hotTourData.TotalPages)
-
-  // 控制換頁& 點擊搜尋查詢行程
-  const handleTourPageClick = async (data: { selected: number }) => {
-    // 【API】給參數搜尋行程
-    const resSearchTourData = await fetch(
-      `${baseTourUrl}${queryParams}&Page=${data.selected + 1}`,
-      {
-        method: 'GET',
-        headers,
-      }
-    )
-    const searchTourData = await resSearchTourData.json()
-
-    if (resSearchTourData.ok) {
-      setTourData(searchTourData.Tours)
-      setTourPage(searchTourData.TotalPages)
-      setCurrentPage(data.selected)
-      setNoData(false)
-    }
-
-    if (!resSearchTourData.ok) {
-      setNoData(true)
-    }
-  }
-
-  // 對行程按愛心或取消愛心
-  const handleClickLiked = async (IsLike: boolean, TourId: number) => {
-    if (!IsLike) {
-      //【API】用戶把行程按愛心
-      fetch(`https://travelmaker.rocket-coding.com/api/tours/${TourId}/like`, {
-        method: 'POST',
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      const newTours = tourData.map((item) => {
-        if (item.TourId === TourId) {
-          return { ...item, Likes: item.Likes + 1 }
-        } else {
-          return item
-        }
-      })
-      setTourData(newTours)
-    } else if (IsLike) {
-      //【API】用戶取消行程愛心
-      fetch(`https://travelmaker.rocket-coding.com/api/tours/${TourId}/like`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-      const newTours = tourData.map((item) => {
-        if (item.TourId === TourId) {
-          return { ...item, Likes: item.Likes - 1 }
-        } else {
-          return item
-        }
-      })
-      setTourData(newTours)
-    }
-  }
-
-  // 複製行程
-  const handleCopyTour = async (TourId: number) => {
-    //【API】用戶複製行程
-    const resCopyTourData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/${TourId}/duplicate`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify('未命名的行程'),
-      }
-    )
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const copyTourData = await resCopyTourData.json()
-
-    if (resCopyTourData.ok) {
-      alert('複製行程成功，請至會員中心我的收藏行程(一般模式)查看')
+      setAddTourSuccess(true)
+      setSuccess(false)
+      setModalText(addAttrData.Message)
     }
   }
 
   //  ----------------- 有關遊記的分隔線 -----------------
-  const [blogData, setBlogData] = useState(hotBlogData.Tours)
-  console.log('blogData', blogData)
-
-  const baseBlogUrl = 'https://travelmaker.rocket-coding.com/api/blogs/search'
-
-  // 取得遊記下一頁資訊
-  const [blogPage, setBlogPage] = useState(hotBlogData.TotalPages)  
-
-  // 控制換頁& 點擊搜尋查詢遊記
-  const handleBlogPageClick = async (data: { selected: number }) => {
-    // 【API】給參數搜尋景點
-    const resSearchBlogData = await fetch(
-      `${baseBlogUrl}${queryParams}&Page=${data.selected + 1}`,
-      {
-        method: 'GET',
-        headers,
-      }
-    )
-    const searchBlogData = await resSearchBlogData.json()
-
-    if (resSearchBlogData.ok) {
-      setBlogData(searchBlogData.Tours)
-      setBlogPage(searchBlogData.TotalPages)
-      setCurrentPage(data.selected)
-      setNoData(false)
-    }
-
-    if (!resSearchBlogData.ok) {
-      setNoData(true)
-    }    
-  }
-
   // 收藏彈窗
   const [blogCollectSuccess, setBlogCollectSuccess] = useState(false)
   const [blogCollectCancel, setBlogCollectCancel] = useState(false)
@@ -497,10 +607,6 @@ export default function HotTopics({
     IsCollect: boolean,
     index: number
   ) => {
-    if (!token) {
-      alert('請先登入，自動跳轉中...')
-      return
-    }
     if (!IsCollect) {
       //【API】收藏遊記
       const resCollectBlogData = await fetch(
@@ -566,6 +672,8 @@ export default function HotTopics({
         <link rel="icon" href="/Group 340.png" />
       </Head>
 
+      {isLoading && <LoadingAnimate isLoading={isLoading} />}
+
       <div className="container pt-[104px] pb-[100px] md:pt-20 md:pb-[160px]">
         {/* 三個Select */}
         <div className="flex mb-7 flex-wrap md:mb-11 md:flex-nowrap md:space-x-6">
@@ -573,19 +681,17 @@ export default function HotTopics({
             instanceId="selectbox"
             options={TypeOptions}
             placeholder="類別"
-            className="w-full mb-7 md:mb-0 md:w-1/4"
+            className="w-full mb-7 md:mb-0 md:w-1/4 z-40"
             isMulti={true}
             onChange={(type) => {
-              // 3個state
-              // console.log('item', type)
               const typeValue = type.map((type) => type.value)
               setSelectedType(typeValue)
             }}
             styles={{
-              control: (baseStyles, state) => ({
+              control: (baseStyles) => ({
                 ...baseStyles,
                 // 用法
-                borderColor: state.isFocused ? 'grey' : 'red',
+                // borderColor: state.isFocused ? 'grey' : 'red',
                 height: '100%',
                 borderRadius: '12px',
               }),
@@ -596,7 +702,7 @@ export default function HotTopics({
             options={AreaOptions}
             placeholder="區域"
             isMulti={true}
-            className="w-full mb-7 md:mb-0 md:w-1/4"
+            className="w-full mb-7 md:mb-0 md:w-1/4 z-40"
             onChange={(district) => {
               const districtValue = district.map((district) => district.value)
               setSelectedDistrict(districtValue)
@@ -613,18 +719,13 @@ export default function HotTopics({
             <input
               type="text"
               placeholder="請輸入關鍵字"
-              value={keyWordValue}
-              onChange={(e) => {
-                setKeyWordValue(e.target.value)
-              }}
+              ref={refKeyWord}
               className=" border border-[#cccccc] placeholder-[#808080]  rounded-xl p-2 h-full focus:outline-none focus:bg-white focus:border-[#2684ff] focus:border-2"
             />
           </div>
           <SearchButton
             onClick={() => {
-              handleAttrPageClick({ selected: 0 })
-              handleTourPageClick({ selected: 0 })
-              handleBlogPageClick({ selected: 0 })
+              handleSearchClick({ selected: 0 })
             }}
           />
         </div>
@@ -638,6 +739,8 @@ export default function HotTopics({
               ${tabPos === item ? `border-primary text-primary` : null}`}
                 onClick={() => {
                   setTabPos(item)
+                 setTourData(tourData)
+              
                 }}
               >
                 {item}
@@ -651,10 +754,14 @@ export default function HotTopics({
         {/* 行程卡片 */}
         {tabPos === '行程' && (
           <div>
-            {noData ? (
-              <p className="text-center text-gray-A8 text-lg">
-                查無資料，請重新篩選
-              </p>
+            {tourNoData ? (
+              <Image
+                width={394}
+                height={437}
+                alt="圖片"
+                src={'/no-data.png'}
+                className="mx-auto pt-[80px]"
+              />
             ) : (
               <div>
                 <div className="flex flex-wrap -my-5 mb-[100px] lg:-mx-3">
@@ -676,7 +783,15 @@ export default function HotTopics({
                             handleClickLiked(item.IsLike, item.TourId)
                           }}
                           onCopyTour={() => {
-                            handleCopyTour(item.TourId)
+                            if (token) {
+                              handleCopyTour(item.TourId)
+                            } else if (!token) {
+                              setLoginConflirm(true)
+                              setTimeout(() => {
+                                router.push('/login')
+                              }, 2000)
+                              return
+                            }
                           }}
                         />
                       </div>
@@ -703,7 +818,7 @@ export default function HotTopics({
                     pageCount={tourPage}
                     marginPagesDisplayed={1}
                     pageRangeDisplayed={5}
-                    onPageChange={handleTourPageClick}
+                    onPageChange={handleSearchClick}
                     containerClassName="flex"
                     pageClassName="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     activeLinkClassName="w-[32px] h-[32px] flex justify-center items-center bg-gray-200 bg-primary text-white"
@@ -721,13 +836,40 @@ export default function HotTopics({
           </div>
         )}
 
+        {/* 複製行程成功 */}
+        <CustomModal modal={copySuccess} setModal={setCopySuccess} wrapper>
+          <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
+            <BsFillCheckCircleFill className="text-[64px] text-[#74c041]" />
+            <p className="text-2xl">複製行程成功</p>
+            <span className="text-lg px-4">
+              請至會員中心 - 我的收藏行程(一般模式)查看
+            </span>
+          </div>
+        </CustomModal>
+
+        {/* 複製行程失敗 */}
+        <CustomModal
+          modal={loginConflirm}
+          setModal={setLoginConflirm}
+          typeConfirm
+          typeConfirmWarnIcon
+          overflowOpen
+          typeConfirmText={'請先登入，自動跳轉中...'}
+          onConfirm={() => {
+            setLoginConflirm(false)
+          }}
+        />
         {/* 景點卡片 */}
         {tabPos === '景點' && (
           <div>
-            {noData ? (
-              <p className="text-center text-gray-A8 text-lg">
-                查無資料，請重新篩選
-              </p>
+            {attrNoData ? (
+              <Image
+                width={394}
+                height={437}
+                alt="圖片"
+                src={'/no-data.png'}
+                className="mx-auto pt-[80px]"
+              />
             ) : (
               <div>
                 {/* 卡片內容 */}
@@ -749,10 +891,17 @@ export default function HotTopics({
                           type={item.Category}
                           // 新增景點
                           onClick={async () => {
-                            setModal(!modal)
-                            handleGetRoomData(item.AttractionId)
-                            setRoomData(roomData)
-                            setAddAttrId(item.AttractionId)
+                            if (token) {
+                              setModal(!modal)
+                              handleGetRoomData(item.AttractionId)
+                              setAddAttrId(item.AttractionId)
+                            } else if (!token) {
+                              setLoginConflirm(true)
+                              setTimeout(() => {
+                                router.push('/login')
+                              }, 2000)
+                              return
+                            }
                           }}
                           // 收藏景點
                           onClick1={() => {
@@ -763,11 +912,19 @@ export default function HotTopics({
                               setCollectModal(!collectModal)
                               setCollectContent(!collectContent)
                             }
-                            handleCollectAttr(
-                              item.AttractionId,
-                              item.IsCollect,
-                              index
-                            )
+                            if (token) {
+                              handleCollectAttr(
+                                item.AttractionId,
+                                item.IsCollect,
+                                index
+                              )
+                            } else if (!token) {
+                              setLoginConflirm(true)
+                              setTimeout(() => {
+                                router.push('/login')
+                              }, 2000)
+                              return
+                            }
                           }}
                         />
                       </div>
@@ -794,7 +951,7 @@ export default function HotTopics({
                     pageCount={attrPage}
                     marginPagesDisplayed={1}
                     pageRangeDisplayed={5}
-                    onPageChange={handleAttrPageClick}
+                    onPageChange={handleSearchClick}
                     containerClassName="flex"
                     pageClassName="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     activeLinkClassName="w-[32px] h-[32px] flex justify-center items-center bg-gray-200 bg-primary text-white"
@@ -821,7 +978,6 @@ export default function HotTopics({
             {/* 按鈕 */}
             <div className="flex flex-col space-y-3 mt-3 pr-3 h-[200px] overflow-y-auto">
               {roomData?.map((item) => {
-                // const isActive = addTourTagStyle[item.RoomGuid]
                 return (
                   <button
                     className={`${
@@ -839,6 +995,22 @@ export default function HotTopics({
                 )
               })}
             </div>
+          </div>
+        </CustomModal>
+
+        {/* 佳景店進房間成功或失敗訊息 */}
+        <CustomModal
+          modal={addTourSuccess}
+          setModal={setAddTourSuccess}
+          wrapper
+        >
+          <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
+            {success ? (
+              <BsFillCheckCircleFill className="text-[64px] text-[#74C041]" />
+            ) : (
+              <BsFillXCircleFill className="text-[64px] text-highlight" />
+            )}
+            <p className="text-2xl">{modalText}</p>
           </div>
         </CustomModal>
 
@@ -869,10 +1041,14 @@ export default function HotTopics({
         {/* 遊記卡片 */}
         {tabPos === '遊記' && (
           <div>
-            {noData ? (
-              <p className="text-center text-gray-A8 text-lg">
-                查無資料，請重新篩選
-              </p>
+            {blogNoData ? (
+              <Image
+                width={394}
+                height={437}
+                alt="圖片"
+                src={'/no-data.png'}
+                className="mx-auto pt-[80px]"
+              />
             ) : (
               <div>
                 <div className="flex flex-wrap -my-5 mb-[100px] lg:-mx-3">
@@ -903,11 +1079,19 @@ export default function HotTopics({
                               setCollectModal(!collectModal)
                               setCollectContent(!collectContent)
                             }
-                            handleCollectBlog(
-                              item.BlogGuid,
-                              item.IsCollect,
-                              index
-                            )
+                            if (token) {
+                              handleCollectBlog(
+                                item.BlogGuid,
+                                item.IsCollect,
+                                index
+                              )
+                            } else if (!token) {
+                              setLoginConflirm(true)
+                              setTimeout(() => {
+                                router.push('/login')
+                              }, 2000)
+                              return
+                            }
                           }}
                         />
                       </div>
@@ -934,7 +1118,7 @@ export default function HotTopics({
                     pageCount={blogPage}
                     marginPagesDisplayed={1}
                     pageRangeDisplayed={5}
-                    onPageChange={handleBlogPageClick}
+                    onPageChange={handleSearchClick}
                     containerClassName="flex"
                     pageClassName="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     activeLinkClassName="w-[32px] h-[32px] flex justify-center items-center bg-gray-200 bg-primary text-white"

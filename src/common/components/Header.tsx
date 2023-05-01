@@ -70,6 +70,9 @@ export default function Header() {
   useEffect(() => setToken(auth), [auth])
   // 判斷是否在會員中心導向至登入註冊
 
+  // 關鍵字搜尋
+  const refKeyWord = useRef<HTMLInputElement | null>(null)
+
   return (
     <div className="z-30 relative overflow-hidden lg:overflow-visible">
       {/* 電腦版 */}
@@ -99,12 +102,22 @@ export default function Header() {
                 <input
                   className="group-hover:ring-1 absolute border-b placeholder-[#ccc] px-5 py-1 w-full h-full rounded-md bg-glass focus-visible:bg-white"
                   placeholder="搜尋"
+                  ref={refKeyWord}
                 />
                 <div className="absolute top-3 right-5">
                   <BsSearch
                     className="opacity-50 group-hover:opacity-100 cursor-pointer "
-                    onClick={() => {
-                      router.push('/hot-topics')
+                    onClick={async () => {
+                      const keyWordValue = refKeyWord.current?.value
+                      const Keyword = keyWordValue === '' ? '' : keyWordValue
+                      const Page = 1
+                      await router.push({
+                        pathname: '/hot-topics',
+                        query: { Keyword, Page },
+                      })
+                      if (refKeyWord.current !== null) {
+                        refKeyWord.current.value = ''
+                      }
                     }}
                   />
                 </div>
