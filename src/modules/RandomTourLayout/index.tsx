@@ -650,7 +650,7 @@ export default function RandamTourLayout({
               </Slider>
             </div>
             {data[0].AttractionId || IsTourId ? (
-              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
+              <div className="mb-9 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
                 <iframe
                   src={`https://www.google.com/maps/embed/v1/directions?key=${
                     process.env.NEXT_PUBLIC_YANG_GOOGLE_KEY
@@ -670,7 +670,7 @@ export default function RandamTourLayout({
                 ></iframe>
               </div>
             ) : (
-              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md relative">
+              <div className="mb-9 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md relative">
                 <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
                   趕緊按下
                   <span className="text-primary">隨機產生行程</span>
@@ -779,6 +779,12 @@ export default function RandamTourLayout({
         setGetRandomConfirm(true)
         setAnotherRandom(true)
         setIsLoading(false)
+        if (sliderRef.current) {
+          sliderRef.current.slickGoTo(0)
+        }
+        if (sliderMobileRef.current) {
+          sliderMobileRef.current.slickGoTo(0)
+        }
         return
       }
 

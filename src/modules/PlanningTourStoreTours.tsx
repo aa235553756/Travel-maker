@@ -31,7 +31,7 @@ export default function PlanningTourStoreTours({
   }, [])
 
   return (
-    <div className=" flex flex-wrap mb-12 py-5 px-7 /max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll z-[-1] rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
+    <div className=" flex flex-wrap mb-9 pt-5 px-7 /max-h-[312px] min-h-[316px] scrollbar-style /overflow-y-scroll z-[-1] rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
       {/* 取唯一一個id ！！！*/}
       {data.map((item, index) => {
         return (
