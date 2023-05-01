@@ -131,6 +131,7 @@ export default function RandamTourLayout({
   const roomNameInputRef = useRef<HTMLInputElement>(null)
   const sliderRef = useRef<Slider>(null)
   const sliderMobileRef = useRef<Slider>(null)
+  const titleRef = useRef<HTMLDivElement>(null)
 
   // ========= RHF 表單 =========
   const formId = 'random-tour-form'
@@ -487,7 +488,7 @@ export default function RandamTourLayout({
       </div>
 
       {/* 電腦版所有介面 */}
-      <div className="flex flex-wrap mb-[60px] lg:mb-[180px]">
+      <div className="flex flex-wrap mb-[60px] lg:mb-[180px]" ref={titleRef}>
         {/* 排行程及連結 佔100%寬度 */}
         <div className="hidden lg:flex w-full mb-3 space-x-6 items-center">
           {/* 排行程文字 */}
@@ -785,6 +786,11 @@ export default function RandamTourLayout({
         if (sliderMobileRef.current) {
           sliderMobileRef.current.slickGoTo(0)
         }
+        // ==隨機產生成功後移動到景點Slider處==
+        window.scrollTo({
+          top: 190,
+          behavior: 'smooth',
+        })
         return
       }
 

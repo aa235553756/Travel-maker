@@ -658,6 +658,12 @@ export default function PlanningTour({
 
         // !======改為不做怕備用景點過多 尚未完成 若景點id已在備用會導致兩個相同備用景點 異常======
 
+        // ==隨機產生成功後移動到景點Slider處==
+        window.scrollTo({
+          top: 670,
+          behavior: 'smooth',
+        })
+
         return
       }
       throw new Error('錯誤,or沒找到景點')
