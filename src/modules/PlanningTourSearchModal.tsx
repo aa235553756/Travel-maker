@@ -219,6 +219,16 @@ export default function PlanningTourSearchModal({
                       type={item.Category}
                       // 新增景點 (加景點進房間)
                       onClick={async () => {
+                        const result = storeTours.find(
+                          (obj) => obj.AttractionId === item.AttractionId
+                        )
+                        if (result) {
+                          // ===提醒已經在備用景點內===
+                          setSuccessConfirmModal(true)
+                          setSuccessConfirmWarn(true)
+                          setSuccessConfirmText('備用景點已在清單內')
+                          return
+                        }
                         const obj = {
                           AttractionId: item.AttractionId,
                           UserGuid: String(user.UserGuid),

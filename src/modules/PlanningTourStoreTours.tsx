@@ -58,7 +58,7 @@ export default function PlanningTourStoreTours({
                 <a
                   href={`/hot-topics/attractions/${item.AttractionId}`}
                   target="_blank"
-                  className="w-[124px] px-1 h-[54px] line-clamp-2  absolute z-[1] top-1/2 text-center bottom-1 left-1/2 translate-x-[-50%] translate-y-[-20%] text-white  animate-pulse hover:underline hover:text-primary-tint active:text-primary  hover:!opacity-100"
+                  className="w-[124px] px-1 h-[52px] line-clamp-2  absolute z-[1] top-1/2 text-center bottom-1 left-1/2 translate-x-[-50%] translate-y-[-20%] text-white  animate-pulse hover:underline hover:text-primary-tint active:text-primary  hover:!opacity-100"
                 >
                   {item.AttractionName}
                 </a>

@@ -24,7 +24,6 @@ export default function PlanningTourTitle({
       : ''
   const URL = `${origin}`
   const { id } = useRouter().query
-  console.log('id', id)
 
   const [tourName, setTourName] = useState(RoomName)
   const [linkEffect, setLinkEffect] = useState(false)
