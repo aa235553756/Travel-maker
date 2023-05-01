@@ -660,7 +660,7 @@ export default function PlanningTour({
 
         // ==隨機產生成功後移動到景點Slider處==
         window.scrollTo({
-          top: 670,
+          top: 630,
           behavior: 'smooth',
         })
 

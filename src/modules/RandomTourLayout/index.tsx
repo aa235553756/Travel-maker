@@ -788,7 +788,7 @@ export default function RandamTourLayout({
         }
         // ==隨機產生成功後移動到景點Slider處==
         window.scrollTo({
-          top: 190,
+          top: 120,
           behavior: 'smooth',
         })
         return
