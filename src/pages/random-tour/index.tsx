@@ -32,7 +32,7 @@ export default function RandamTour({
       <CustomHead
         title={'Travel Maker | 規劃行程'}
         h1={'還在為了聚會行程煩惱嗎？ Travel Maker 五秒鐘搞定行程！'}
-        description={'你的朋友分享了一個新行程'}
+        description={'你的朋友向您分享了一組新行程，快來Travel Maker查看吧'}
       />
       <div>
         <RandamTourLayout data={data} moreData={moreData} />
