@@ -385,7 +385,6 @@ export default function Login() {
           maxAge: 60 * 60 * 24 * 7,
         })
         setCookie('user', JSON.stringify(resJSON), { maxAge: 60 * 60 * 24 * 7 })
-        console.log(router)
 
         setTimeout(() => {
           router.back()
