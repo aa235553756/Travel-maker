@@ -93,9 +93,11 @@ export default function PlanningTourTitle({
           <div
             className="font-bold relative"
             onClick={() => {
-              const user = JSON.parse(String(getCookie('user')))
+              const user = getCookie('user')
+                ? JSON.parse(String(getCookie('user')))
+                : null
               // ==取得guid,判斷是否為房主==
-              if (user.UserGuid === CreaterGuid) {
+              if (user?.UserGuid === CreaterGuid) {
                 setIsChangeTourName(!isChangeTourName)
               }
             }}

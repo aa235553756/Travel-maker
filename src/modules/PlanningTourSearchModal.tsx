@@ -73,6 +73,7 @@ export default function PlanningTourSearchModal({
   setSuccessConfirmModal,
   setSuccessConfirmText,
   setSuccessConfirmWarn,
+  setLoginConfirm,
 }: {
   hotAttrData: HotAttrProps
   storeTours: storeTourProp[]
@@ -81,6 +82,7 @@ export default function PlanningTourSearchModal({
   setSuccessConfirmModal: React.Dispatch<boolean>
   setSuccessConfirmText: React.Dispatch<string>
   setSuccessConfirmWarn: React.Dispatch<boolean>
+  setLoginConfirm: React.Dispatch<boolean>
 }) {
   // ======use Cookies=========
   const user = getCookie('user')
@@ -219,6 +221,14 @@ export default function PlanningTourSearchModal({
                       type={item.Category}
                       // 新增景點 (加景點進房間)
                       onClick={async () => {
+                        const token = getCookie('auth')
+                        if (token === undefined) {
+                          setLoginConfirm(true)
+                          // setTimeout(() => {
+                          //   router.push('/login')
+                          // }, 2000)
+                          return
+                        }
                         const result = storeTours.find(
                           (obj) => obj.AttractionId === item.AttractionId
                         )
@@ -251,6 +261,7 @@ export default function PlanningTourSearchModal({
             {/* 頁籤元件 */}
             <div className="flex justify-center mt-8">
               <ReactPaginate
+                forcePage={currentPage}
                 previousLabel={
                   <span className="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white rounded-tl-md rounded-bl-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <BsChevronLeft />
@@ -301,6 +312,15 @@ export default function PlanningTourSearchModal({
         : ''
       const queryParams = `?&${typeParams}&${districtParams}&${keyWordParams}`
 
+      const token = getCookie('auth')
+      const headers: { [key: string]: string } = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers.Authorization = `${token}`
+      }
+
       //【API】給參數搜尋景點
       const resSearchAttrData = await fetch(
         `https://travelmaker.rocket-coding.com/api/attractions/search${queryParams}&Page=${
@@ -308,10 +328,7 @@ export default function PlanningTourSearchModal({
         }`,
         {
           method: 'GET',
-          headers: {
-            Authorization: `${getCookie('auth')}`,
-            'Content-Type': 'application/json',
-          },
+          headers,
         }
       )
       const searchAttrData = await resSearchAttrData.json()

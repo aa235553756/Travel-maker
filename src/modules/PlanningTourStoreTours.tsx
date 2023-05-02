@@ -13,21 +13,23 @@ export default function PlanningTourStoreTours({
   setAddTourModal,
   setStoreTours,
   setUnSaved,
+  setLoginConfirm,
 }: {
   data: RoomAttractionsProp[]
   CreaterGuid: string
   setAddTourModal: React.Dispatch<boolean>
   setStoreTours: React.Dispatch<RoomAttractionsProp[]>
   setUnSaved: React.Dispatch<boolean>
+  setLoginConfirm: React.Dispatch<boolean>
 }) {
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
     : undefined
 
-  const [userGuid, setUserGuid] = useState('')
+  const [userGuid, setUserGuid] = useState(undefined)
 
   useEffect(() => {
-    setUserGuid(user.UserGuid)
+    setUserGuid(user?.UserGuid)
   }, [])
 
   return (
@@ -45,6 +47,15 @@ export default function PlanningTourStoreTours({
                   <MdOutlineCancel
                     className="absolute z-[1] text-white text-xl top-1 right-1 cursor-pointer"
                     onClick={() => {
+                      // ===確認token===
+                      const token = getCookie('auth')
+                      if (token === undefined) {
+                        setLoginConfirm(true)
+                        // setTimeout(() => {
+                        //   router.push('/login')
+                        // }, 2000)
+                        return
+                      }
                       setStoreTours(data.filter((item, i) => !(i === index)))
                       setUnSaved(true)
                     }}
