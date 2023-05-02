@@ -242,8 +242,9 @@ export default function HotTopics({
 
   const queryParams = `?&${typeParams}&${districtParams}`
 
-  // 控制換頁 & 輸入條件搜尋
-  const handleSearchClick = async (data: { selected: number }) => {
+  //  ----------------- 有關行程的分隔線 -----------------
+  // 控制換頁 & 點擊搜尋查詢行程
+  const handleTourPageClick = async (data: { selected: number }) => {
     setIsLoading(true)
 
     const keyWordValue = refKeyWord.current?.value
@@ -258,150 +259,34 @@ export default function HotTopics({
       query: { Type, District, Keyword, Page },
     })
 
-    // 【API】給參數搜尋行程
-    const resSearchTourData = await fetch(
-      `${baseTourUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
-        data.selected + 1
-      }`,
-      {
-        headers,
+    try {
+      // 【API】給參數搜尋行程
+      const resSearchTourData = await fetch(
+        `${baseTourUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
+          data.selected + 1
+        }`,
+        {
+          headers,
+        }
+      )
+      const searchTourData = await resSearchTourData.json()
+
+      if (resSearchTourData.ok) {
+        setTourData(searchTourData.Tours)
+        setTourPage(searchTourData.TotalPages)
+        // setTourNoData(false)
+      } else {
+        if (!resSearchTourData.ok) {
+          setTourNoData(true)
+        }
       }
-    )
-    const searchTourData = await resSearchTourData.json()
-
-    // 【API】給參數搜尋景點
-    const resSearchAttrData = await fetch(
-      `${baseAttrUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
-        data.selected + 1
-      }`,
-      {
-        headers,
-      }
-    )
-    const searchAttrData = await resSearchAttrData.json()
-
-    // 【API】給參數搜尋景點
-    const resSearchBlogData = await fetch(
-      `${baseBlogUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
-        data.selected + 1
-      }`,
-      {
-        headers,
-      }
-    )
-    const searchBlogData = await resSearchBlogData.json()
-
-    if (resSearchTourData.ok) {
-      setAttrData(searchAttrData.Attractions)
-      setAttrPage(searchAttrData.TotalPages)
-      setCurrentPage(data.selected)
-      setTourNoData(false)
-    }
-
-    if (resSearchAttrData.ok) {
-      setTourData(searchTourData.Tours)
-      setTourPage(searchTourData.TotalPages)
-      setCurrentPage(data.selected)
-      setAttrNoData(false)
-    }
-
-    if (resSearchBlogData.ok) {
-      setBlogData(searchBlogData.Tours)
-      setBlogPage(searchBlogData.TotalPages)
-      setCurrentPage(data.selected)
-      setBlogNoData(false)
-    }
-    if (!resSearchTourData.ok) {
-      setTourNoData(true)
-    }
-
-    if (!resSearchAttrData.ok) {
-      setAttrNoData(true)
-    }
-
-    if (!resSearchBlogData.ok) {
-      setBlogNoData(true)
+    } catch (error) {
+      console.log(error)
     }
 
     setIsLoading(false)
-
-    console.log(tourData);
-    console.log(attrData);
-    
   }
 
-  // 控制換頁& 點擊搜尋查詢行程
-  // const handleTourPageClick = async (data: { selected: number }) => {
-  //   // 【API】給參數搜尋行程
-  //   const resSearchTourData = await fetch(
-  //     `${baseTourUrl}${queryParams}&Page=${data.selected + 1}`,
-  //     {
-  //       method: 'GET',
-  //       headers,
-  //     }
-  //   )
-  //   const searchTourData = await resSearchTourData.json()
-
-  //   if (resSearchTourData.ok) {
-  //     setTourData(searchTourData.Tours)
-  //     setTourPage(searchTourData.TotalPages)
-  //     setCurrentPage(data.selected)
-  //     setNoData(false)
-  //   }
-
-  //   if (!resSearchTourData.ok) {
-  //     setNoData(true)
-  //   }
-  // }
-
-  // 控制換頁 & 點擊搜尋查詢景點
-  // const handleAttrPageClick = async (data: { selected: number }) => {
-  //   //【API】給參數搜尋景點
-  //   const resSearchAttrData = await fetch(
-  //     `${baseAttrUrl}${queryParams}&Page=${data.selected + 1}`,
-  //     {
-  //       method: 'GET',
-  //       headers,
-  //     }
-  //   )
-  //   const searchAttrData = await resSearchAttrData.json()
-
-  //   if (resSearchAttrData.ok) {
-  //     setAttrData(searchAttrData.Attractions)
-  //     setAttrPage(searchAttrData.TotalPages)
-  //     setCurrentPage(data.selected)
-  //     setNoData(false)
-  //   }
-  //   if (!resSearchAttrData.ok) {
-  //     setNoData(true)
-  //   }
-  // }
-
-  // 控制換頁& 點擊搜尋查詢遊記
-  // const handleBlogPageClick = async (data: { selected: number }) => {
-  //   // 【API】給參數搜尋景點
-  //   const resSearchBlogData = await fetch(
-  //     `${baseBlogUrl}${queryParams}&Page=${data.selected + 1}`,
-  //     {
-  //       method: 'GET',
-  //       headers,
-  //     }
-  //   )
-  //   const searchBlogData = await resSearchBlogData.json()
-
-  //   if (resSearchBlogData.ok) {
-  //     setBlogData(searchBlogData.Tours)
-  //     setBlogPage(searchBlogData.TotalPages)
-  //     setCurrentPage(data.selected)
-  //     setNoData(false)
-  //   }
-
-  //   if (!resSearchBlogData.ok) {
-  //     setNoData(true)
-  //   }
-  // }
-
-  //  ----------------- 有關行程的分隔線 -----------------
   // 複製行程
   const [loginConflirm, setLoginConflirm] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
@@ -467,6 +352,52 @@ export default function HotTopics({
   }
 
   //  ----------------- 有關景點的分隔線 -----------------
+  // 控制換頁 & 點擊搜尋查詢景點
+  const handleAttrPageClick = async (data: { selected: number }) => {
+    setIsLoading(true)
+
+    const keyWordValue = refKeyWord.current?.value
+
+    // 搜尋時更改路由
+    const Type = selectedType ?? ''
+    const District = selectedDistrict ?? ''
+    const Keyword = keyWordValue === '' ? '' : keyWordValue
+    const Page = data.selected + 1
+    router.push({
+      pathname: '/hot-topics',
+      query: { Type, District, Keyword, Page },
+    })
+
+    try {
+      // 【API】給參數搜尋景點
+      const resSearchAttrData = await fetch(
+        `${baseAttrUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
+          data.selected + 1
+        }`,
+        {
+          headers,
+        }
+      )
+      const searchAttrData = await resSearchAttrData.json()
+
+      if (resSearchAttrData.ok) {
+        setAttrData(searchAttrData.Attractions)
+        setAttrPage(searchAttrData.TotalPages)
+        // setTourNoData(false)
+        // setAttrNoData(false)
+        // setBlogNoData(false)
+      } else {
+        if (!resSearchAttrData.ok) {
+          setAttrNoData(true)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    setIsLoading(false)
+  }
+
   // 收藏 & 加入行程 彈窗
   const [modal, setModal] = useState(false)
   const [collectModal, setCollectModal] = useState(false)
@@ -597,6 +528,51 @@ export default function HotTopics({
   }
 
   //  ----------------- 有關遊記的分隔線 -----------------
+  // 控制換頁& 點擊搜尋查詢遊記
+  const handleBlogPageClick = async (data: { selected: number }) => {
+    setIsLoading(true)
+
+    const keyWordValue = refKeyWord.current?.value
+
+    // 搜尋時更改路由
+    const Type = selectedType ?? ''
+    const District = selectedDistrict ?? ''
+    const Keyword = keyWordValue === '' ? '' : keyWordValue
+    const Page = data.selected + 1
+    router.push({
+      pathname: '/hot-topics',
+      query: { Type, District, Keyword, Page },
+    })
+
+    try {
+      // 【API】給參數搜尋景點
+      const resSearchBlogData = await fetch(
+        `${baseBlogUrl}${queryParams}&Keyword=${keyWordValue}&Page=${
+          data.selected + 1
+        }`,
+        {
+          headers,
+        }
+      )
+      const searchBlogData = await resSearchBlogData.json()
+
+      if (resSearchBlogData.ok) {
+        setBlogData(searchBlogData.Tours)
+        setBlogPage(searchBlogData.TotalPages)
+        setCurrentPage(data.selected)
+        setBlogNoData(false)
+      } else {
+        if (!resSearchBlogData.ok) {
+          setBlogNoData(true)
+        }
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    setIsLoading(false)
+  }
+
   // 收藏彈窗
   const [blogCollectSuccess, setBlogCollectSuccess] = useState(false)
   const [blogCollectCancel, setBlogCollectCancel] = useState(false)
@@ -725,7 +701,9 @@ export default function HotTopics({
           </div>
           <SearchButton
             onClick={() => {
-              handleSearchClick({ selected: 0 })
+              handleAttrPageClick({ selected: 0 })
+              handleTourPageClick({ selected: 0 })
+              handleBlogPageClick({ selected: 0 })
             }}
           />
         </div>
@@ -739,8 +717,9 @@ export default function HotTopics({
               ${tabPos === item ? `border-primary text-primary` : null}`}
                 onClick={() => {
                   setTabPos(item)
-                 setTourData(tourData)
-              
+                  setTourData(hotTourData.Tours)
+                  setAttrData(hotAttrData.Attractions)
+                  setBlogData(hotBlogData.Tours)
                 }}
               >
                 {item}
@@ -818,7 +797,7 @@ export default function HotTopics({
                     pageCount={tourPage}
                     marginPagesDisplayed={1}
                     pageRangeDisplayed={5}
-                    onPageChange={handleSearchClick}
+                    onPageChange={handleTourPageClick}
                     containerClassName="flex"
                     pageClassName="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     activeLinkClassName="w-[32px] h-[32px] flex justify-center items-center bg-gray-200 bg-primary text-white"
@@ -951,7 +930,7 @@ export default function HotTopics({
                     pageCount={attrPage}
                     marginPagesDisplayed={1}
                     pageRangeDisplayed={5}
-                    onPageChange={handleSearchClick}
+                    onPageChange={handleAttrPageClick}
                     containerClassName="flex"
                     pageClassName="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     activeLinkClassName="w-[32px] h-[32px] flex justify-center items-center bg-gray-200 bg-primary text-white"
@@ -1118,7 +1097,7 @@ export default function HotTopics({
                     pageCount={blogPage}
                     marginPagesDisplayed={1}
                     pageRangeDisplayed={5}
-                    onPageChange={handleSearchClick}
+                    onPageChange={handleBlogPageClick}
                     containerClassName="flex"
                     pageClassName="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                     activeLinkClassName="w-[32px] h-[32px] flex justify-center items-center bg-gray-200 bg-primary text-white"
