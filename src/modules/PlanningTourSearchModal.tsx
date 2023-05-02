@@ -73,6 +73,7 @@ export default function PlanningTourSearchModal({
   setSuccessConfirmModal,
   setSuccessConfirmText,
   setSuccessConfirmWarn,
+  setLoginConfirm,
 }: {
   hotAttrData: HotAttrProps
   storeTours: storeTourProp[]
@@ -81,6 +82,7 @@ export default function PlanningTourSearchModal({
   setSuccessConfirmModal: React.Dispatch<boolean>
   setSuccessConfirmText: React.Dispatch<string>
   setSuccessConfirmWarn: React.Dispatch<boolean>
+  setLoginConfirm: React.Dispatch<boolean>
 }) {
   // ======use Cookies=========
   const user = getCookie('user')
@@ -162,6 +164,10 @@ export default function PlanningTourSearchModal({
         </div>
         <SearchButton
           onClick={() => {
+            attrCardDIVRef?.current?.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            })
             handleAttrPageClick({ selected: 0 })
           }}
         />
@@ -215,6 +221,24 @@ export default function PlanningTourSearchModal({
                       type={item.Category}
                       // 新增景點 (加景點進房間)
                       onClick={async () => {
+                        const token = getCookie('auth')
+                        if (token === undefined) {
+                          setLoginConfirm(true)
+                          // setTimeout(() => {
+                          //   router.push('/login')
+                          // }, 2000)
+                          return
+                        }
+                        const result = storeTours.find(
+                          (obj) => obj.AttractionId === item.AttractionId
+                        )
+                        if (result) {
+                          // ===提醒已經在備用景點內===
+                          setSuccessConfirmModal(true)
+                          setSuccessConfirmWarn(true)
+                          setSuccessConfirmText('備用景點已在清單內')
+                          return
+                        }
                         const obj = {
                           AttractionId: item.AttractionId,
                           UserGuid: String(user.UserGuid),
@@ -229,27 +253,6 @@ export default function PlanningTourSearchModal({
                         setSuccessConfirmWarn(false)
                         setSuccessConfirmText('新增備用景點成功')
                       }}
-                      // setModal(!modal)
-                      // handleGetRoomData(item.AttractionId)
-                      // setRoomData(roomData)
-                      // setAddAttrId(item.AttractionId)
-
-                      // 收藏景點
-                      onClick1={() => {
-                        // alert('收藏')
-                        // if (item.IsCollect) {
-                        //   setCollectModal(!collectModal)
-                        //   setCollectContent(!collectContent)
-                        // } else if (!item.IsCollect) {
-                        //   setCollectModal(!collectModal)
-                        //   setCollectContent(!collectContent)
-                        // }
-                        // handleCollectAttr(
-                        //   item.AttractionId,
-                        //   item.IsCollect,
-                        //   index
-                        // )
-                      }}
                     />
                   </div>
                 )
@@ -258,6 +261,7 @@ export default function PlanningTourSearchModal({
             {/* 頁籤元件 */}
             <div className="flex justify-center mt-8">
               <ReactPaginate
+                forcePage={currentPage}
                 previousLabel={
                   <span className="mx-2 w-[32px] h-[32px] border flex justify-center items-center border-[#D7D7D7] bg-white rounded-tl-md rounded-bl-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                     <BsChevronLeft />
@@ -285,40 +289,12 @@ export default function PlanningTourSearchModal({
                     top: 0,
                     behavior: 'smooth',
                   })
-                  // window.scrollTo({
-                  //   top: 0,
-                  //   behavior: 'smooth',
-                  // })
                 }}
               />
             </div>
           </div>
         )}
       </div>
-
-      {/* 景點收藏成功提醒 Modal */}
-      {/* <CustomModal
-    modal={attrCollectSuccess}
-    setModal={setAttrCollectSuccess}
-    wrapper
-  >
-    <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
-      <BsBookmarkCheck className="text-[64px] text-[#74c041]" />
-      <p className="text-2xl">收藏景點成功</p>
-    </div>
-  </CustomModal> */}
-
-      {/* 景點取消收藏提醒 Modal */}
-      {/* <CustomModal
-    modal={attrCollectCancel}
-    setModal={setAttrCollectCancel}
-    wrapper
-  >
-    <div className="w-[408px] h-[288px] bg-white flex flex-col justify-center items-center space-y-6 rounded-xl">
-      <BsBookmarkX className="text-[64px] text-highlight" />
-      <p className="text-2xl">取消收藏景點</p>
-    </div>
-  </CustomModal> */}
     </div>
   )
   // ======handle搜尋按鈕or點擊頁面======
@@ -336,6 +312,15 @@ export default function PlanningTourSearchModal({
         : ''
       const queryParams = `?&${typeParams}&${districtParams}&${keyWordParams}`
 
+      const token = getCookie('auth')
+      const headers: { [key: string]: string } = {
+        'Content-Type': 'application/json',
+      }
+
+      if (token) {
+        headers.Authorization = `${token}`
+      }
+
       //【API】給參數搜尋景點
       const resSearchAttrData = await fetch(
         `https://travelmaker.rocket-coding.com/api/attractions/search${queryParams}&Page=${
@@ -343,10 +328,7 @@ export default function PlanningTourSearchModal({
         }`,
         {
           method: 'GET',
-          headers: {
-            Authorization: `${getCookie('auth')}`,
-            'Content-Type': 'application/json',
-          },
+          headers,
         }
       )
       const searchAttrData = await resSearchAttrData.json()

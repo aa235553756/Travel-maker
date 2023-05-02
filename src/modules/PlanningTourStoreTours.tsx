@@ -13,25 +13,27 @@ export default function PlanningTourStoreTours({
   setAddTourModal,
   setStoreTours,
   setUnSaved,
+  setLoginConfirm,
 }: {
   data: RoomAttractionsProp[]
   CreaterGuid: string
   setAddTourModal: React.Dispatch<boolean>
   setStoreTours: React.Dispatch<RoomAttractionsProp[]>
   setUnSaved: React.Dispatch<boolean>
+  setLoginConfirm: React.Dispatch<boolean>
 }) {
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
     : undefined
 
-  const [userGuid, setUserGuid] = useState('')
+  const [userGuid, setUserGuid] = useState(undefined)
 
   useEffect(() => {
-    setUserGuid(user.UserGuid)
+    setUserGuid(user?.UserGuid)
   }, [])
 
   return (
-    <div className=" flex flex-wrap mb-12 py-5 px-7 /max-h-[312px] min-h-[312px] scrollbar-style /overflow-y-scroll z-[-1] rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
+    <div className=" flex flex-wrap mb-9 pt-5 px-7 /max-h-[312px] min-h-[316px] scrollbar-style /overflow-y-scroll z-[-1] rounded-md shadow-[1px_2px_12px_0px_rgba(0,0,0,0.25)]">
       {/* 取唯一一個id ！！！*/}
       {data.map((item, index) => {
         return (
@@ -45,6 +47,15 @@ export default function PlanningTourStoreTours({
                   <MdOutlineCancel
                     className="absolute z-[1] text-white text-xl top-1 right-1 cursor-pointer"
                     onClick={() => {
+                      // ===確認token===
+                      const token = getCookie('auth')
+                      if (token === undefined) {
+                        setLoginConfirm(true)
+                        // setTimeout(() => {
+                        //   router.push('/login')
+                        // }, 2000)
+                        return
+                      }
                       setStoreTours(data.filter((item, i) => !(i === index)))
                       setUnSaved(true)
                     }}
@@ -55,9 +66,13 @@ export default function PlanningTourStoreTours({
                 </div>
                 <div className="absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(2, 0, 0, 0)] to-[#0F0B0B]"></div>
 
-                <div className="w-[124px] px-1 h-[54px] line-clamp-2  absolute z-[1] top-1/2 text-center bottom-1 left-1/2 translate-x-[-50%] translate-y-[-20%] text-white  animate-pulse">
+                <a
+                  href={`/hot-topics/attractions/${item.AttractionId}`}
+                  target="_blank"
+                  className="w-[124px] px-1 h-[52px] line-clamp-2  absolute z-[1] top-1/2 text-center bottom-1 left-1/2 translate-x-[-50%] translate-y-[-20%] text-white  animate-pulse hover:underline hover:text-primary-tint active:text-primary  hover:!opacity-100"
+                >
                   {item.AttractionName}
-                </div>
+                </a>
                 <Image
                   alt=""
                   src={item.ImageUrl}

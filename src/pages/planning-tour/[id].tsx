@@ -36,7 +36,6 @@ import { CustomModal } from '@/common/components/CustomModal'
 import DragStateDIV from '@/modules/DragStateDIV'
 import { postRoomTours } from '@/util/roomApi'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
-import { useRouter } from 'next/router'
 import { getRandomTours } from '@/util/tourApi'
 import { getCookie } from 'cookies-next'
 import PlanningTourSearchModal from '@/modules/PlanningTourSearchModal'
@@ -94,7 +93,6 @@ export default function PlanningTour({
   hotAttrData: HotAttrProps
   moreData: MoreTourProp[]
 }) {
-  const router = useRouter()
   const user = getCookie('user')
     ? JSON.parse(String(getCookie('user')))
     : undefined
@@ -213,10 +211,10 @@ export default function PlanningTour({
     const token = getCookie('auth')
     if (token === undefined) {
       setLoginConfirm(true)
-      setTimeout(() => {
-        router.push('/login')
-      }, 2000)
-      return
+      // setTimeout(() => {
+      //   router.push('/login')
+      // }, 2000)
+      // return
     }
   }, [])
 
@@ -230,19 +228,6 @@ export default function PlanningTour({
       </Head>
       <div>
         <LoadingAnimate isLoading={isLoading} />
-        {/* ======登入提醒====== */}
-        <CustomModal
-          modal={loginConfirm}
-          setModal={setLoginConfirm}
-          typeConfirm
-          typeConfirmWarnIcon
-          wrapper
-          unClickable
-          typeConfirmText={'請先登入，自動跳轉中...'}
-          onConfirm={() => {
-            router.push('/login')
-          }}
-        />
         {/* ======新增景點 的 搜尋大Modal====== */}
         <CustomModal
           wrapper
@@ -259,6 +244,7 @@ export default function PlanningTour({
             <BsXCircle />
           </button>
           <PlanningTourSearchModal
+            setLoginConfirm={setLoginConfirm}
             hotAttrData={hotAttrData}
             storeTours={storeTours}
             setStoreTours={setStoreTours}
@@ -268,6 +254,24 @@ export default function PlanningTour({
             setSuccessConfirmWarn={setSuccessConfirmWarn}
           />
         </CustomModal>
+        {/* ======登入提醒====== */}
+        <CustomModal
+          modal={loginConfirm}
+          setModal={setLoginConfirm}
+          typeConfirm
+          typeConfirmWarnIcon
+          wrapper
+          unClickable
+          typeConfirmText={'請先登入，以加入共同規劃'}
+          onConfirm={() => {
+            setLoginConfirm(false)
+            setAddTourModal(false)
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            })
+          }}
+        />
         {/* ======成功modal====== */}
         <CustomModal
           modal={successConfirmModal}
@@ -283,13 +287,20 @@ export default function PlanningTour({
         {/* ======拖拉主要邏輯====== */}
         <div className="container">
           <div className="block mt-4 lg:flex lg:space-x-6 lg:mb-20 md:mt-[80px]">
-            <VoteDate data={originData} />
-            <InvitePeople data={originData} />
+            <VoteDate data={originData} setLoginConfirm={setLoginConfirm} />
+            <InvitePeople data={originData} setLoginConfirm={setLoginConfirm} />
           </div>
           {/* 中間拖拉 & 篩選區塊 */}
           <div className="flex flex-wrap mb-[200px] min-w-[1128px]">
             {/* 排行程 & 行程名稱 寬100% */}
-            <PlanningTourTitle RoomName={data.RoomName} />
+            <PlanningTourTitle
+              RoomName={data.RoomName}
+              CreaterGuid={data.CreaterGuid}
+              setSuccessConfirmWarn={setSuccessConfirmWarn}
+              setSuccessConfirmModal={setSuccessConfirmModal}
+              setSuccessConfirmText={setSuccessConfirmText}
+              setIsLoading={setIsLoading}
+            />
             {/* 篩選器及其按鈕 */}
             <div className="mr-6 max-w-[264px] hidden md:block">
               <SelectSide
@@ -341,6 +352,14 @@ export default function PlanningTour({
                                           <button
                                             className="z-[50] absolute bg-[rgba(255,255,255,0.7)] rounded-full w-[20px] h-[20px] text-black text-xl top-1 right-1"
                                             onClick={() => {
+                                              const token = getCookie('auth')
+                                              if (token === undefined) {
+                                                setLoginConfirm(true)
+                                                // setTimeout(() => {
+                                                //   router.push('/login')
+                                                // }, 2000)
+                                                return
+                                              }
                                               // ==設置未儲存State==
                                               setUnSaved(true)
                                               // ==設置不顯示此塊State==
@@ -390,6 +409,7 @@ export default function PlanningTour({
                       setAddTourModal={setAddTourModal}
                       setStoreTours={setStoreTours}
                       setUnSaved={setUnSaved}
+                      setLoginConfirm={setLoginConfirm}
                     />
                   ) : (
                     <TourMap data={sortData} />
@@ -421,9 +441,9 @@ export default function PlanningTour({
       const token = getCookie('auth')
       if (token === undefined) {
         setLoginConfirm(true)
-        setTimeout(() => {
-          router.push('/login')
-        }, 2000)
+        // setTimeout(() => {
+        //   router.push('/login')
+        // }, 2000)
         return
       }
       //===loading發 POST===
@@ -450,6 +470,14 @@ export default function PlanningTour({
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function handleDragEnd(e: any) {
+    const token = getCookie('auth')
+    if (token === undefined) {
+      setLoginConfirm(true)
+      // setTimeout(() => {
+      //   router.push('/login')
+      // }, 2000)
+      return
+    }
     const { active, over } = e
     // ======進入拖拉取代判斷======
     if (
@@ -568,7 +596,13 @@ export default function PlanningTour({
   }
 
   async function onSubmit(data: defaultValueProp) {
+    const token = getCookie('auth')
+    if (token === undefined) {
+      setLoginConfirm(true)
+      return
+    }
     setIsLoading(true)
+
     try {
       // 缺geo,故先判斷鄰近值,在做函式返回newData
       const newData = await (data.nearBy
@@ -651,6 +685,12 @@ export default function PlanningTour({
 
         // !======改為不做怕備用景點過多 尚未完成 若景點id已在備用會導致兩個相同備用景點 異常======
 
+        // ==隨機產生成功後移動到景點Slider處==
+        window.scrollTo({
+          top: 630,
+          behavior: 'smooth',
+        })
+
         return
       }
       throw new Error('錯誤,or沒找到景點')
@@ -727,6 +767,9 @@ export async function getServerSideProps({
   try {
     const { id } = params
     const token = getCookie('auth', { req, res })
+    const user = getCookie('user', { req, res })
+      ? JSON.parse(String(getCookie('user', { req, res })))
+      : undefined
     const headers: { [key: string]: string } = {
       'Content-Type': 'application/json',
     }
@@ -735,13 +778,28 @@ export async function getServerSideProps({
       headers.Authorization = `${token}`
     }
 
+    // ======新增被揪======
+    token
+      ? await fetch('https://travelmaker.rocket-coding.com/api/rooms/members', {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({
+            RoomGuid: id,
+            UserEmail: user?.Account,
+          }),
+        })
+      : null
+
+    // ======取得房間(確定上面先執行)======
     const response = await fetch(
       `https://travelmaker.rocket-coding.com/api/rooms/${id}`,
-      {
-        headers: {
-          Authorization: `${token ?? undefined}`,
-        },
-      }
+      token
+        ? {
+            headers: {
+              Authorization: `${token ?? undefined}`,
+            },
+          }
+        : undefined
     )
     const data = await response.json()
     // 以及知道這個連結的人會被加進來 (post token)

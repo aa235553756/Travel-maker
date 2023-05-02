@@ -80,16 +80,17 @@ export default function RandamTourLayout({
   const waypoint =
     (IsTourId ? idData.length : data.length) >= 2
       ? '&waypoints=' +
-        (IsTourId ? idData : data)
-          .filter((item, i) => {
-            if (i === 0 || i === data.length - 1) {
-              return false
-            }
-            return item.AttractionName
-          })
-          .map((item) => item.AttractionName)
-          .join(' 台北市|') +
-        ' 台北市'
+        (
+          (IsTourId ? idData : data)
+            .filter((item, i) => {
+              if (i === 0 || i === data.length - 1) {
+                return false
+              }
+              return item.AttractionName
+            })
+            .map((item) => item.AttractionName)
+            .join(' 台北市|') + ' 台北市'
+        ).replace(/&/g, ' ')
       : null
 
   // =========手機版表單state=========
@@ -130,6 +131,7 @@ export default function RandamTourLayout({
   const roomNameInputRef = useRef<HTMLInputElement>(null)
   const sliderRef = useRef<Slider>(null)
   const sliderMobileRef = useRef<Slider>(null)
+  const titleRef = useRef<HTMLDivElement>(null)
 
   // ========= RHF 表單 =========
   const formId = 'random-tour-form'
@@ -436,13 +438,13 @@ export default function RandamTourLayout({
             const handleErrors2 = (e: { preventDefault: () => void }) => {
               // 判斷2個都為false時
               if (!watch2('nearBy') && !watch2('DistrictName').length) {
-                alert('錯誤，表單填寫不完整 區域')
+                alert('填寫不完整 (區域)')
                 e.preventDefault()
                 return
               }
               // 判斷有無沒填寫
               if (Object.keys(errors2).length) {
-                alert('錯誤，表單填寫不完整 Type')
+                alert('填寫不完整 (行程類別)')
               }
             }
             handleErrors2(e)
@@ -465,7 +467,7 @@ export default function RandamTourLayout({
                   target="_blank"
                   href={`${URL}`}
                   rel="noopener noreferrer"
-                  className="cursor-pointer absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white "
+                  className="cursor-pointer absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-white hover:underline hover:text-primary-tint active:text-primary "
                 >
                   {item.AttractionName}
                 </a>
@@ -486,7 +488,7 @@ export default function RandamTourLayout({
       </div>
 
       {/* 電腦版所有介面 */}
-      <div className="flex flex-wrap mb-[60px] lg:mb-[180px]">
+      <div className="flex flex-wrap mb-[60px] lg:mb-[180px]" ref={titleRef}>
         {/* 排行程及連結 佔100%寬度 */}
         <div className="hidden lg:flex w-full mb-3 space-x-6 items-center">
           {/* 排行程文字 */}
@@ -522,8 +524,7 @@ export default function RandamTourLayout({
                     ref={TourNameInputRef}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter') {
-                        setTourName(TourNameInputRef?.current?.value)
-                        setChangeNameConfirm(true)
+                        handleChangeName()
                         if (TourNameInputRef.current) {
                           TourNameInputRef.current.blur()
                         }
@@ -538,12 +539,7 @@ export default function RandamTourLayout({
                   />
                   <button
                     className="py-1 px-8 text-white bg-primary rounded-md"
-                    onClick={() => {
-                      if (TourNameInputRef?.current?.value !== '') {
-                        setTourName(TourNameInputRef?.current?.value)
-                        setChangeNameConfirm(true)
-                      }
-                    }}
+                    onClick={handleChangeName}
                   >
                     儲存
                   </button>
@@ -638,7 +634,7 @@ export default function RandamTourLayout({
                       <a
                         target="_blank"
                         href={`/hot-topics/attractions/${item.AttractionId}`}
-                        className="cursor-pointer hover:text-primary-tint absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 "
+                        className="cursor-pointer hover:underline hover:text-primary-tint active:text-primary  absolute text-center min-w-[180px] max-w-[180px] bottom-1 left-1/2 translate-x-[-50%] text-red-100 "
                       >
                         {item.AttractionName}
                       </a>
@@ -655,19 +651,19 @@ export default function RandamTourLayout({
               </Slider>
             </div>
             {data[0].AttractionId || IsTourId ? (
-              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
+              <div className="mb-9 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md">
                 <iframe
                   src={`https://www.google.com/maps/embed/v1/directions?key=${
                     process.env.NEXT_PUBLIC_YANG_GOOGLE_KEY
-                  }&origin=${
+                  }&origin=${(
                     (IsTourId ? idData[0] : data[0]).AttractionName + ' 台北市'
-                  }${waypoint}
-                  &destination=${
+                  ).replace(/&/g, ' ')}${waypoint}
+                  &destination=${(
                     (IsTourId
                       ? idData[idData.length - 1]
                       : data[data.length - 1]
                     ).AttractionName + ' 台北市'
-                  }`}
+                  ).replace(/&/g, ' ')}`}
                   // &mode=${'walking'}
                   className="w-full h-full min-h-[336px] lg:min-h-[576px] rounded-md"
                   loading="lazy"
@@ -675,7 +671,7 @@ export default function RandamTourLayout({
                 ></iframe>
               </div>
             ) : (
-              <div className="mb-12 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md relative">
+              <div className="mb-9 min-h-[336px] lg:min-h-[576px] bg-[#D7D7D7] rounded-md relative">
                 <span className="absolute top-1/2 left-1/2 translate-x-[-50%] translate-y-[-50%]">
                   趕緊按下
                   <span className="text-primary">隨機產生行程</span>
@@ -784,6 +780,17 @@ export default function RandamTourLayout({
         setGetRandomConfirm(true)
         setAnotherRandom(true)
         setIsLoading(false)
+        if (sliderRef.current) {
+          sliderRef.current.slickGoTo(0)
+        }
+        if (sliderMobileRef.current) {
+          sliderMobileRef.current.slickGoTo(0)
+        }
+        // ==隨機產生成功後移動到景點Slider處==
+        window.scrollTo({
+          top: 120,
+          behavior: 'smooth',
+        })
         return
       }
 
@@ -1008,6 +1015,32 @@ export default function RandamTourLayout({
       throw new Error('不知名錯誤')
     } catch (err) {
       // alert(err)
+      setIsLoading(false)
+    }
+  }
+  async function handleChangeName() {
+    setIsLoading(true)
+    const newName = TourNameInputRef?.current?.value
+    try {
+      if (newName !== '' && newName !== undefined) {
+        const res = await fetch(
+          `https://travelmaker.rocket-coding.com/api/tours/${query.id}/rename`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: String(token),
+            },
+            body: JSON.stringify(newName),
+          }
+        )
+        if (res.ok) {
+          setTourName(newName)
+          setChangeNameConfirm(true)
+        }
+      }
+    } catch (err) {
+    } finally {
       setIsLoading(false)
     }
   }

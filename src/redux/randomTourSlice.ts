@@ -8,7 +8,7 @@ const initialState = {
     .map(() => {
       return {
         ImageUrl: '/blurLogo.png',
-        AttractionName: '景點名稱',
+        AttractionName: '',
       }
     }),
 }
