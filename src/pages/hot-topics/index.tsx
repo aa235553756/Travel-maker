@@ -758,6 +758,7 @@ export default function HotTopics({
                           isLike={item.IsLike}
                           imagesUrl={item.ImageUrl}
                           showCopy
+                          showLike
                           onClickTourLike={() => {
                             handleClickLiked(item.IsLike, item.TourId)
                           }}
