@@ -7,7 +7,7 @@ export default function PlanningTourTab({
   setTabPos: React.Dispatch<string>
 }) {
   return (
-    <ul className="flex mb-6">
+    <ul className="flex mb-5">
       {['備用景點', '地圖'].map((item) => {
         return (
           <li

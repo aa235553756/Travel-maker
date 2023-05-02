@@ -67,19 +67,24 @@ export default function AttractCard({
         ></Image>
       </div>
       {/* 景點資訊 */}
-      <div className="p-4 pb-3 md:p-6 md:pt-5 md:pb-10">
+      <div className="px-4 pt-3 pb-6 md:px-6 md:pt-5 md:pb-6">
         <div className="flex items-center mb-2 space-x-3">
           <BsGeoAltFill className="text-highlight" />
           <p className="font-bold">{district}</p>
         </div>
-        <p className="text-lg mb-3 line-clamp-1">{attractName}</p>
-        <div className="mb-3">
+        <p className="text-lg mb-2 line-clamp-1">{attractName}</p>
+        <div className="mb-6">
           <CustomStar rating={rating} />
         </div>
         <div className="flex space-x-3">
-          {type?.slice(0, 3).map((item: string, index: number) => {
-            return <TypeTag type={item} key={index} />
-          })}
+          {/* 最多顯示兩個類別，以防爆版 */}
+          {type.length >= 1
+            ? type?.slice(0, 2).map((item: string, index: number) => {
+                return <TypeTag type={item} key={index} />
+              })
+            : type?.map((item: string, index: number) => {
+                return <TypeTag type={item} key={index} />
+              })}
         </div>
       </div>
     </div>

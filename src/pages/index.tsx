@@ -5,7 +5,7 @@ import WhereIGO from '@/modules/WhereIGO'
 import Explore from '@/modules/Explore'
 import Feature from '@/modules/Feature'
 import Banner from '@/modules/Banner'
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 interface AttractionDataProps {
   AttractionId: number
@@ -44,7 +44,7 @@ interface AttractionDetails {
   ImageUrl: string
 }
 
-interface HotData {
+interface HotDataProps {
   Tours: Tour[]
   Attractions: AttractionDetails[]
 }
@@ -52,25 +52,13 @@ interface HotData {
 export async function getStaticProps() {
   // 【API】試玩行程
   const resTryData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/try`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
+    `https://travelmaker.rocket-coding.com/api/tours/try`
   )
   const tryData = await resTryData.json()
 
   // 【API】首頁 - 取得熱門行程及熱門景點
   const resHotData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/homepage`,
-    {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }
+    `https://travelmaker.rocket-coding.com/api/tours/homepage`
   )
   const hotData = await resHotData.json()
 
@@ -88,31 +76,32 @@ export default function Home({
   hotData,
 }: {
   tryData: TryDataProps
-  hotData: HotData
+  hotData: HotDataProps
 }) {
   // 試玩行程種類 state
   const [tryPlayCategoryData, setTryPlayCategoryData] = useState(
     tryData.Category
   )
-
   // 試玩行程景點 state
   const [tryPlayData, setTryPlayData] = useState(tryData.AttractionData)
+  const [isLoading, setIsLoading] = useState(false)
 
   // 點擊換一組
   const handleTry = async () => {
-    const resTryData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/try`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    setIsLoading(true)
 
+    const resTryData = await fetch(
+      `https://travelmaker.rocket-coding.com/api/tours/try`
+    )
     const newData = await resTryData.json()
-    setTryPlayCategoryData(newData.Category)
-    setTryPlayData(newData.AttractionData)
+
+    setTimeout(() => {
+      if (resTryData.ok) {
+        setTryPlayCategoryData(newData.Category)
+        setTryPlayData(newData.AttractionData)
+        setIsLoading(false)
+      }
+    }, 3000)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -134,6 +123,7 @@ export default function Home({
           tryPlayCategoryData={tryPlayCategoryData}
           tryPlayData={tryPlayData}
           onClick={() => handleTry()}
+          isLoading={isLoading}
         />
         <Feature />
         <Explore />
