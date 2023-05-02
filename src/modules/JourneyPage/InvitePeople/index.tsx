@@ -24,8 +24,10 @@ interface InvitePeopleProp {
 
 export default function InvitePeople({
   data: originData,
+  setLoginConfirm,
 }: {
   data: InvitePeopleProp
+  setLoginConfirm: React.Dispatch<boolean>
 }) {
   // 圖片邊框色碼
   const colorAry = [
@@ -94,6 +96,14 @@ export default function InvitePeople({
   // 新增夥伴帳號
   const [account, setAccount] = useState<UsersProp[]>(originData.Users || [])
   const addAccount = async () => {
+    const token = getCookie('auth')
+    if (token === undefined) {
+      setLoginConfirm(true)
+      // setTimeout(() => {
+      //   router.push('/login')
+      // }, 2000)
+      return
+    }
     try {
       const validate = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -274,7 +284,7 @@ export default function InvitePeople({
           setAccountConfirm(false)
         }}
       />
-      
+
       {/* 帳號非平台會員 */}
       <CustomModal
         modal={notMember}

@@ -21,7 +21,13 @@ interface VoteDataProp {
   CreaterGuid?: string
 }
 
-export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
+export default function VoteDate({
+  data: originData,
+  setLoginConfirm,
+}: {
+  data: VoteDataProp
+  setLoginConfirm: React.Dispatch<boolean>
+}) {
   const [startDate, setStartDate] = useState<null | Date>(null)
   const [selectedDates, setSelectedDates] = useState(originData.VoteDates)
   const datePickerRef = useRef<DatePicker>(null)
@@ -36,6 +42,14 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
 
   // 新增聚會日期
   const handleAddDate = async () => {
+    const token = getCookie('auth')
+    if (token === undefined) {
+      setLoginConfirm(true)
+      // setTimeout(() => {
+      //   router.push('/login')
+      // }, 2000)
+      return
+    }
     try {
       if (startDate === null) {
         setDateConfirm(true)
@@ -208,8 +222,8 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
           <div className="h-[236px] overflow-y-auto flex flex-col space-y-4">
             {selectedDates.map((item, index) => {
               return (
-                <div
-                  className="border border-[#EAEAEA] p-4 rounded-md  hover:border-primary-dark hover:bg-primary-dark/10 hover:duration-500"
+                <label
+                  className="border border-[#EAEAEA] p-4 rounded-md  hover:border-primary-dark hover:bg-primary-dark/10 hover:duration-500 cursor-pointer"
                   key={item.VoteDateId}
                 >
                   <div className="flex justify-between">
@@ -217,10 +231,10 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
                       <input
                         className="cursor-pointer"
                         type="checkbox"
-                        id="dateCheckbox"
+                        // id="dateCheckbox"
                         value=""
                         defaultChecked={item.IsVoted}
-                        onClick={() => {
+                        onChange={() => {
                           handleVoteDate(
                             item.VoteDateId,
                             item.Count,
@@ -228,9 +242,7 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
                           )
                         }}
                       />
-                      <label htmlFor="dateCheckbox">
-                        {moment(item.Date).format('YYYY-MM-DD')}
-                      </label>
+                      <div>{moment(item.Date).format('YYYY-MM-DD')}</div>
                     </div>
 
                     <div className="flex items-center space-x-4 cursor-pointer">
@@ -263,7 +275,7 @@ export default function VoteDate({ data: originData }: { data: VoteDataProp }) {
                       )}
                     </div>
                   </div>
-                </div>
+                </label>
               )
             })}
           </div>

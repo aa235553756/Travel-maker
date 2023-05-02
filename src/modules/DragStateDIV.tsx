@@ -15,9 +15,13 @@ export default function DragStateDIV({ item }: { item: RoomAttractionsProp }) {
       <div className="h-full">
         <div className="absolute bottom-0 left-0 w-full h-[60px] bg-gradient-to-b from-[rgba(255,255,255,0.0)] to-black"></div>
 
-        <div className="absolute line-clamp-2 px-1 text-center min-w-[180px] max-w-[180px] bottom-2 left-1/2 translate-x-[-50%] text-white ">
+        <a
+          href={`/hot-topics/attractions/${item.AttractionId}`}
+          target="_blank"
+          className="absolute line-clamp-2 px-1 text-center min-w-[180px] max-w-[180px] bottom-2 left-1/2 translate-x-[-50%] text-white hover:underline hover:text-primary-tint active:text-primary z-50"
+        >
           {item.AttractionName}
-        </div>
+        </a>
         <Image
           alt=""
           src={item.ImageUrl}
