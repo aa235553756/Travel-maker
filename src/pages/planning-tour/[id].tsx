@@ -792,13 +792,14 @@ export async function getServerSideProps({
 
     // ======取得房間(確定上面先執行)======
     const response = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/${id}`
-      // ,
-      // {
-      //   headers: {
-      //     Authorization: `${token ?? undefined}`,
-      //   },
-      // }
+      `https://travelmaker.rocket-coding.com/api/rooms/${id}`,
+      token
+        ? {
+            headers: {
+              Authorization: `${token ?? undefined}`,
+            },
+          }
+        : undefined
     )
     const data = await response.json()
     // 以及知道這個連結的人會被加進來 (post token)
