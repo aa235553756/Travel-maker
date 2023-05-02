@@ -24,10 +24,7 @@ export default function randomTourId({
       <CustomHead
         title={'Travel Maker | 規劃行程'}
         h1={'還在為了聚會行程煩惱嗎？ Travel Maker 五秒鐘搞定行程！'}
-        description={
-          '你的朋友向您分享了一組新行程，快來Travel Maker查看吧 | ' +
-          JSON.stringify(data.Attractions)
-        }
+        description={'你的朋友向您分享了一組新行程，快來Travel Maker查看吧 '}
       />
       <div>
         {!data.TourId ? '！錯誤，沒有此行程' : null}
