@@ -197,39 +197,9 @@ export default function HotTopics({
   }
 
   //  ----------------- 有關搜尋 -----------------
-  const [tourData, setTourData] = useState(
-    hotTourData?.Tours ? hotTourData?.Tours : []
-  )
-  const [attrData, setAttrData] = useState(
-    hotAttrData?.Attractions ? hotAttrData?.Attractions : []
-  )
-  const [blogData, setBlogData] = useState(
-    hotBlogData?.Tours ? hotBlogData?.Tours : []
-  )
-  const [tourNoData, setTourNoData] = useState(false)
-  const [attrNoData, setAttrNoData] = useState(false)
-  const [blogNoData, setBlogNoData] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-
-  // hotTourData.Tours ? hotTourData.Tours : ''
-
-  // 取得景點下一頁資訊
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentPage, setCurrentPage] = useState(0)
-  const [tourPage, setTourPage] = useState(hotTourData?.TotalPages)
-  const [attrPage, setAttrPage] = useState(hotAttrData?.TotalPages)
-  const [blogPage, setBlogPage] = useState(hotBlogData?.TotalPages)
-
   // 搜尋條件
   const [selectedType, setSelectedType] = useState<string[]>([])
   const [selectedDistrict, setSelectedDistrict] = useState<string[]>([])
-
-  const baseTourUrl = 'https://travelmaker.rocket-coding.com/api/tours/search'
-  const baseAttrUrl =
-    'https://travelmaker.rocket-coding.com/api/attractions/search'
-  const baseBlogUrl = 'https://travelmaker.rocket-coding.com/api/blogs/search'
-
-  // 關鍵字搜尋
   const refKeyWord = useRef<HTMLInputElement>(null)
 
   // 接 API 用，将 type 和 district 的值轉為 &=
@@ -239,10 +209,21 @@ export default function HotTopics({
   const districtParams = selectedDistrict
     .map((district) => `District=${encodeURIComponent(district)}`)
     .join('&')
-
   const queryParams = `?&${typeParams}&${districtParams}`
 
+  // 取得景點下一頁資訊
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [currentPage, setCurrentPage] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
+
   //  ----------------- 有關行程的分隔線 -----------------
+  const [tourData, setTourData] = useState(
+    hotTourData?.Tours ? hotTourData?.Tours : []
+  )
+  const [tourNoData, setTourNoData] = useState(false)
+  const [tourPage, setTourPage] = useState(hotTourData?.TotalPages)
+  const baseTourUrl = 'https://travelmaker.rocket-coding.com/api/tours/search'
+
   // 控制換頁 & 點擊搜尋查詢行程
   const handleTourPageClick = async (data: { selected: number }) => {
     setIsLoading(true)
@@ -274,11 +255,11 @@ export default function HotTopics({
       if (resSearchTourData.ok) {
         setTourData(searchTourData.Tours)
         setTourPage(searchTourData.TotalPages)
-        // setTourNoData(false)
-      } else {
-        if (!resSearchTourData.ok) {
-          setTourNoData(true)
-        }
+        setCurrentPage(data.selected)
+        setTourNoData(false)
+      }
+      if (!resSearchTourData.ok) {
+        setTourNoData(true)
       }
     } catch (error) {
       console.log(error)
@@ -352,6 +333,15 @@ export default function HotTopics({
   }
 
   //  ----------------- 有關景點的分隔線 -----------------
+  const [attrData, setAttrData] = useState(
+    hotAttrData?.Attractions ? hotAttrData?.Attractions : []
+  )
+  const [attrNoData, setAttrNoData] = useState(false)
+  const [attrPage, setAttrPage] = useState(hotAttrData?.TotalPages)
+
+  const baseAttrUrl =
+    'https://travelmaker.rocket-coding.com/api/attractions/search'
+
   // 控制換頁 & 點擊搜尋查詢景點
   const handleAttrPageClick = async (data: { selected: number }) => {
     setIsLoading(true)
@@ -383,13 +373,11 @@ export default function HotTopics({
       if (resSearchAttrData.ok) {
         setAttrData(searchAttrData.Attractions)
         setAttrPage(searchAttrData.TotalPages)
-        // setTourNoData(false)
-        // setAttrNoData(false)
-        // setBlogNoData(false)
-      } else {
-        if (!resSearchAttrData.ok) {
-          setAttrNoData(true)
-        }
+        setCurrentPage(data.selected)
+        setAttrNoData(false)
+      }
+      if (!resSearchAttrData.ok) {
+        setAttrNoData(true)
       }
     } catch (error) {
       console.log(error)
@@ -528,6 +516,13 @@ export default function HotTopics({
   }
 
   //  ----------------- 有關遊記的分隔線 -----------------
+  const [blogData, setBlogData] = useState(
+    hotBlogData?.Tours ? hotBlogData?.Tours : []
+  )
+  const [blogNoData, setBlogNoData] = useState(false)
+  const [blogPage, setBlogPage] = useState(hotBlogData?.TotalPages)
+  const baseBlogUrl = 'https://travelmaker.rocket-coding.com/api/blogs/search'
+
   // 控制換頁& 點擊搜尋查詢遊記
   const handleBlogPageClick = async (data: { selected: number }) => {
     setIsLoading(true)
@@ -561,10 +556,9 @@ export default function HotTopics({
         setBlogPage(searchBlogData.TotalPages)
         setCurrentPage(data.selected)
         setBlogNoData(false)
-      } else {
-        if (!resSearchBlogData.ok) {
-          setBlogNoData(true)
-        }
+      }
+      if (!resSearchBlogData.ok) {
+        setBlogNoData(true)
       }
     } catch (error) {
       console.log(error)
@@ -717,9 +711,6 @@ export default function HotTopics({
               ${tabPos === item ? `border-primary text-primary` : null}`}
                 onClick={() => {
                   setTabPos(item)
-                  setTourData(hotTourData.Tours)
-                  setAttrData(hotAttrData.Attractions)
-                  setBlogData(hotBlogData.Tours)
                 }}
               >
                 {item}
