@@ -83,7 +83,7 @@ export default function Header() {
             >
               {/* <div className="md:w-[60px] md:h-[60px] lg:w-[102px] lg:h-[102px] bg-[#ccc] rounded-full"></div> */}
 
-              <h1 className="max-w-[210px] max-h-[100px]">
+              <h2 className="max-w-[210px] max-h-[100px]">
                 <Image
                   src="/logo.png"
                   alt="還在為了聚會行程煩惱嗎？ Travel Maker 五秒鐘搞定行程！"
@@ -91,7 +91,7 @@ export default function Header() {
                   height={100}
                   priority
                 />
-              </h1>
+              </h2>
             </Link>
             <div className="flex space-x-5 items-center">
               {/* 搜尋bar */}
