@@ -223,7 +223,7 @@ export default function PlanningTour({
       <CustomHead
         title={'Travel Maker | 共同規劃'}
         h1={'還在為了聚會行程煩惱嗎？ Travel Maker 五秒鐘搞定行程！'}
-        description={'你的朋友邀請您在Travel Maker一同規劃行程,快點來吧'}
+        description={'你的朋友想邀請您一起在Travel Maker共同編輯行程'}
       />
       <div>
         <LoadingAnimate isLoading={isLoading} />
