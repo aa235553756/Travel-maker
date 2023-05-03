@@ -25,10 +25,7 @@ export default function CustomHead({
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta property="og:title" content={title || defaultTitle} />
-        <meta
-          property="og:image"
-          content="https://raw.githubusercontent.com/aa235553756/Travel-maker/main/public/blurLogo.png"
-        />
+        <meta property="og:image" content="/blurLogo.png" />
         <meta
           property="og:description"
           content={
