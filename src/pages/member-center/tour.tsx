@@ -12,6 +12,7 @@ import { MdKeyboardArrowUp } from 'react-icons/md'
 
 import { CustomModal } from '@/common/components/CustomModal'
 import Head from 'next/head'
+import Image from 'next/image'
 
 export async function getServerSideProps({
   req,
@@ -82,13 +83,25 @@ export default function Tour({
   const [activeTab, setActiveTab] = useState(1)
 
   // 無資料時
-  const [noData, setNoData] = useState(false)
+  const [noTourData, setNoTourData] = useState(false)
+  const [noRoomData, setNoRoomData] = useState(false)
+  // useEffect(() => {
+  //   if (tourData===undefined) {
+  //     setNoData(true)
+  //   }
+  //   if (roomData ===undefined) {
+  //     setNoData(true)
+  //   }
+  // }, [])
+  console.log(tourData)
+  console.log(roomData)
+
   useEffect(() => {
     if (tourData.Message === '已無我的行程') {
-      setNoData(true)
+      setNoTourData(true)
     }
     if (roomData.Message === '已無我的房間') {
-      setNoData(true)
+      setNoRoomData(true)
     }
   }, [])
 
@@ -192,8 +205,6 @@ export default function Tour({
     }
   }, [moreTourData])
 
-  console.log(moreTourData)
-
   return (
     <>
       <Head>
@@ -235,6 +246,7 @@ export default function Tour({
                   } p-4 mb-7`}
                   onClick={() => {
                     setActiveTab(2)
+                    getMoreRoomData(1)
                   }}
                 >
                   房間模式({moreRoomData ? `${roomData.RoomCounts}` : '0'})
@@ -243,8 +255,14 @@ export default function Tour({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-col space-y-6">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  {noTourData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     moreTourData?.map((item) => {
                       return (
@@ -275,8 +293,14 @@ export default function Tour({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-col space-y-10">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  {noRoomData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     moreRoomData?.map((item) => {
                       return (
@@ -396,8 +420,14 @@ export default function Tour({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                  {noTourData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     moreTourData?.map((item) => {
                       return (
@@ -442,9 +472,15 @@ export default function Tour({
                 </div>
               )}
               {activeTab === 2 && (
-                <div className="flex flex-wrap justify-center -my-3 mb-[60px] lg:-mx-3">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8 mx-auto">無資料</p>
+                <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
+                  {noRoomData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     moreRoomData?.map((item) => {
                       return (
