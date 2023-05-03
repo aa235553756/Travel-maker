@@ -751,7 +751,15 @@ export default function HotTopics({
                           showCopy
                           showLike
                           onClickTourLike={() => {
-                            handleClickLiked(item.IsLike, item.TourId)
+                            if (token) {
+                              handleClickLiked(item.IsLike, item.TourId)
+                            } else if (!token) {
+                              setLoginConflirm(true)
+                              setTimeout(() => {
+                                router.push('/login')
+                              }, 2000)
+                              return
+                            }
                           }}
                           onCopyTour={() => {
                             if (token) {
