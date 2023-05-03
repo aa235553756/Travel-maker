@@ -15,7 +15,7 @@ export default function CustomHead({
   return (
     <>
       <Head>
-        <title>Travel Maker | 共同規劃</title>
+        <title>{title}</title>
         <meta
           name="description"
           content={
