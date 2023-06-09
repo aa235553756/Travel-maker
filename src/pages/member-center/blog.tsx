@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
-import Link from 'next/link'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import BlogCard from '@/common/components/card/BlogCard'
 import BlogDraftCard from '@/modules/MemberCenterPage/components/BlogDraftCard'
@@ -9,6 +8,9 @@ import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
 // import { BsXCircle } from 'react-icons/bs'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
+import { CustomModal } from '@/common/components/CustomModal'
+import { useRouter } from 'next/router'
+import { postNewDraftBlogApi } from '../../util/blogApi'
 
 export async function getServerSideProps({
   req,
@@ -45,21 +47,41 @@ export async function getServerSideProps({
   )
   const memberCountData = await resMemberCountData.json()
 
+  const resGetToursName = await fetch(
+    'https://travelmaker.rocket-coding.com/api/blogs/tours',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const toursNameData = await resGetToursName.json()
+
   return {
     props: {
       blogData,
       memberCountData,
+      toursNameData,
     },
   }
 }
 
+interface toursNameDataProps {
+  TourId: number
+  TourName: string
+}
 export default function Blog({
   blogData,
   memberCountData,
+  toursNameData,
 }: {
   blogData: BlogDataProps
   memberCountData: MemberCountProps
+  toursNameData: toursNameDataProps[]
 }) {
+  const router = useRouter()
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
 
@@ -85,6 +107,9 @@ export default function Blog({
   const [toTop, setToTop] = useState(false)
 
   const [no, setNo] = useState(false)
+
+  // =========Modal State=========
+  const [modal, setModal] = useState(false)
 
   const getMoreBlogData = async (page: number) => {
     const res = await fetch(
@@ -146,6 +171,7 @@ export default function Blog({
   }, [moreBlogData])
 
   console.log(moreBlogData)
+  console.log(toursNameData)
 
   return (
     <>
@@ -156,6 +182,45 @@ export default function Blog({
         <link rel="icon" href="/Group 340.png" />
       </Head>
       <div>
+        {/* 景點加入房間 Modal */}
+        <CustomModal
+          modal={modal}
+          setModal={setModal}
+          wrapper
+          onConfirm={() => {
+            setModal(false)
+          }}
+        >
+          <div className="w-[260px] min-h-[260px] p-7 bg-white rounded-xl ">
+            {/* 標題 */}
+            <h4 className="text-xl mb-2">選擇行程以撰寫遊記</h4>
+            <hr />
+            {/* 按鈕 */}
+            <div className="flex flex-col space-y-3 mt-3 pr-3 h-[200px] overflow-y-auto">
+              {toursNameData.map(
+                ({ TourName, TourId }: toursNameDataProps, i) => {
+                  //roomData
+                  // const isActive = addTourTagStyle[item.RoomGuid]
+                  return (
+                    <button
+                      className={`${
+                        // item.IsExisted
+                        false
+                          ? 'bg-primary text-white'
+                          : 'border-gray-A8 text-gray-A8'
+                      } w-full block border px-2 py-1 rounded-xl `}
+                      onClick={newDraftBlog(TourId)}
+                      key={i}
+                    >
+                      {TourName}
+                      {/* {item.RoomName} */}
+                    </button>
+                  )
+                }
+              )}
+            </div>
+          </div>
+        </CustomModal>
         {/* 手機版 */}
         <div className="container">
           <div className="md:hidden mt-8 mb-[100px]">
@@ -163,7 +228,12 @@ export default function Blog({
               <h2 className="text-lg font-bold">
                 我的遊記({memberCountData.BlogCounts})
               </h2>
-              <button className="border border-gray-73 px-4 py-2 rounded-md text-gray-73">
+              <button
+                className="border border-gray-73 px-4 py-2 rounded-md text-gray-73"
+                onClick={() => {
+                  setModal(true)
+                }}
+              >
                 新增遊記
               </button>
             </div>
@@ -269,11 +339,14 @@ export default function Blog({
             <div className="md:member-shadow md:rounded-md">
               <div className="md:flex md:justify-between md:items-center md:px-10 md:py-8">
                 <h2 className="md:text-xl">我的遊記</h2>
-                <Link href="../blog/post-blog">
-                  <button className="md:border md:border-gray-73 md:px-4 md:py-2 md:rounded-md md:text-gray-73">
-                    新增遊記
-                  </button>
-                </Link>
+                <button
+                  className="md:border md:border-gray-73 md:px-4 md:py-2 md:rounded-md md:text-gray-73"
+                  onClick={() => {
+                    setModal(true)
+                  }}
+                >
+                  新增遊記
+                </button>
               </div>
               <hr className="md:w-full md:border-gray-E2" />
               <div className="md:px-10 md:py-6">
@@ -385,4 +458,18 @@ export default function Blog({
       </div>
     </>
   )
+
+  function newDraftBlog(
+    TourId: number
+  ): React.MouseEventHandler<HTMLButtonElement> | undefined {
+    return async () => {
+      try {
+        const res = await postNewDraftBlogApi(TourId, token)
+        const { BlogGuid } = await res.json()
+        router.push(`/blog/post-blog/${BlogGuid}`)
+      } finally {
+        setModal(false)
+      }
+    }
+  }
 }

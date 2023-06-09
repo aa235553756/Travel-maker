@@ -109,6 +109,9 @@ export default function PostBlog({
   viewBlogData: ViewBlogDataProps
   blogCommentData: BlogCommentDataProps
 }) {
+  console.log('viewBlogData', viewBlogData)
+  console.log('blogCommentData', blogCommentData)
+
   const token = getCookie('auth')
 
   // 收藏 & 取消收藏遊記
@@ -184,7 +187,7 @@ export default function PostBlog({
             alt="圖片"
             width={744}
             height={372}
-            className="w-full h-[300px] md:h-[372px] md:min-h-[372px] mx-auto relative object-contain lg:rounded-md"
+            className="w-full h-[300px] md:h-[372px] md:min-h-[372px] mx-auto relative object-cover lg:rounded-md"
           ></Image>
         </div>
         {/* 收藏 &　分享遊記 */}
