@@ -287,7 +287,7 @@ export default function Blog({
             <hr />
             {/* 按鈕 */}
             <div className="flex flex-col space-y-3 mt-3 pr-3 h-[200px] overflow-y-auto">
-              {toursNameData.map(
+              {(toursNameData.length ? toursNameData : []).map(
                 ({ TourName, TourId }: toursNameDataProps, i) => {
                   //roomData
                   // const isActive = addTourTagStyle[item.RoomGuid]
@@ -308,6 +308,9 @@ export default function Blog({
                   )
                 }
               )}
+              {toursNameData.length === undefined ? (
+                <p className="text-center text-gray-73 p-4">您必須先創建行程</p>
+              ) : null}
             </div>
           </div>
         </CustomModal>
@@ -390,7 +393,7 @@ export default function Blog({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-col space-y-10">
-                  {draftBlogData.BlogData.map(
+                  {draftBlogData?.BlogData?.map(
                     (blog: draftBlogProp, index: number) => {
                       return (
                         <BlogDraftCard
@@ -527,7 +530,7 @@ export default function Blog({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
-                  {draftBlogData.BlogData.map(
+                  {draftBlogData?.BlogData?.map(
                     (blog: draftBlogProp, index: number) => {
                       return (
                         <div
