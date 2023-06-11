@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import ImageUploading, { ImageListType } from 'react-images-uploading'
 import { MdOutlineCancel } from 'react-icons/md'
 import { BasicButton } from '@/common/components/button/BasicBtn'
+import { saveBlogApi } from '@/util/blogApi'
 
 interface BlogAttractionProp {
   AttractionName: string
@@ -17,7 +18,7 @@ interface BlogAttractionProp {
 
 interface BlogData {
   Title: string
-  Cover: string
+  Cover: string | null
   Category: string[]
   Status: number
   BlogAttractionList: BlogAttractionProp[]
@@ -25,19 +26,25 @@ interface BlogData {
 }
 
 export default function PostBlog({ data }: { data: BlogData }) {
+  console.log(data)
+
   const router = useRouter()
   const { id } = useRouter().query
   // =========react-images-uploading=========
-  const [cover, setCover] = useState<ImageListType>([])
+  // 由於這邊是用陣列渲染，所以判斷是否有coer，有->[{data_url}]，沒有->空陣列
+  const [cover, setCover] = useState<ImageListType>(
+    data.Cover !== '' ? [{ data_url: data.Cover }] : []
+  )
   const [cateGory, setCateGory] = useState(data.Category)
   const [imageAry, setImageAry] = useState<ImageListType[]>(
-    data.BlogAttractionList.map(() => {
-      return [
-        // {
-        //   data_url:
-        //     'https://travelmaker.rocket-coding.com/upload/blogImage/行程15-2-1.jpg',
-        // },
-      ]
+    data.BlogAttractionList.map((BlogAttraction: BlogAttractionProp) => {
+      return BlogAttraction.ImageUrl[0]
+        ? [
+            {
+              data_url: BlogAttraction.ImageUrl[0],
+            },
+          ]
+        : []
     })
   )
   // 圖片最大數量
@@ -377,7 +384,8 @@ export default function PostBlog({ data }: { data: BlogData }) {
 
             {/* 按鈕們 */}
             <div className="flex justify-end space-x-6 mt-[40px]">
-              <BasicButton onClick={postBlog} text={'發布'} />
+              <BasicButton onClick={saveBlog} text={'儲存'} border />
+              <BasicButton onClick={releaseBlog} text={'發布'} />
             </div>
           </div>
         </div>
@@ -440,7 +448,7 @@ export default function PostBlog({ data }: { data: BlogData }) {
     }
   }
 
-  async function postBlog() {
+  async function saveBlog() {
     // ======判斷有無token===
     const token = getCookie('auth')
     if (!token) {
@@ -453,64 +461,48 @@ export default function PostBlog({ data }: { data: BlogData }) {
       alert('請填寫標題')
       return
     }
-    // ======判斷圖片是否全數設置好，並警告用戶======
-    let isImageAllSet = true
-    for (let i = 0; i < imageAry.length; i++) {
-      if (!imageAry[i].length) {
-        isImageAllSet = false
-        break
-      }
-    }
-    if (!isImageAllSet || !cover[0]?.['data_url']) {
-      alert('請填滿圖片，內容可留空')
-      return
-    }
 
-    // ======複製data，開始準備資料======
+    // ======複製data，開始準備資料，以及data Guid======
     const newData = { ...data }
     newData.BlogGuid = String(id)
 
-    // =====類別======
+    // =====重設定data類別======
     newData.Category = cateGory.length ? cateGory : ['隨心所欲']
 
     // ======replace網址,不然後端會存到像是"httphttp"格式======
     const httpUrl = 'https://travelmaker.rocket-coding.com/upload/blogImage/'
-    // >===replace Cover===
-    if (newData.Cover.includes(httpUrl)) {
-      newData.Cover = newData.Cover.replace(httpUrl, '')
-    }
-    // >===replace 景點圖片===
-    newData.BlogAttractionList?.map((BlogAttraction: BlogAttractionProp) => {
-      BlogAttraction.ImageUrl.map((url, i) => {
-        if (url.includes(httpUrl)) {
-          BlogAttraction.ImageUrl[i] = BlogAttraction.ImageUrl[i].replace(
-            httpUrl,
-            ''
-          )
+
+    // ======重設定data中cover圖片(的key名字)======
+    const coverImageAry = cover
+      .map((cover) => {
+        // 包含http嗎，有->放http.jpg，沒有->放file name
+        if (!cover['data_url'].includes(httpUrl)) {
+          return String(cover?.file?.name)
+        } else {
+          return String(cover['data_url']?.replace(httpUrl, ''))
         }
       })
-    })
+      .join()
+    newData.Cover = coverImageAry !== '' ? coverImageAry : null
 
-    // ======有新的cover嗎 有->重設定cover(的key)======
-    cover[0]?.file ? (newData.Cover = cover[0].file.name) : null
-
-    // ======有新的景點圖片嗎 有->重設定景點圖片(的key)======
+    // ======重設定data景點圖片(的key名字)======
     newData.BlogAttractionList.map(
       (item: { ImageUrl: string[] }, i: number) => {
-        // 圖片陣列不為0,才執行
-        if (imageAry[i].length !== 0) {
-          // 宣告圖片陣列改為圖片名稱陣列 並賦值到newData景點中 => 將newData中景點圖片陣列改為圖片名稱陣列
-          const ImageNameAry = imageAry[i].map(
-            (images) => String(images?.file?.name)
-            // 在這裡換圖
-          )
-          item.ImageUrl = ImageNameAry
-        }
+        // 宣告圖片陣列改為圖片名稱陣列 並賦值到newData景點中 => 將newData中景點圖片陣列改為圖片名稱陣列
+        const ImageNameAry = imageAry[i].map((images) => {
+          // 包含http嗎，有->放http.jpg，沒有->放file name
+          if (!images['data_url'].includes(httpUrl)) {
+            return String(images?.file?.name)
+          } else {
+            return String(images['data_url']?.replace(httpUrl, ''))
+          }
+        })
+        item.ImageUrl = ImageNameAry
         return item
       }
     )
 
-    // ======textarea & 標題文字======
+    // ======標題文字 & 景點文字======
     if (titleRef.current?.value !== undefined) {
       newData.Title = titleRef.current?.value
     }
@@ -535,16 +527,6 @@ export default function PostBlog({ data }: { data: BlogData }) {
       })
     })
 
-    // ===印出 FormData===
-    formData.forEach(function (value, key) {
-      console.log('新增的' + key, value)
-    })
-
-    console.log('目前沒有打Api，呼叫了return')
-    console.log('景點圖片 http 被去掉是正常的')
-
-    return
-
     // ======打API======
     try {
       const myHeaders = new Headers()
@@ -558,16 +540,76 @@ export default function PostBlog({ data }: { data: BlogData }) {
         body: formData,
       }
 
+      // saveBlogApi
+      await saveBlogApi(requestOptions)
+      alert('已儲存編輯內容')
+
+      // router.push(`/blog/post-blog/${id}`)
+    } catch (err) {
+      alert('網路連線異常')
+      return 404
+    }
+  }
+
+  async function releaseBlog() {
+    // ======判斷有無token===
+    const token = getCookie('auth')
+    if (!token) {
+      alert('請重新登入')
+      return
+    }
+
+    // ======判斷圖片是否全數設置好，並警告用戶======
+    let isImageAllSet = true
+    for (let i = 0; i < imageAry.length; i++) {
+      if (!imageAry[i].length) {
+        isImageAllSet = false
+        break
+      }
+    }
+    if (!isImageAllSet || !cover[0]?.['data_url']) {
+      alert('請填滿圖片，內容可留空')
+      return
+    }
+
+    try {
+      // 先執行儲存blog函式
+      const saveBlogStatus = await saveBlog()
+      if (saveBlogStatus === 404) {
+        return
+      }
+
+      alert('發布中...')
+
+      const myHeaders = new Headers()
+      if (token !== undefined) {
+        myHeaders.append('Authorization', String(token))
+      }
+
+      const requestOptions = {
+        method: 'PUT',
+        headers: myHeaders,
+      }
+
       const res = await fetch(
-        'https://travelmaker.rocket-coding.com/api/blogs/edit',
+        `https://travelmaker.rocket-coding.com/api/blogs/release/${id}`,
         requestOptions
       )
-      const resJSON = await res.json()
-      console.log(resJSON)
 
-      router.push(`/blog/post-blog/${id}`)
+      if (res.status === 400) {
+        alert('此遊記已發布')
+      }
+
+      if (res.status === 200) {
+        alert('成功發佈，自動跳轉中...')
+      }
+
+      setTimeout(() => {
+        router.push(`/blog/view-blog/${id}`)
+      }, 1000)
     } catch (err) {
-      console.log(err)
+      alert(err)
+      alert('網路連線異常')
     }
   }
 }

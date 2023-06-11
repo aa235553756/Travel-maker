@@ -191,7 +191,7 @@ export default function PostBlog({
           ></Image>
         </div>
         {/* 收藏 &　分享遊記 */}
-        <div className="absolute top-5 right-5 space-x-4 z-30">
+        <div className="absolute top-5 right-5 space-x-4 z-20">
           <CollectBtn
             showCollect={viewBlogData.IsCollect}
             onClick1={() => {
