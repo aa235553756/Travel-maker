@@ -1,17 +1,30 @@
 import React from 'react'
+import Image from 'next/image'
 import FollowBtn from '@/common/components/button/FollowBtn'
 
-export default function Follows({ user }: { user: string }) {
+export default function Follows({
+  id,
+  user,
+  userImage,
+  isFollow,
+}: {
+  id: string
+  user: string
+  userImage: string
+  isFollow: boolean
+}) {
   return (
-    <div className="w-full bg-[#ccc] p-6 lg:px-15">
-      <div className="flex flex-col space-y-3 lg:flex-row lg:items-center">
-        <div className="flex items-center space-x-4 lg:space-x-12">
-          <div className="w-[60px] h-[60px] bg-[#d7d7d7] rounded-full"></div>
-          <p className="text-lg w-[150px]">{user}</p>
-        </div>
-        <div className="ml-[76px] lg:ml-[180px]">
-          <FollowBtn />
-        </div>
+    <div className="w-full shadow-[1px_1px_10px_0px_rgba(0,0,0,0.08)] rounded-md p-6 lg:px-[60px]">
+      <div className="flex items-center space-x-4 lg:space-x-12">
+        <Image
+          src={userImage}
+          width={60}
+          height={60}
+          className="rounded-full min-h-[60px] border"
+          alt="圖片"
+        ></Image>
+        <p className="text-lg line-clamp-1 flex-1">{user}</p>
+        <FollowBtn isFollow={isFollow} id={id} />
       </div>
     </div>
   )
