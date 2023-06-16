@@ -262,7 +262,7 @@ export default function PostComment({
                 <div
                   className="flex items-center space-x-2 pl-12"
                   key={item.BlogReplyId}
-                  id={item.BlogReplyId}
+                  id={item.BlogReplyId.toString()}
                 >
                   <Image
                     src={item.ProfilePicture}
