@@ -64,8 +64,8 @@ export default function BlogCard({
   like: number
   comment: number
   onClick?: () => void
-  blog: BlogDataProps[]
-  setBlog: React.Dispatch<React.SetStateAction<BlogDataProps[]>>
+  blog?: BlogDataProps[]
+  setBlog?: React.Dispatch<React.SetStateAction<BlogDataProps[] | undefined>>
 }) {
   const router = useRouter()
   const token = getCookie('auth')
@@ -89,10 +89,12 @@ export default function BlogCard({
       const delBlogData = await resDelBlogData.json()
 
       if (resDelBlogData.ok) {
-        const updatedBlogs = blog.filter((item) => item.BlogGuid !== String(id))
-        // 使用斷言解決 setBlog 與 updatedBlogs 型別不同的問題
-        // setBlog(updatedBlogs as BlogsDataProps[])
-        setBlog(updatedBlogs)
+        const updatedBlogs = blog?.filter(
+          (item) => item.BlogGuid !== String(id)
+        )
+        if (setBlog !== undefined && updatedBlogs !== undefined) {
+          setBlog(updatedBlogs)
+        }
       }
       if (!resDelBlogData.ok) {
         setTypeConfirmText(delBlogData.Message)

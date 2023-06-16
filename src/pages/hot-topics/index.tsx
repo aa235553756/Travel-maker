@@ -1,5 +1,5 @@
 import SearchButton from '@/common/components/searchButton'
-import React, {  useState } from 'react'
+import React, { useState } from 'react'
 import Select from 'react-select'
 import TourCard from '@/common/components/card/TourCard'
 import ReactPaginate from 'react-paginate'
@@ -173,7 +173,6 @@ export default function HotTopics({
     headers.Authorization = `${token}`
   }
 
-
   //  ----------------- 有關景點的分隔線 -----------------
   const [attrData, setAttrData] = useState(hotAttrData.Attractions)
   console.log('attrData', attrData)
@@ -208,7 +207,7 @@ export default function HotTopics({
 
   // 控制換頁 & 點擊搜尋查詢景點
   const handleAttrPageClick = async (data: { selected: number }) => {
-      //【API】給參數搜尋景點
+    //【API】給參數搜尋景點
     const resSearchAttrData = await fetch(
       `${baseAttrUrl}${queryParams}&Page=${data.selected + 1}`,
       {
@@ -461,7 +460,7 @@ export default function HotTopics({
   const baseBlogUrl = 'https://travelmaker.rocket-coding.com/api/blogs/search'
 
   // 取得遊記下一頁資訊
-  const [blogPage, setBlogPage] = useState(hotBlogData.TotalPages)  
+  const [blogPage, setBlogPage] = useState(hotBlogData.TotalPages)
 
   // 控制換頁& 點擊搜尋查詢遊記
   const handleBlogPageClick = async (data: { selected: number }) => {
@@ -484,7 +483,7 @@ export default function HotTopics({
 
     if (!resSearchBlogData.ok) {
       setNoData(true)
-    }    
+    }
   }
 
   // 收藏彈窗

@@ -304,7 +304,11 @@ export default function MyBlog({
                     blogImage={item.Cover}
                     userImage={item.Profile}
                     blog={blog}
-                    setBlog={setBlog}
+                    setBlog={
+                      setBlog as React.Dispatch<
+                        React.SetStateAction<BlogDataProps[] | undefined>
+                      >
+                    }
                   />
                 </div>
               )
