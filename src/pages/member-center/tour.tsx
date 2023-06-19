@@ -93,8 +93,8 @@ export default function Tour({
   //     setNoData(true)
   //   }
   // }, [])
-  console.log(tourData)
-  console.log(roomData)
+  // console.log(tourData)
+  // console.log(roomData)
 
   useEffect(() => {
     if (tourData.Message === '已無我的行程') {
@@ -205,6 +205,78 @@ export default function Tour({
     }
   }, [moreTourData])
 
+  // 刪除我的行程
+  const [tourId, setTourId] = useState(0)
+  const handleDelTour = async (tourId: number) => {
+    try {
+      // 【API】刪除自己的行程
+      const resDelTourData = await fetch(
+        `https://travelmaker.rocket-coding.com/api/tours/${tourId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      if (resDelTourData.ok) {
+        const updatedBlogs = moreTourData?.filter(
+          (item) => item.TourId !== tourId
+        )
+        if (setMoreTourData !== undefined && updatedBlogs !== undefined) {
+          setMoreTourData(updatedBlogs)
+        }
+      }
+
+      if (resDelTourData.ok) {
+        return
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
+
+  // 刪除我的房間
+  const [roomGuid, setRoomGuid] = useState('')
+  const handleDelRoom = async (roomGuid: string) => {
+    console.log('點到了')
+
+    try {
+      // 【API】主揪刪除房間
+      const resDelRoomData = await fetch(
+        `https://travelmaker.rocket-coding.com/api/rooms/${roomGuid}`,
+        {
+          method: 'PUT',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      if (resDelRoomData.ok) {
+        const updatedBlogs = moreRoomData?.filter(
+          (item) => item.RoomGuid !== roomGuid
+        )
+        if (setMoreRoomData !== undefined && updatedBlogs !== undefined) {
+          setMoreRoomData(updatedBlogs)
+        }
+
+        console.log('刪除成功')
+      }
+
+      if (resDelRoomData.ok) {
+        console.log('刪除失敗')
+
+        return
+      }
+    } catch (err) {
+      alert(err)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -283,6 +355,7 @@ export default function Tour({
                             showDelete
                             onClick={() => {
                               setDeleteConfirm(!deleteConfirm)
+                              setTourId(item.TourId)
                             }}
                           />
                         </div>
@@ -322,6 +395,7 @@ export default function Tour({
                             showDelete
                             onClick={() => {
                               setDeleteConfirm(!deleteConfirm)
+                              setRoomGuid(item.RoomGuid)
                             }}
                           />
                         </div>
@@ -353,7 +427,18 @@ export default function Tour({
               >
                 取消
               </button>
-              <button className="bg-primary border border-transparent text-white text-xl px-9 py-3 font-bold rounded-md hover:bg-primary-tint hover:duration-500">
+              <button
+                className="bg-primary border border-transparent text-white text-xl px-9 py-3 font-bold rounded-md hover:bg-primary-tint hover:duration-500"
+                onClick={() => {
+                  if (tourId) {
+                    handleDelTour(tourId)
+                  }
+                  if (roomGuid) {
+                    handleDelRoom(roomGuid)
+                  }
+                  setDeleteConfirm(!deleteConfirm)
+                }}
+              >
                 刪除
               </button>
             </div>
@@ -448,6 +533,7 @@ export default function Tour({
                             showDelete
                             onClick={() => {
                               setDeleteConfirm(!deleteConfirm)
+                              setTourId(item.TourId)
                             }}
                           />
                         </div>
@@ -502,6 +588,7 @@ export default function Tour({
                             showDelete
                             onClick={() => {
                               setDeleteConfirm(!deleteConfirm)
+                              setRoomGuid(item.RoomGuid)
                             }}
                           />
                         </div>
