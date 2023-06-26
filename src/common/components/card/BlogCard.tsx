@@ -112,6 +112,8 @@ export default function BlogCard({
           onClick={(e) => {
             e.preventDefault()
             router.push(`/blog/view-blog/${id}`)
+            console.log(id);
+            
           }}
           className="absolute w-full h-full z-10 cursor-pointer"
         ></a>
