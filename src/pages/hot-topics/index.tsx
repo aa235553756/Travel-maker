@@ -196,7 +196,6 @@ export default function HotTopics({
     headers.Authorization = `${token}`
   }
 
-
   // 給參數搜尋景點
   //  ----------------- 有關搜尋 -----------------
   // 搜尋條件
@@ -355,6 +354,15 @@ export default function HotTopics({
       }
     )
     const searchAttrData = await resSearchAttrData.json()
+    if (resSearchAttrData.ok) {
+      setAttrData(searchAttrData.Attractions)
+      setAttrPage(searchAttrData.TotalPages)
+      setCurrentPage(data.selected)
+      setAttrNoData(false)
+    }
+    if (!resSearchAttrData.ok) {
+      setAttrNoData(true)
+    }
     setIsLoading(true)
 
     const keyWordValue = refKeyWord.current?.value
