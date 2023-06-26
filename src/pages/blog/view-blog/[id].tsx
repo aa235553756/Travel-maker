@@ -184,11 +184,11 @@ export default function PostBlog({
             alt="圖片"
             width={744}
             height={372}
-            className="w-full h-[300px] md:h-[372px] md:min-h-[372px] mx-auto relative object-contain lg:rounded-md"
+            className="w-full h-[300px] md:h-[372px] md:min-h-[372px] mx-auto relative object-cover lg:rounded-md"
           ></Image>
         </div>
         {/* 收藏 &　分享遊記 */}
-        <div className="absolute top-5 right-5 space-x-4 z-30">
+        <div className="absolute top-5 right-5 space-x-4 z-20">
           <CollectBtn
             showCollect={viewBlogData.IsCollect}
             onClick1={() => {
