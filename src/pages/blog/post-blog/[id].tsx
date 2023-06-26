@@ -219,6 +219,7 @@ export default function PostBlog({ data }: { data: BlogData }) {
                         <ImageUploading
                           multiple
                           value={imageAry[i]}
+                          // eslint-disable-next-line @typescript-eslint/no-unused-vars
                           onChange={(imageList, addUpdateIndex) => {
                             // data for submit
                             setImageAry(() => {
