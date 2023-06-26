@@ -109,9 +109,6 @@ export default function PostBlog({
   viewBlogData: ViewBlogDataProps
   blogCommentData: BlogCommentDataProps
 }) {
-  console.log('viewBlogData', viewBlogData)
-  console.log('blogCommentData', blogCommentData)
-
   const token = getCookie('auth')
 
   // 收藏 & 取消收藏遊記

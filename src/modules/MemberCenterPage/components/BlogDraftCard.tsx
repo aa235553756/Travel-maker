@@ -47,7 +47,7 @@ export default function BlogDraftCard({
               alt="圖片"
               width={328}
               height={260}
-              className="w-full min-h-[260px] rounded-t-md  border-b "
+              className="w-full h-[260px] max-h-[260px] rounded-t-md  border-b "
             ></Image>
           ) : (
             <Image
@@ -55,7 +55,7 @@ export default function BlogDraftCard({
               alt="圖片"
               width={328}
               height={260}
-              className="w-full min-h-[260px] rounded-t-md object-contain border-b "
+              className="w-full h-[260px] max-h-[260px] rounded-t-md object-contain border-b "
             ></Image>
           )}
         </div>

@@ -8,6 +8,8 @@ import ImageUploading, { ImageListType } from 'react-images-uploading'
 import { MdOutlineCancel } from 'react-icons/md'
 import { BasicButton } from '@/common/components/button/BasicBtn'
 import { saveBlogApi } from '@/util/blogApi'
+import { CustomModal } from '@/common/components/CustomModal'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
 
 interface BlogAttractionProp {
   AttractionName: string
@@ -26,8 +28,6 @@ interface BlogData {
 }
 
 export default function PostBlog({ data }: { data: BlogData }) {
-  console.log(data)
-
   const router = useRouter()
   const { id } = useRouter().query
   // =========react-images-uploading=========
@@ -66,14 +66,28 @@ export default function PostBlog({ data }: { data: BlogData }) {
     '冒險活潑',
   ]
 
+  const [modal, setModal] = useState(false)
+  const [modalText, setModalText] = useState('儲存成功')
+  const [isLoading, setIsLoading] = useState(false)
+
   return (
     <>
+      {/* Modal */}
+      <CustomModal
+        modal={modal}
+        setModal={setModal}
+        typeConfirm
+        typeConfirmText={modalText}
+        onConfirm={() => setModal(!modal)}
+      />
+      {/* loading */}
+      <LoadingAnimate isLoading={isLoading} />
       {/* 封面 */}
       <ImageUploading
         value={cover}
         maxNumber={maxNumber}
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         onChange={(imageList, addUpdateIndex) => {
-          console.log(imageList, addUpdateIndex)
           setCover(imageList)
           return
         }}
@@ -207,12 +221,9 @@ export default function PostBlog({ data }: { data: BlogData }) {
                           value={imageAry[i]}
                           onChange={(imageList, addUpdateIndex) => {
                             // data for submit
-                            console.log(imageList, addUpdateIndex)
-
                             setImageAry(() => {
                               const newData = [...imageAry]
                               newData[i] = imageList
-                              console.log(newData, 'newData')
 
                               return newData
                             })
@@ -540,14 +551,18 @@ export default function PostBlog({ data }: { data: BlogData }) {
         body: formData,
       }
 
+      setIsLoading(true)
       // saveBlogApi
       await saveBlogApi(requestOptions)
-      alert('已儲存編輯內容')
+      setModal(true)
+      setModalText('已儲存編輯內容')
 
       // router.push(`/blog/post-blog/${id}`)
     } catch (err) {
       alert('網路連線異常')
       return 404
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -573,13 +588,13 @@ export default function PostBlog({ data }: { data: BlogData }) {
     }
 
     try {
+      setIsLoading(true)
       // 先執行儲存blog函式
       const saveBlogStatus = await saveBlog()
+      setModal(false)
       if (saveBlogStatus === 404) {
         return
       }
-
-      alert('發布中...')
 
       const myHeaders = new Headers()
       if (token !== undefined) {
@@ -601,7 +616,8 @@ export default function PostBlog({ data }: { data: BlogData }) {
       }
 
       if (res.status === 200) {
-        alert('成功發佈，自動跳轉中...')
+        setModal(true)
+        setModalText('成功發佈，自動跳轉中...')
       }
 
       setTimeout(() => {
@@ -610,6 +626,8 @@ export default function PostBlog({ data }: { data: BlogData }) {
     } catch (err) {
       alert(err)
       alert('網路連線異常')
+    } finally {
+      setIsLoading(false)
     }
   }
 }

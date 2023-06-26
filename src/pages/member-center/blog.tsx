@@ -110,8 +110,6 @@ export default function Blog({
   toursNameData: toursNameDataProps[]
   draftBlogData: draftBlogAryProp
 }) {
-  console.log('draftBlogData', draftBlogData)
-
   const router = useRouter()
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
@@ -208,7 +206,6 @@ export default function Blog({
   }, [moreBlogData])
 
   console.log(moreBlogData)
-  console.log(toursNameData)
 
   return (
     <>
