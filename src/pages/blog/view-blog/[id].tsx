@@ -44,6 +44,7 @@ interface ViewBlogDataProps {
 }
 
 interface BlogCommentDataProps {
+  Message: string
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filter(arg0: (item: any) => boolean): unknown
   length: ReactNode
@@ -197,8 +198,11 @@ export default function PostBlog({
 
   // 留言
   const addCommentRef = useRef<HTMLInputElement>(null)
-  const [comment, setComment] = useState<BlogCommentDataProps[]>(blogCommentData)
-  
+  const [comment, setComment] =
+    useState<BlogCommentDataProps[]>(blogCommentData)
+  console.log('comment', comment)
+  console.log('blogCommentData', blogCommentData)
+
   // 新增留言
   const [addCommentFail, setAddCommentFail] = useState(false)
   const [typeConfirmText, setTypeConfirmText] = useState('')
@@ -225,7 +229,18 @@ export default function PostBlog({
         if (addCommentRef.current?.value) {
           addCommentRef.current.value = ''
         }
-        setComment((prevComments) => [...prevComments, addCommentData])
+        // setComment((prevComments) => [...(prevComments), addCommentData])
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setComment((prevComments:any) => {
+          if (prevComments.Message === '尚無評論') {
+            return [addCommentData]
+          } else if (Array.isArray(prevComments)) {
+            return [...prevComments, addCommentData]
+          } else {
+            return prevComments
+          }
+        })
+      
       }
 
       if (!resAddCommentData.ok) {
@@ -446,18 +461,18 @@ export default function PostBlog({
               </div>
             </div>
 
-            {Array.isArray(comment) && <hr className="mb-10" />}
+            {comment.length >= 1 && <hr className="mb-10" />}
 
             {/* 其他留言 */}
             <div className="lg:w-3/4 lg:mx-auto">
               <div>
-                {Array.isArray(comment) && (
+                {comment.length >= 1 && (
                   <h2 className="text-lg mb-7 font-bold">
                     其他留言({comment.length})
                   </h2>
                 )}
                 <div className="flex-col space-y-9">
-                  {Array.isArray(comment) &&
+                  {comment.length >= 0 &&
                     comment?.map((item) => {
                       return (
                         <PostComment

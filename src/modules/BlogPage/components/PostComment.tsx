@@ -122,6 +122,8 @@ export default function PostComment({
   // 手機版 - 更多按鈕
   const [moreBtn, setMoreBtn] = useState(false)
 
+  console.log(reply)
+
   return (
     <div>
       <div className="flex flex-col space-y-6">
@@ -130,7 +132,7 @@ export default function PostComment({
             <div className="flex items-center space-x-2">
               {/* 頭貼 */}
               <Image
-                src={userImageUrl}
+                src={userImageUrl !== '' ? userImageUrl : '/userDefault.png'}
                 alt="圖片"
                 width={40}
                 height={40}
@@ -141,7 +143,15 @@ export default function PostComment({
               <div className="flex flex-col text-sm">
                 <div className="flex space-x-5">
                   <p>{user}</p>
-                  {isMyComment && (
+                  <a
+                    className="font-bold cursor-pointer text-gray-73 hover:text-gray-A8 hover:duration-300"
+                    onClick={() => {
+                      setIsReply(true)
+                    }}
+                  >
+                    回覆
+                  </a>
+                  {/* {isMyComment && (
                     <a
                       className="font-bold cursor-pointer text-gray-73 hover:text-gray-A8 hover:duration-300"
                       onClick={() => {
@@ -150,7 +160,7 @@ export default function PostComment({
                     >
                       回覆
                     </a>
-                  )}
+                  )} */}
                 </div>
                 <p className="text-gray-A8">{userTime}</p>
               </div>
@@ -265,7 +275,7 @@ export default function PostComment({
                   id={item.BlogReplyId.toString()}
                 >
                   <Image
-                    src={item.ProfilePicture}
+                    src={item.ProfilePicture !== '' ? item.ProfilePicture : '/userDefault.png'}
                     alt="圖片"
                     width={40}
                     height={40}
@@ -278,8 +288,7 @@ export default function PostComment({
                       <span className="text-gray-A8 flex-grow">
                         {item.InitDate}
                       </span>
-
-                      {isMyComment && (
+                      {item.IsMyComment && (
                         <div className="flex items-center space-x-3">
                           <div>
                             <MdModeEdit
