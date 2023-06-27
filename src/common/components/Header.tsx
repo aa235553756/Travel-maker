@@ -23,6 +23,7 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import HeaderNotifi from './HeaderNotifi'
 
 export default function Header() {
   const router = useRouter()
@@ -72,6 +73,10 @@ export default function Header() {
 
   // 關鍵字搜尋
   const refKeyWord = useRef<HTMLInputElement | null>(null)
+
+  useEffect(() => {
+    setShowMember(false)
+  }, [router.query])
 
   return (
     <div className="z-30 relative overflow-hidden lg:overflow-visible">
@@ -152,6 +157,7 @@ export default function Header() {
                     </div>
                   </Link>
                 </li>
+                {token ? <HeaderNotifi /> : null}
                 {token ? (
                   <li className="relative">
                     <button
