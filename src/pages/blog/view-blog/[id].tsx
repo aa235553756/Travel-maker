@@ -200,8 +200,6 @@ export default function PostBlog({
   const addCommentRef = useRef<HTMLInputElement>(null)
   const [comment, setComment] =
     useState<BlogCommentDataProps[]>(blogCommentData)
-  console.log('comment', comment)
-  console.log('blogCommentData', blogCommentData)
 
   // 新增留言
   const [addCommentFail, setAddCommentFail] = useState(false)
@@ -231,7 +229,7 @@ export default function PostBlog({
         }
         // setComment((prevComments) => [...(prevComments), addCommentData])
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        setComment((prevComments:any) => {
+        setComment((prevComments: any) => {
           if (prevComments.Message === '尚無評論') {
             return [addCommentData]
           } else if (Array.isArray(prevComments)) {
@@ -240,7 +238,6 @@ export default function PostBlog({
             return prevComments
           }
         })
-      
       }
 
       if (!resAddCommentData.ok) {
@@ -427,23 +424,13 @@ export default function PostBlog({
             <div className="lg:w-3/4 lg:mx-auto">
               <h2 className="text-lg mb-7 font-bold">留言</h2>
               <div className="flex items-center space-x-4 mb-20 w-full">
-                {picture ? (
-                  <Image
-                    src={viewBlogData.ProfilePicture}
-                    alt="圖片"
-                    width={40}
-                    height={40}
-                    className="rounded-full min-h-[40px]"
-                  ></Image>
-                ) : (
-                  <Image
-                    src="/userDefault.png"
-                    alt="圖片"
-                    width={40}
-                    height={40}
-                    className="rounded-full min-h-[40px]"
-                  ></Image>
-                )}
+                <Image
+                  src={picture ? picture : '/userDefault.png'}
+                  alt="圖片"
+                  width={40}
+                  height={40}
+                  className="rounded-full min-h-[40px]"
+                ></Image>
                 <input
                   type="text"
                   placeholder="請留言"

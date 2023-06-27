@@ -81,9 +81,10 @@ export default function PostComment({
 
   // 編輯回覆
   const replyValues = replyAry?.map((item) => item.Reply)
-  const [editReplyValue, setEditReplyValue] = useState(
-    replyValues || reply?.map(() => '')
-  )
+  // const [editReplyValue, setEditReplyValue] = useState(
+  //   replyValues || reply?.map(() => '')
+  // )
+  const [editReplyValue, setEditReplyValue] = useState(replyValues)
   const [isEditReply, setIsEditReply] = useState(
     Array(replyAry?.length).fill(false)
   )
@@ -121,8 +122,6 @@ export default function PostComment({
 
   // 手機版 - 更多按鈕
   const [moreBtn, setMoreBtn] = useState(false)
-
-  console.log(reply)
 
   return (
     <div>
@@ -275,7 +274,11 @@ export default function PostComment({
                   id={item.BlogReplyId.toString()}
                 >
                   <Image
-                    src={item.ProfilePicture !== '' ? item.ProfilePicture : '/userDefault.png'}
+                    src={
+                      item.ProfilePicture !== ''
+                        ? item.ProfilePicture
+                        : '/userDefault.png'
+                    }
                     alt="圖片"
                     width={40}
                     height={40}
@@ -396,8 +399,17 @@ export default function PostComment({
                             if (res.ok) {
                               setEditReplyValue((prevState) => {
                                 const updatedState = [...prevState]
-                                if (replyAry) {
+                                // if (replyAry) {
+                                //   replyAry[index].Reply = editReplyValue[index]
+                                // }
+                                // if (replyAry) {
+                                //   const updatedReplyAry = [...replyAry];
+                                //   updatedReplyAry[index].Reply = editReplyValue[index];
+                                //   return updatedReplyAry.map((item) => item.Reply);
+                                // }
+                                if (replyAry && replyAry[index]) {
                                   replyAry[index].Reply = editReplyValue[index]
+                                  return replyAry.map((item) => item.Reply)
                                 }
                                 updatedState[index] = editReplyValue[index]
                                 return updatedState
@@ -409,7 +421,11 @@ export default function PostComment({
                         </button>
                       </div>
                     ) : (
-                      <p>{item.Reply}</p>
+                      <p>
+                        {editReplyValue[index]
+                          ? editReplyValue[index]
+                          : item.Reply}
+                      </p>
                     )}
                   </div>
                 </div>
