@@ -205,7 +205,11 @@ export default function MyBlog({
         {/* 用戶 */}
         <div className="flex items-center space-x-[60px] pb-10">
           <Image
-            src={blogsData.ProfilePicture}
+            src={
+              blogsData.ProfilePicture
+                ? blogsData.ProfilePicture
+                : '/userDefault.png'
+            }
             width={90}
             height={90}
             className="rounded-full min-h-[90px]"
