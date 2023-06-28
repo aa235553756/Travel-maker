@@ -1,16 +1,203 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import BlogCard from '@/common/components/card/BlogCard'
-import SeeMore from '@/common/components/SeeMore'
 import Follows from '@/modules/BlogPage/components/Follows'
 import Fans from '@/modules/BlogPage/components/Fans'
+import { getCookie } from 'cookies-next'
 
-export default function MyBlog() {
-  // tab class 切換
-  const [activeTab, setActiveTab] = useState(1)
-  const tabState = (tabIndex: number): void => {
-    setActiveTab(tabIndex)
+interface BlogDataProps {
+  BlogGuid: string
+  IsCollect: boolean
+  Cover: string
+  Title: string
+  Profile: string
+  UserName: string
+  InitDate: string
+  Sees: number
+  Likes: number
+  Comments: number
+  Category: string[]
+}
+
+interface BlogsDataProps {
+  ProfilePicture: string
+  UserName: string
+  IsFollow: boolean
+  Blogs: number
+  Fans: number
+  Follows: number
+  BlogData: BlogDataProps[]
+}
+
+interface FanDatProps {
+  UserGuid: string
+  UserName: string
+  ProfilePicture: string
+  IsFollow: boolean
+}
+
+interface FansDataProps {
+  UserName: string
+  ProfilePicture: string
+  BlogCounts: number
+  Fans: number
+  Followers: number
+  FanData: FanDatProps[]
+}
+
+interface FollowDataProps {
+  UserGuid: string
+  UserName: string
+  ProfilePicture: string
+  IsFollow: boolean
+}
+
+interface FollowsDataProps {
+  UserName: string
+  ProfilePicture: string
+  BlogCounts: number
+  Fans: number
+  Followers: number
+  FollowData: FollowDataProps[]
+}
+
+export async function getServerSideProps({
+  req,
+  res,
+}: {
+  req: undefined
+  res: undefined
+}) {
+  const token = getCookie('auth', { res, req })
+  const user = getCookie('user', { res, req })
+    ? JSON.parse(String(getCookie('user', { res, req })))
+    : null
+
+  // 【API】取得單一用戶社群頁面(遊記)
+  const resBlogsData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/blogs/profile/${user.UserGuid}`,
+    {
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const blogsData = await resBlogsData.json()
+
+  // 【API】顯示粉絲
+  const resFansData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/fans/1`,
+    {
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const fansData = await resFansData.json()
+
+  // 【API】顯示追蹤
+  const resFollowsData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/follows/1`,
+    {
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const followsData = await resFollowsData.json()
+
+  return {
+    props: {
+      blogsData,
+      fansData,
+      followsData,
+    },
   }
+}
+
+export default function MyBlog({
+  blogsData,
+  fansData,
+  followsData,
+}: {
+  blogsData: BlogsDataProps
+  fansData: FansDataProps
+  followsData: FollowsDataProps
+}) {
+  const token = getCookie('auth')
+  const user = getCookie('user') ? JSON.parse(String(getCookie('user'))) : null
+
+  const [activeTab, setActiveTab] = useState(1)
+  const [page, setPage] = useState(2)
+  const [blog, setBlog] = useState(blogsData.BlogData)
+  const [fan, setFan] = useState(fansData.FanData)
+  const [follow, setFollow] = useState(followsData.FollowData)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [fanNum, setFanNum] = useState(fansData.Fans)
+  const [followNum, setFollowNum] = useState(followsData.Followers)
+  const [loading, setLoading] = useState(false)
+
+  // 節流 : 每隔設定的秒數才執行函數
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const throttle = <T extends any[]>(
+    callback: (...args: T) => void,
+    time = 1000
+  ) => {
+    let timer: NodeJS.Timeout | null = null
+    return (...args: T) => {
+      if (timer) {
+        return
+      }
+
+      timer = setTimeout(() => {
+        timer = null
+        callback(...args)
+      }, time)
+    }
+  }
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      const clientHeight = document.documentElement.clientHeight
+      const scrollTop = document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight
+
+      if (scrollTop + clientHeight + 100 >= scrollHeight) {
+        setLoading(true)
+        const data = await fetch(
+          `https://travelmaker.rocket-coding.com/api/blogs/profile/${user.UserGuid}/${page}`,
+          {
+            headers: {
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
+        const moreData = await data.json()
+
+        if (data.ok) {
+          setBlog((prevData) => [...prevData, ...moreData])
+          setPage((prevPage) => prevPage + 1)
+        }
+      }
+    }
+
+    const throttledScrollHandler = throttle(handleScroll)
+
+    const scrollEventListener = () => {
+      throttledScrollHandler()
+    }
+
+    window.addEventListener('scroll', scrollEventListener)
+
+    return () => {
+      window.removeEventListener('scroll', scrollEventListener)
+    }
+  }, [user, token, page, setBlog, setPage])
 
   return (
     <div className="container">
@@ -18,51 +205,85 @@ export default function MyBlog() {
         {/* 用戶 */}
         <div className="flex items-center space-x-[60px] pb-10">
           <Image
-            src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
-            alt="圖片"
+            src={
+              blogsData.ProfilePicture
+                ? blogsData.ProfilePicture
+                : '/userDefault.png'
+            }
             width={90}
             height={90}
             className="rounded-full min-h-[90px]"
+            alt="圖片"
           ></Image>
-          <h2 className="text-[22px] font-bold">小熊軟糖</h2>
+          <h2 className="text-[22px] font-bold">{blogsData.UserName}</h2>
         </div>
+
         {/* 頁籤 */}
         <div className="pb-10">
           <div className="flex justify-between pb-2">
             <button
               type="button"
               className={`w-1/3 border-b text-center p-4 ${
-                activeTab === 1 ? 'border-[#000]' : 'border-[#ccc]'
+                activeTab === 1
+                  ? 'border-primary text-primary'
+                  : 'border-gray-E2 text-gray-A8'
               }`}
               onClick={() => {
-                tabState(1)
+                setActiveTab(1)
               }}
             >
-              <p>6</p>
+              <p>{blogsData.Blogs}</p>
               <p>遊記</p>
             </button>
             <button
               type="button"
               className={`w-1/3 border-b text-center p-4 ${
-                activeTab === 2 ? 'border-[#000]' : 'border-[#ccc]'
+                activeTab === 2
+                  ? 'border-primary text-primary'
+                  : 'border-gray-E2 text-gray-A8'
               }`}
-              onClick={() => {
-                tabState(2)
+              onClick={async () => {
+                setActiveTab(2)
+                const resFansData = await fetch(
+                  `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/fans/1`,
+                  {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                  }
+                )
+                const fansData = await resFansData.json()
+                setFan(fansData.FanData)
               }}
             >
-              <p>10</p>
+              <p>{fanNum}</p>
               <p>粉絲</p>
             </button>
             <button
               type="button"
               className={`w-1/3 border-b text-center p-4 ${
-                activeTab === 3 ? 'border-[#000]' : 'border-[#ccc]'
+                activeTab === 3
+                  ? 'border-primary text-primary'
+                  : 'border-gray-E2 text-gray-A8'
               }`}
-              onClick={() => {
-                tabState(3)
+              onClick={async () => {
+                setActiveTab(3)
+                const resFollowsData = await fetch(
+                  `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/follows/1`,
+                  {
+                    headers: {
+                      Authorization: `${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                  }
+                )
+                const followsData = await resFollowsData.json()
+                setFollow(followsData.FollowData)
+                setFollowNum(followsData.Followers)
               }}
             >
-              <p>4</p>
+              <p>{followNum}</p>
               <p>追蹤</p>
             </button>
           </div>
@@ -70,69 +291,72 @@ export default function MyBlog() {
 
         {/* 貼文 */}
         {activeTab === 1 && (
-          <div className="flex flex-col space-y-6 lg:mb-8 lg:flex-row lg:flex-wrap lg:space-x-6">
-            <BlogCard
-              showCollect={false}
-              blogName="好瘋狂熱血少年"
-              poster="老頭阿迪"
-              time="2023-03-01 18:00"
-              type={['城市走走']}
-              view={10}
-              like={10}
-              comment={10}
-              blogImage={''}
-              userImage={''}
-            />
-            <BlogCard
-              showCollect={false}
-              blogName="好瘋狂熱血少年"
-              poster="老頭阿迪"
-              time="2023-03-01 18:00"
-              type={['城市走走']}
-              view={10}
-              like={10}
-              comment={10}
-              blogImage={''}
-              userImage={''}
-            />
-            <BlogCard
-              showCollect={false}
-              blogName="好瘋狂熱血少年"
-              poster="老頭阿迪"
-              time="2023-03-01 18:00"
-              type={['城市走走']}
-              view={10}
-              like={10}
-              comment={10}
-              blogImage={''}
-              userImage={''}
-            />
+          <div className="flex flex-wrap -my-5 mb-[100px] lg:-mx-3">
+            {blog?.map((item, index) => {
+              return (
+                <div className="w-full py-5 lg:w-1/2 lg:px-3" key={index}>
+                  <BlogCard
+                    draft
+                    id={item.BlogGuid}
+                    blogName={item.Title}
+                    poster={item.UserName}
+                    time={item.InitDate}
+                    type={item.Category}
+                    view={item.Sees}
+                    like={item.Likes}
+                    comment={item.Comments}
+                    blogImage={item.Cover}
+                    userImage={item.Profile}
+                    blog={blog}
+                    setBlog={
+                      setBlog as React.Dispatch<
+                        React.SetStateAction<BlogDataProps[] | undefined>
+                      >
+                    }
+                  />
+                </div>
+              )
+            })}
           </div>
         )}
 
         {/* 粉絲 */}
         {activeTab === 2 && (
-          <div className="flex flex-col space-y-6 lg:mb-8 lg:flex-row lg:flex-wrap">
-            <Fans user="老頭阿迪" />
-            <Fans user="珍珠五十嵐" />
-            <Fans user="木村倒頭栽" />
-            <Fans user="有春地瓜" />
+          <div className="flex flex-col space-y-10 lg:mb-8 lg:flex-wrap">
+            {fan?.map((item) => {
+              return (
+                <div key={item.UserGuid}>
+                  <Fans
+                    id={item.UserGuid}
+                    user={item.UserName}
+                    userImage={item.ProfilePicture}
+                    isFollow={item.IsFollow}
+                  />
+                </div>
+              )
+            })}
           </div>
         )}
 
         {/* 追蹤 */}
         {activeTab === 3 && (
-          <div className="flex flex-col space-y-6 lg:mb-8 lg:flex-row lg:flex-wrap">
-            <Follows user="蘋果牛奶糖" />
-            <Follows user="臺北的韓國歐巴" />
-            <Follows user="環遊小世界的少年" />
-            <Follows user="蛋捲珍好甲" />
+          <div className="flex flex-col space-y-10 lg:mb-8 lg:flex-wrap">
+            {follow?.map((item, index) => {
+              return (
+                <div key={index}>
+                  <Follows
+                    id={item.UserGuid}
+                    user={item.UserName}
+                    userImage={item.ProfilePicture}
+                    isFollow={item.IsFollow}
+                  />
+                </div>
+              )
+            })}
           </div>
         )}
 
-        <div className="hidden lg:block">
-          <SeeMore />
-        </div>
+        {loading ? null : <p className="text-center">loading...</p>}
       </div>
     </div>
   )

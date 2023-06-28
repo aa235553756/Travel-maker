@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
-import Link from 'next/link'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import BlogCard from '@/common/components/card/BlogCard'
 import BlogDraftCard from '@/modules/MemberCenterPage/components/BlogDraftCard'
@@ -9,6 +8,10 @@ import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
 // import { BsXCircle } from 'react-icons/bs'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
+import { CustomModal } from '@/common/components/CustomModal'
+import { useRouter } from 'next/router'
+import { postNewDraftBlogApi } from '../../util/blogApi'
+import { BsExclamationCircle } from 'react-icons/bs'
 
 export async function getServerSideProps({
   req,
@@ -32,6 +35,18 @@ export async function getServerSideProps({
   )
   const blogData = await resBlogData.json()
 
+  // 【API】取得我的收藏遊記
+  const resDraftBlogData = await fetch(
+    ' https://travelmaker.rocket-coding.com/api/users/blogDrafts/1',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
     `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
@@ -45,21 +60,57 @@ export async function getServerSideProps({
   )
   const memberCountData = await resMemberCountData.json()
 
+  const resGetToursName = await fetch(
+    'https://travelmaker.rocket-coding.com/api/blogs/tours',
+    {
+      method: 'GET',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const toursNameData = await resGetToursName.json()
+
+  const draftBlogData = await resDraftBlogData.json()
   return {
     props: {
       blogData,
       memberCountData,
+      toursNameData,
+      draftBlogData,
     },
   }
+}
+
+interface toursNameDataProps {
+  TourId: number
+  TourName: string
+}
+
+interface draftBlogProp {
+  BlogGuid: string
+  Title: string
+  Cover: string
+  InitDate: string
+}
+
+interface draftBlogAryProp {
+  BlogData: draftBlogProp[]
 }
 
 export default function Blog({
   blogData,
   memberCountData,
+  toursNameData,
+  draftBlogData,
 }: {
   blogData: BlogDataProps
   memberCountData: MemberCountProps
+  toursNameData: toursNameDataProps[]
+  draftBlogData: draftBlogAryProp
 }) {
+  const router = useRouter()
   // tab  class 切換
   const [activeTab, setActiveTab] = useState(1)
 
@@ -77,14 +128,23 @@ export default function Blog({
     setCountData(countData)
   }, [countData])
 
+  const [deleteConfirm, setDeleteConfirm] = useState(false)
+  const [deleteBlogGuid, setDeleteBlogGuid] = useState('')
+
   // 獲取更多資料
   const token = getCookie('auth')
+  const user = getCookie('user')
+    ? JSON.parse(String(getCookie('user')))
+    : undefined
   const [moreBlogData, setMoreBlogData] = useState(blogData.BlogData)
   const [page, setPage] = useState(2)
   const [isLoading, setIsLoading] = useState(false)
   const [toTop, setToTop] = useState(false)
 
   const [no, setNo] = useState(false)
+
+  // =========Modal State=========
+  const [modal, setModal] = useState(false)
 
   const getMoreBlogData = async (page: number) => {
     const res = await fetch(
@@ -155,7 +215,102 @@ export default function Blog({
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/Group 340.png" />
       </Head>
+      {/* 刪除草稿遊記(待完成) */}
+      <CustomModal modal={deleteConfirm} setModal={setDeleteConfirm} wrapper>
+        <div className="w-[552px] pt-8 p-7 bg-white rounded-xl">
+          <div className="flex items-center space-x-2 mb-5">
+            <BsExclamationCircle className="text-[32px] text-highlight" />
+            <h4 className="text-xl">確定要刪除嗎？</h4>
+          </div>
+          <hr />
+          <span className="p-8 block">刪除後將無法復原，是否確認刪除?</span>
+          <div className="flex justify-end space-x-9">
+            <button
+              className="border border-primary text-primary text-xl px-9 py-3 font-bold rounded-md hover:border-primary-tint hover:text-primary-tint hover:duration-500"
+              onClick={() => {
+                setDeleteConfirm(!deleteConfirm)
+              }}
+            >
+              取消
+            </button>
+            <button
+              className="bg-primary border border-transparent text-white text-xl px-9 py-3 font-bold rounded-md hover:bg-primary-tint hover:duration-500"
+              onClick={async () => {
+                try {
+                  const myHeaders = new Headers()
+                  if (token !== undefined) {
+                    myHeaders.append('Authorization', String(token))
+                  }
+                  const requestOptions = {
+                    method: 'PUT',
+                    headers: myHeaders,
+                  }
+
+                  const res = await fetch(
+                    `https://travelmaker.rocket-coding.com/api/blogs/remove/${deleteBlogGuid}`,
+                    requestOptions
+                  )
+
+                  if (res.ok) {
+                    alert('成功刪除')
+                  } else {
+                    throw new Error()
+                  }
+                } catch (err) {
+                  alert('網路連線異常')
+                } finally {
+                  setDeleteConfirm(false)
+                }
+              }}
+            >
+              刪除
+            </button>
+          </div>
+        </div>
+      </CustomModal>
       <div>
+        {/* 景點加入房間 Modal */}
+        <CustomModal
+          modal={modal}
+          setModal={setModal}
+          wrapper
+          onConfirm={() => {
+            setModal(false)
+          }}
+        >
+          <div className="w-[260px] min-h-[260px] p-7 bg-white rounded-xl ">
+            {/* 標題 */}
+            <h4 className="text-xl mb-2">選擇行程以撰寫遊記</h4>
+            <hr />
+            {/* 按鈕 */}
+            <div className="flex flex-col space-y-3 mt-3 pr-3 h-[200px] overflow-y-auto">
+              {(toursNameData.length ? toursNameData : []).map(
+                ({ TourName, TourId }: toursNameDataProps, i) => {
+                  //roomData
+                  // const isActive = addTourTagStyle[item.RoomGuid]
+                  return (
+                    <button
+                      className={`${
+                        // item.IsExisted
+                        false
+                          ? 'bg-primary text-white'
+                          : 'border-gray-A8 text-gray-A8'
+                      } w-full block border px-2 py-1 rounded-xl `}
+                      onClick={newDraftBlog(TourId)}
+                      key={i}
+                    >
+                      {TourName}
+                      {/* {item.RoomName} */}
+                    </button>
+                  )
+                }
+              )}
+              {toursNameData.length === undefined ? (
+                <p className="text-center text-gray-73 p-4">您必須先創建行程</p>
+              ) : null}
+            </div>
+          </div>
+        </CustomModal>
         {/* 手機版 */}
         <div className="container">
           <div className="md:hidden mt-8 mb-[100px]">
@@ -163,7 +318,12 @@ export default function Blog({
               <h2 className="text-lg font-bold">
                 我的遊記({memberCountData.BlogCounts})
               </h2>
-              <button className="border border-gray-73 px-4 py-2 rounded-md text-gray-73">
+              <button
+                className="border border-gray-73 px-4 py-2 rounded-md text-gray-73"
+                onClick={() => {
+                  setModal(true)
+                }}
+              >
                 新增遊記
               </button>
             </div>
@@ -210,7 +370,7 @@ export default function Blog({
                       return (
                         <div key={item.BlogGuid}>
                           <BlogCard
-                            id={parseInt(item.BlogGuid)}
+                            id={item.BlogGuid}
                             showCollect={true}
                             blogName={item.Title}
                             poster={item.UserName}
@@ -230,19 +390,24 @@ export default function Blog({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-col space-y-10">
-                  {Array(20)
-                    .fill('')
-                    .map((item, index) => {
+                  {draftBlogData?.BlogData?.map(
+                    (blog: draftBlogProp, index: number) => {
                       return (
                         <BlogDraftCard
                           key={index}
-                          showDelete={true}
-                          blogName="漫步鳥語人森"
-                          poster="小熊的旅行食蹤"
-                          time="2023-03-01 18:00"
+                          showDelete={false}
+                          blogCover={blog.Cover}
+                          blogName={blog.Title}
+                          poster={user.UserName}
+                          userProfilePicture={user.ProfilePicture}
+                          time={blog.InitDate}
+                          blogGuid={blog.BlogGuid}
+                          setDeleteConfirm={setDeleteConfirm}
+                          setDeleteBlogGuid={setDeleteBlogGuid}
                         />
                       )
-                    })}
+                    }
+                  )}
                 </div>
               )}
             </div>
@@ -269,11 +434,14 @@ export default function Blog({
             <div className="md:member-shadow md:rounded-md">
               <div className="md:flex md:justify-between md:items-center md:px-10 md:py-8">
                 <h2 className="md:text-xl">我的遊記</h2>
-                <Link href="../blog/post-blog">
-                  <button className="md:border md:border-gray-73 md:px-4 md:py-2 md:rounded-md md:text-gray-73">
-                    新增遊記
-                  </button>
-                </Link>
+                <button
+                  className="md:border md:border-gray-73 md:px-4 md:py-2 md:rounded-md md:text-gray-73"
+                  onClick={() => {
+                    setModal(true)
+                  }}
+                >
+                  新增遊記
+                </button>
               </div>
               <hr className="md:w-full md:border-gray-E2" />
               <div className="md:px-10 md:py-6">
@@ -313,7 +481,7 @@ export default function Blog({
               </div>
               {/* tab 內容 */}
               {activeTab === 1 && (
-                <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
+                <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
                   {noData ? (
                     <p className="text-lg text-gray-B8">無資料</p>
                   ) : (
@@ -324,7 +492,7 @@ export default function Blog({
                           className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
                         >
                           <BlogCard
-                            id={parseInt(item.BlogGuid)}
+                            id={item.BlogGuid}
                             showCollect={true}
                             blogName={item.Title}
                             poster={item.UserName}
@@ -359,23 +527,28 @@ export default function Blog({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
-                  {Array(20)
-                    .fill('')
-                    .map((item, index) => {
+                  {draftBlogData?.BlogData?.map(
+                    (blog: draftBlogProp, index: number) => {
                       return (
                         <div
                           key={index}
                           className="w-full py-3 lg:w-1/2 lg:px-3"
                         >
                           <BlogDraftCard
-                            showDelete={true}
-                            blogName="漫步鳥語人森"
-                            poster="小熊的旅行食蹤"
-                            time="2023-03-01 18:00"
+                            showDelete={false}
+                            blogCover={blog.Cover}
+                            blogName={blog.Title}
+                            poster={user.UserName}
+                            time={blog.InitDate}
+                            userProfilePicture={user.ProfilePicture}
+                            blogGuid={blog.BlogGuid}
+                            setDeleteConfirm={setDeleteConfirm}
+                            setDeleteBlogGuid={setDeleteBlogGuid}
                           />
                         </div>
                       )
-                    })}
+                    }
+                  )}
                 </div>
               )}
               {isLoading && <p className="text-lg text-center">loading...</p>}
@@ -385,4 +558,18 @@ export default function Blog({
       </div>
     </>
   )
+
+  function newDraftBlog(
+    TourId: number
+  ): React.MouseEventHandler<HTMLButtonElement> | undefined {
+    return async () => {
+      try {
+        const res = await postNewDraftBlogApi(TourId, token)
+        const { BlogGuid } = await res.json()
+        router.push(`/blog/post-blog/${BlogGuid}`)
+      } finally {
+        setModal(false)
+      }
+    }
+  }
 }

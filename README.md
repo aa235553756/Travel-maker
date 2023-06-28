@@ -135,7 +135,7 @@ my-react-app/
 
 ## 🔗 相關連結
 - [設計稿](https://www.figma.com/file/DZ5QXoX44UbjjTDgwoUa7e/%E5%B0%88%E9%A1%8C?node-id=2014-30653&t=FV51kesPtkZeFxNo-0)
-- [簡報](https://www.canva.com/design/DAFhQyi7JYw/D2bMbdCXiQjRv2c6-KwKAA/view?utm_content=DAFhQyi7JYw&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink)
+- [簡報](https://www.canva.com/design/DAFhQyi7JYw/D2bMbdCXiQjRv2c6-KwKAA/view#1)
 - [Pull Request](https://github.com/aa235553756/travel-maker/pulse)
 - [Demo](https://travel-maker.vercel.app/)
 

@@ -15,8 +15,12 @@ export default function LikeBtn({
     <button
       type="button"
       onClick={() => {
-        setIsLike(!isLike)
+        onClick1 ? setIsLike(!isLike) : null
         onClick1 ? onClick1() : null
+        // if (onClick1) {
+        //   setIsLike(!isLike)
+        //   onClick1()
+        // }
       }}
     >
       {isLike ? <AiFillHeart className="text-highlight" /> : <AiOutlineHeart />}

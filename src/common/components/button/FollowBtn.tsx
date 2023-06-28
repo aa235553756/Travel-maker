@@ -1,17 +1,68 @@
+import { getCookie } from 'cookies-next'
 import React, { useState } from 'react'
 
-export default function FollowBtn() {
-  // 追蹤 css 狀態
-  const [isTrack, setIsTrack] = useState(true)
+export default function FollowBtn({
+  isFollow,
+  id,
+}: {
+  isFollow: boolean
+  id: string
+}) {
+  const [follow, setFollow] = useState(isFollow)
+  const token = getCookie('auth')
+  const user = getCookie('user') ? JSON.parse(String(getCookie('user'))) : null
+
+  const handleFollow = async () => {
+    // 【API】新增追蹤
+    await fetch(
+      `https://travelmaker.rocket-coding.com/api/blogs/follow/${id}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  }
+
+  const handleCancelFollow = async () => {
+    // 【API】取消追蹤
+    await fetch(
+      `https://travelmaker.rocket-coding.com/api/blogs/follow/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  }
+
+  const handleGetFollow = async () => {
+    // 【API】顯示粉絲
+    await fetch(
+      `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/fans/1`,
+      {
+        headers: {
+          Authorization: `${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    )
+  }
 
   return (
     <div>
-      {isTrack ? (
+      {follow ? (
         <button
           type="button"
-          className="border border-primary text-primary px-8 py-3 w-[114px] rounded-md md:px-6 md:py-2"
+          className="border border-primary text-primary p-2 w-[80px] rounded-md md:w-[114px] md:px-6 md:py-2"
           onClick={() => {
-            setIsTrack(!isTrack)
+            handleCancelFollow()
+            handleGetFollow()
+            setFollow(!follow)
           }}
         >
           追蹤中
@@ -19,9 +70,11 @@ export default function FollowBtn() {
       ) : (
         <button
           type="button"
-          className="border border-transparent bg-primary text-white px-8 py-3 w-[114px] rounded-md md:px-6 md:py-2"
+          className="border border-transparent bg-primary text-white p-2 w-[80px] rounded-md md:w-[114px] md:px-6 md:py-2"
           onClick={() => {
-            setIsTrack(!isTrack)
+            handleFollow()
+            handleGetFollow()
+            setFollow(!follow)
           }}
         >
           追蹤
