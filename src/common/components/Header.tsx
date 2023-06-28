@@ -182,7 +182,7 @@ export default function Header() {
                               <Image
                                 width="52"
                                 height="52"
-                                src={picture}
+                                src={picture ? picture : '/userDefault.png'}
                                 alt="圖片"
                                 className="h-[52px] rounded-full"
                               ></Image>

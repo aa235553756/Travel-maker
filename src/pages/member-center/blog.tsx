@@ -370,7 +370,7 @@ export default function Blog({
                       return (
                         <div key={item.BlogGuid}>
                           <BlogCard
-                            id={parseInt(item.BlogGuid)}
+                            id={item.BlogGuid}
                             showCollect={true}
                             blogName={item.Title}
                             poster={item.UserName}
@@ -481,7 +481,7 @@ export default function Blog({
               </div>
               {/* tab 內容 */}
               {activeTab === 1 && (
-                <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
+                <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
                   {noData ? (
                     <p className="text-lg text-gray-B8">無資料</p>
                   ) : (
@@ -492,7 +492,7 @@ export default function Blog({
                           className="w-full py-3 lg:w-1/2 lg:px-3 cursor-pointer"
                         >
                           <BlogCard
-                            id={parseInt(item.BlogGuid)}
+                            id={item.BlogGuid}
                             showCollect={true}
                             blogName={item.Title}
                             poster={item.UserName}
