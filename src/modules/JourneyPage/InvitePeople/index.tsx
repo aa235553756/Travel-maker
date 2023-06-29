@@ -93,6 +93,8 @@ export default function InvitePeople({
   // 夥伴帳號 value
   const memberInputRef = useRef<HTMLInputElement>(null)
 
+  const token = getCookie('auth')
+
   // 新增夥伴帳號
   const [account, setAccount] = useState<UsersProp[]>(originData.Users || [])
   const addAccount = async () => {
@@ -116,8 +118,6 @@ export default function InvitePeople({
           return
         }
       }
-
-      const token = getCookie('auth')
 
       // 【API】主揪新增被揪
       const resRoomMemberData = await fetch(
@@ -158,12 +158,38 @@ export default function InvitePeople({
   }
 
   // 刪除夥伴帳號
-  const deleteAccount = (index: number) => {
-    setAccount((prevAccount) => {
-      const newAccount = [...prevAccount]
-      newAccount.splice(index, 1)
-      return newAccount
-    })
+  const deleteAccount = async (index: number, userGuid: string) => {
+    try {
+      // 【API】主揪刪除被揪.被揪刪除自己
+      const resDelAccountData = await fetch(
+        `https://travelmaker.rocket-coding.com/api/rooms/members`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            RoomGuid: originData.RoomGuid,
+            UserGuid: userGuid,
+          }),
+        }
+      )
+
+      if (resDelAccountData.ok) {
+        setAccount((prevAccount) => {
+          const newAccount = [...prevAccount]
+          newAccount.splice(index, 1)
+          return newAccount
+        })
+      }
+
+      if (resDelAccountData.ok) {
+        return
+      }
+    } catch (err) {
+      alert(err)
+    }
   }
 
   // 帳號驗證彈窗
@@ -248,18 +274,18 @@ export default function InvitePeople({
                         // 若是主揪，則其餘人顯示 Icon
                         item.UserGuid !== userGuid && (
                           <MdOutlineCancel
-                            className="absolute top-0 right-2 text-gray-A8"
+                            className="absolute top-0 right-2 text-gray-A8 cursor-pointer"
                             onClick={() => {
-                              deleteAccount(index)
+                              deleteAccount(index, item.UserGuid)
                             }}
                           />
                         )
                       ) : item.UserGuid === userGuid ? (
                         //  若是被揪，顯示登入者自己的 Icon
                         <MdOutlineCancel
-                          className="absolute top-0 right-2 text-gray-A8"
+                          className="absolute top-0 right-2 text-gray-A8 cursor-pointer"
                           onClick={() => {
-                            deleteAccount(index)
+                            deleteAccount(index, item.UserGuid)
                           }}
                         />
                       ) : null}
