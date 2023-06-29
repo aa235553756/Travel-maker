@@ -9,6 +9,7 @@ import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
 // import { BsXCircle } from 'react-icons/bs'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
+import Image from 'next/image'
 
 export async function getServerSideProps({
   req,
@@ -64,10 +65,14 @@ export default function Blog({
   const [activeTab, setActiveTab] = useState(1)
 
   // 無資料時
-  const [noData, setNoData] = useState(false)
+  const [noBlogData, setNoBlogData] = useState(false)
+  
+  // 這邊記得幫我 set 一下草稿遊記無資料時換成圖片
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [noDraftData, setNoDraftData] = useState(false)
   useEffect(() => {
     if (blogData.Message === '已無我的收藏遊記') {
-      setNoData(true)
+      setNoBlogData(true)
     }
   }, [])
 
@@ -108,7 +113,7 @@ export default function Blog({
 
     if (newBlogs.Message === '已無我的行程') {
       setIsLoading(false)
-      setNoData(true)
+      setNoBlogData(true)
     }
 
     if (!newBlogs) {
@@ -201,8 +206,14 @@ export default function Blog({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-col space-y-6">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8">無資料</p>
+                  {noBlogData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     blogData?.BlogData?.map((item) => {
                       console.log(item.Cover)
@@ -230,19 +241,29 @@ export default function Blog({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-col space-y-10">
-                  {Array(20)
-                    .fill('')
-                    .map((item, index) => {
-                      return (
-                        <BlogDraftCard
-                          key={index}
-                          showDelete={true}
-                          blogName="漫步鳥語人森"
-                          poster="小熊的旅行食蹤"
-                          time="2023-03-01 18:00"
-                        />
-                      )
-                    })}
+                  {noDraftData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
+                  ) : (
+                    Array(20)
+                      .fill('')
+                      .map((item, index) => {
+                        return (
+                          <BlogDraftCard
+                            key={index}
+                            showDelete={true}
+                            blogName="漫步鳥語人森"
+                            poster="小熊的旅行食蹤"
+                            time="2023-03-01 18:00"
+                          />
+                        )
+                      })
+                  )}
                 </div>
               )}
             </div>
@@ -250,7 +271,7 @@ export default function Blog({
         </div>
         {/* 電腦版 */}
         {/* 無行程提醒 */}
-        {/* <CustomModal modal={noData} setModal={setNoData} wrapper>
+        {/* <CustomModal modal={noBlogData} setModal={setNoBlogData} wrapper>
           <div className="w-[300px] p-7 bg-white rounded-xl">
             <div className="flex flex-col items-center space-y-4">
               <BsXCircle className="text-5xl text-highlight" />
@@ -314,8 +335,14 @@ export default function Blog({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8">無資料</p>
+                  {noBlogData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     moreBlogData?.map((item) => {
                       return (
@@ -359,23 +386,33 @@ export default function Blog({
               )}
               {activeTab === 2 && (
                 <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
-                  {Array(20)
-                    .fill('')
-                    .map((item, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="w-full py-3 lg:w-1/2 lg:px-3"
-                        >
-                          <BlogDraftCard
-                            showDelete={true}
-                            blogName="漫步鳥語人森"
-                            poster="小熊的旅行食蹤"
-                            time="2023-03-01 18:00"
-                          />
-                        </div>
-                      )
-                    })}
+                  {noDraftData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
+                  ) : (
+                    Array(20)
+                      .fill('')
+                      .map((item, index) => {
+                        return (
+                          <div
+                            key={index}
+                            className="w-full py-3 lg:w-1/2 lg:px-3"
+                          >
+                            <BlogDraftCard
+                              showDelete={true}
+                              blogName="漫步鳥語人森"
+                              poster="小熊的旅行食蹤"
+                              time="2023-03-01 18:00"
+                            />
+                          </div>
+                        )
+                      })
+                  )}
                 </div>
               )}
               {isLoading && <p className="text-lg text-center">loading...</p>}
