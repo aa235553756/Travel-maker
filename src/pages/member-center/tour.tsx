@@ -241,8 +241,6 @@ export default function Tour({
   // 刪除我的房間
   const [roomGuid, setRoomGuid] = useState('')
   const handleDelRoom = async (roomGuid: string) => {
-    console.log('點到了')
-
     try {
       // 【API】主揪刪除房間
       const resDelRoomData = await fetch(
@@ -263,13 +261,9 @@ export default function Tour({
         if (setMoreRoomData !== undefined && updatedBlogs !== undefined) {
           setMoreRoomData(updatedBlogs)
         }
-
-        console.log('刪除成功')
       }
 
       if (resDelRoomData.ok) {
-        console.log('刪除失敗')
-
         return
       }
     } catch (err) {
