@@ -30,7 +30,7 @@ export default function FollowUserCard({
               ></Image>
               <span>{poster}</span>
             </div>
-            <FollowBtn />
+            <FollowBtn isFollow={false} id={''} />
           </div>
         </div> 
       </div>
