@@ -91,7 +91,7 @@ export function HeaderNotifiBlock() {
   return (
     <div
       ref={containerRef}
-      className=" pt-3 overflow-scroll  min-[420px]:w-[356px] w-[calc(100dvw-32px)]  h-[520px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white focus:text-blue-600"
+      className=" pt-3 overflow-scroll  min-[420px]:w-[356px] w-[calc(100vw-32px)]  h-[520px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white focus:text-blue-600"
     >
       <div>
         <h3 className="border-b border-[#DCDCDC]">
