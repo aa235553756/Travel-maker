@@ -5,20 +5,12 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 const initialState = {
   page: 2,
   isShow: true, //控制block state
+  isShowMobile: true,
+  isMoreDataEnd: false,
   data: {
     Status: false,
     Counts: 0,
-    NotificationData: [
-      // {
-      //   text: '預設slice',
-      //   isNew: true,
-      //   isRead: false,
-      //   initDate: '1天前',
-      //   profilePicture: '',
-      //   link: 'http',
-      //   NotificationId: 20000,
-      // },
-    ],
+    NotificationData: [],
   },
 }
 
@@ -28,6 +20,9 @@ export const notifiSlice = createSlice({
   reducers: {
     setIsShow: (state, action: PayloadAction<boolean>) => {
       state.isShow = action.payload
+    },
+    setIsShowMobile: (state, action: PayloadAction<boolean>) => {
+      state.isShowMobile = action.payload
     },
     setNotifiData: (state, action) => {
       state.data = action.payload
@@ -88,6 +83,9 @@ export const notifiSlice = createSlice({
     changeStatus: (state) => {
       state.data.Status = false
     },
+    setIsMoreDataEnd: (state, action) => {
+      state.isMoreDataEnd = action.payload
+    },
   },
 })
 
@@ -95,13 +93,19 @@ export const getNotifi = (state: { notifi: { isShow: boolean } }) =>
   state.notifi
 export const getIsShow = (state: { notifi: { isShow: boolean } }) =>
   state.notifi.isShow
+export const getIsShowMobile = (state: { notifi: { isShowMobile: boolean } }) =>
+  state.notifi.isShowMobile
 export const getData = (state: {
   notifi: { data: NotificationResponseType }
 }) => state.notifi.data
 export const getPage = (state: { notifi: { page: number } }) =>
   state.notifi.page
+export const getIsMoreDataEnd = (state: {
+  notifi: { isMoreDataEnd: boolean }
+}) => state.notifi.isMoreDataEnd
 
 export const { setIsShow } = notifiSlice.actions
+export const { setIsShowMobile } = notifiSlice.actions
 export const { setNotifiData } = notifiSlice.actions
 export const { addNotifiData } = notifiSlice.actions
 export const { setPage } = notifiSlice.actions
@@ -110,5 +114,6 @@ export const { resetNotifiData } = notifiSlice.actions
 export const { clearIsNew } = notifiSlice.actions
 export const { getNewNotifiData } = notifiSlice.actions
 export const { changeStatus } = notifiSlice.actions
+export const { setIsMoreDataEnd } = notifiSlice.actions
 
 export default notifiSlice.reducer

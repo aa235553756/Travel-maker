@@ -75,8 +75,6 @@ export default function HeaderNotifiList({
           // 是否為最新通知 -> 拔除該通知 (接下來重新get資料後會自動跑到先前通知)
           dispatch(clearIsNew(notificationId))
         }
-        const resJSON = await res.json()
-        console.log(resJSON) //通知已讀
 
         const promiseAry = []
 
@@ -108,10 +106,8 @@ export default function HeaderNotifiList({
             throw new Error('網路連線錯誤')
           }
         }
-        console.log(newObj)
 
         dispatch(setNotifiData(newObj))
-        console.log('重新設置及排序新舊')
       } catch (err) {
         alert(err)
       }

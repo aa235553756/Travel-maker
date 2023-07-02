@@ -15,6 +15,7 @@ import {
   getNewNotifiData,
   resetNotifiData,
   resetPage,
+  setIsMoreDataEnd,
   setNotifiData,
 } from '@/redux/notifiSlice'
 
@@ -43,6 +44,7 @@ function App({ Component, pageProps }: AppProps) {
     // 第一次撈通知,或重新登入,設置沒有token時return防止繼續撈資料
     if (token !== undefined) {
       dispatch(resetPage())
+      dispatch(setIsMoreDataEnd(false))
       getNotifications()
     } else {
       return

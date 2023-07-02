@@ -26,13 +26,19 @@ import { useRouter } from 'next/router'
 import HeaderNotifi from './HeaderNotifi'
 import { IoMdNotificationsOutline } from 'react-icons/io'
 import { useDispatch, useSelector } from 'react-redux'
-import { getData, getIsShow, setIsShow } from '@/redux/notifiSlice'
+import {
+  changeStatus,
+  getData,
+  getIsShowMobile,
+  setIsShowMobile,
+} from '@/redux/notifiSlice'
 import { HeaderNotifiBlock } from './HeaderNotifiBlock'
 
 export default function Header() {
   const data = useSelector(getData)
-  const isShow = useSelector(getIsShow)
+  const isShowMobile = useSelector(getIsShowMobile)
   const dispatch = useDispatch()
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const router = useRouter()
   // 漢堡條
@@ -85,6 +91,23 @@ export default function Header() {
   useEffect(() => {
     setShowMember(false)
   }, [router.query])
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutsideMobile)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutsideMobile)
+    }
+
+    function handleClickOutsideMobile(event: MouseEvent) {
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(event.target as HTMLDivElement)
+      ) {
+        dispatch(setIsShowMobile(false))
+      }
+    }
+  }, [dispatch])
 
   return (
     <div className="z-50 relative /overflow-hidden lg:overflow-visible">
@@ -323,16 +346,34 @@ export default function Header() {
                 {token ? (
                   <div
                     className="relative cursor-pointer"
-                    onClick={(e) => {
+                    onClick={async (e) => {
                       e.stopPropagation()
-                      dispatch(setIsShow(!isShow))
+                      dispatch(setIsShowMobile(!isShowMobile))
+                      if (isShowMobile) {
+                        return
+                      }
+                      try {
+                        const token = getCookie('auth')
+                        const myHeaders = new Headers()
+                        if (token !== undefined) {
+                          myHeaders.append('Authorization', String(token))
+                        }
+                        const requestOptions = {
+                          method: 'PUT',
+                          headers: myHeaders,
+                        }
+                        const res = await fetch(
+                          `https://travelmaker.rocket-coding.com/api/users/notifications/reset`,
+                          requestOptions
+                        )
+                        if (res.status === 200) {
+                          dispatch(changeStatus())
+                        }
+                      } finally {
+                        //
+                      }
                     }}
                   >
-                    {isShow ? (
-                      <div className="relative top-[-50px]">
-                        <HeaderNotifiBlock />
-                      </div>
-                    ) : null}
                     {/* icon */}
                     <IoMdNotificationsOutline className="text-3xl  group-hover:text-highlight duration-150" />
                     {/* 紅色圓點 */}
@@ -341,6 +382,11 @@ export default function Header() {
                         {data.Counts > 99 ? '99+' : data.Counts}
                       </div>
                     ) : null}
+                  </div>
+                ) : null}
+                {isShowMobile ? (
+                  <div ref={panelRef} className="absolute right-0 top-[-50px]">
+                    <HeaderNotifiBlock />
                   </div>
                 ) : null}
               </div>

@@ -4,13 +4,21 @@ import { HeaderNotifiNone } from './HeaderNotifiNone'
 import { NotificationRenderType } from '@/util/NotificationDataType'
 import { HeaderCustomSkeleton } from './HeaderCustomSkeleton'
 import translTextAry from '@/constant/notifiData'
-import { getPage, setPage, addNotifiData, getData } from '@/redux/notifiSlice'
+import {
+  getPage,
+  setPage,
+  addNotifiData,
+  getData,
+  getIsMoreDataEnd,
+  setIsMoreDataEnd,
+} from '@/redux/notifiSlice'
 import { getCookie } from 'cookies-next'
 import { debounce } from 'lodash'
 import { useDispatch, useSelector } from 'react-redux'
 
 export function HeaderNotifiBlock() {
   const data = useSelector(getData)
+  const isMoreDataEnd = useSelector(getIsMoreDataEnd)
   const dispatch = useDispatch()
 
   const newestData = translTextAry(
@@ -26,8 +34,6 @@ export function HeaderNotifiBlock() {
 
   const page = useSelector(getPage)
   const [isLoading, setIsLoading] = useState(false)
-
-  const [isMoreDataEnd, setIsMoreDataEnd] = useState(false)
 
   const fetchData = debounce(async () => {
     setIsLoading(true)
@@ -50,7 +56,7 @@ export function HeaderNotifiBlock() {
       const resJSON = await res.json()
       if (res.status === 400) {
         // console.log('頁數已經全部取得')
-        setIsMoreDataEnd(true)
+        dispatch(setIsMoreDataEnd(true))
         return
       }
       dispatch(setPage())
@@ -91,7 +97,7 @@ export function HeaderNotifiBlock() {
   return (
     <div
       ref={containerRef}
-      className=" pt-3 overflow-scroll  min-[420px]:w-[356px] w-[calc(100vw-32px)]  h-[520px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white focus:text-blue-600"
+      className="pt-3 overflow-scroll  min-[421px]:w-[356px] w-[calc(100vw-32px)]  h-[520px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white focus:text-blue-600"
     >
       <div>
         <h3 className="border-b border-[#DCDCDC]">
