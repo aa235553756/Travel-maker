@@ -39,6 +39,7 @@ export default function Header() {
   const isShowMobile = useSelector(getIsShowMobile)
   const dispatch = useDispatch()
   const panelRef = useRef<HTMLDivElement>(null)
+  const memberRef = useRef<HTMLLIElement>(null)
 
   const router = useRouter()
   // 漢堡條
@@ -105,6 +106,23 @@ export default function Header() {
         !panelRef.current.contains(event.target as HTMLDivElement)
       ) {
         dispatch(setIsShowMobile(false))
+      }
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutsideMobile)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutsideMobile)
+    }
+
+    function handleClickOutsideMobile(event: MouseEvent) {
+      if (
+        memberRef.current &&
+        !memberRef.current.contains(event.target as HTMLDivElement)
+      ) {
+        setShowMember(false)
       }
     }
   }, [dispatch])
@@ -190,7 +208,7 @@ export default function Header() {
                 </li>
                 {token ? <HeaderNotifi /> : null}
                 {token ? (
-                  <li className="relative">
+                  <li className="relative" ref={memberRef}>
                     <button
                       type="button"
                       onClick={() => {
