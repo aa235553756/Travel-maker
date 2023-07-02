@@ -3,24 +3,17 @@ import userDefault from 'public/userDefault.png'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
-import {
-  addNotifiData,
-  getPage,
-  setNotifiData,
-  setPage,
-} from '@/redux/notifiSlice'
+import { clearIsNew, getPage, setNotifiData } from '@/redux/notifiSlice'
 import { useDispatch, useSelector } from 'react-redux'
+import {
+  NotificationRenderType,
+  NotificationType,
+} from '@/util/NotificationDataType'
 
 export default function HeaderNotifiList({
   item,
 }: {
-  item: {
-    text: string
-    initDate: string
-    notificationId: number
-    isRead: boolean
-    profilePicture: string
-  }
+  item: NotificationRenderType
 }) {
   const { text, initDate, isRead, profilePicture, notificationId } = item
   const dispatch = useDispatch()
@@ -31,53 +24,7 @@ export default function HeaderNotifiList({
       <Link
         href={''}
         className="min-h-[66px] flex justify-between items-center px-5 py-2"
-        onClick={async () => {
-          try {
-            const token = getCookie('auth')
-            const myHeaders = new Headers()
-            if (token !== undefined) {
-              myHeaders.append('Authorization', String(token))
-            }
-            const requestOptions = {
-              method: 'PUT',
-              headers: myHeaders,
-            }
-            const res = await fetch(
-              `https://travelmaker.rocket-coding.com/api/users/notifications/${notificationId}`,
-              requestOptions
-            )
-            if (res.status === 400) {
-              return
-            }
-            const resJSON = await res.json()
-            console.log(resJSON) //通知已讀
-
-            const promiseAry = []
-
-            for (let i = 1; i <= page; i++) {
-              console.log('active i', i)
-              promiseAry.push(() =>
-                fetch(
-                  `https://travelmaker.rocket-coding.com/api/users/notifications/${i}`,
-                  { method: 'GET', headers: myHeaders }
-                )
-              )
-            }
-            const resAry = await Promise.all(promiseAry.map((fn) => fn()))
-
-            for (let i = 0; i < resAry.length; i++) {
-              if (resAry[i].ok) {
-                const response = resAry[i]
-                const jsonData = await response.json()
-                dispatch(addNotifiData(jsonData))
-              } else {
-                console.log('錯誤')
-              }
-            }
-          } catch (err) {
-            console.log('錯誤捕捉', err)
-          }
-        }}
+        onClick={handelIsRead()}
       >
         {/* 用戶圖片及通知文字 */}
         <div className="flex items-center">
@@ -102,4 +49,72 @@ export default function HeaderNotifiList({
       </Link>
     </li>
   )
+
+  function handelIsRead():
+    | React.MouseEventHandler<HTMLAnchorElement>
+    | undefined {
+    return async () => {
+      try {
+        const token = getCookie('auth')
+        const myHeaders = new Headers()
+        if (token !== undefined) {
+          myHeaders.append('Authorization', String(token))
+        }
+        const requestOptions = {
+          method: 'PUT',
+          headers: myHeaders,
+        }
+        const res = await fetch(
+          `https://travelmaker.rocket-coding.com/api/users/notifications/${notificationId}`,
+          requestOptions
+        )
+        if (res.status === 400) {
+          return
+        }
+        if (item.isNew) {
+          // 是否為最新通知 -> 拔除該通知 (接下來重新get資料後會自動跑到先前通知)
+          dispatch(clearIsNew(notificationId))
+        }
+        const resJSON = await res.json()
+        console.log(resJSON) //通知已讀
+
+        const promiseAry = []
+
+        for (let i = 1; i < page; i++) {
+          promiseAry.push(() =>
+            fetch(
+              `https://travelmaker.rocket-coding.com/api/users/notifications/${i}`,
+              { method: 'GET', headers: myHeaders }
+            )
+          )
+        }
+        const resAry = await Promise.all(promiseAry.map((fn) => fn()))
+
+        const newObj = {
+          Status: false,
+          Counts: 0,
+          NotificationData: [] as NotificationType[],
+        }
+        for (let i = 0; i < resAry.length; i++) {
+          if (resAry[i].ok) {
+            const response = resAry[i]
+            const jsonData = await response.json()
+            jsonData.NotificationData.map((item: NotificationType) =>
+              newObj.NotificationData.push(item)
+            )
+            newObj.Status = jsonData.Status
+            newObj.Counts = jsonData.Counts
+          } else {
+            throw new Error('網路連線錯誤')
+          }
+        }
+        console.log(newObj)
+
+        dispatch(setNotifiData(newObj))
+        console.log('重新設置及排序新舊')
+      } catch (err) {
+        alert(err)
+      }
+    }
+  }
 }

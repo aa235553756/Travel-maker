@@ -24,8 +24,16 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import HeaderNotifi from './HeaderNotifi'
+import { IoMdNotificationsOutline } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import { getData, getIsShow, setIsShow } from '@/redux/notifiSlice'
+import { HeaderNotifiBlock } from './HeaderNotifiBlock'
 
 export default function Header() {
+  const data = useSelector(getData)
+  const isShow = useSelector(getIsShow)
+  const dispatch = useDispatch()
+
   const router = useRouter()
   // 漢堡條
 
@@ -79,7 +87,7 @@ export default function Header() {
   }, [router.query])
 
   return (
-    <div className="z-30 relative overflow-hidden lg:overflow-visible">
+    <div className="z-50 relative /overflow-hidden lg:overflow-visible">
       {/* 電腦版 */}
       <div className="z-10 top-0 w-full hidden shadow border-b-[1px] border-gray-E7 md:h-[120px] md:bg-glass-45 md:items-center md:justify-between lg:flex">
         <div className="container">
@@ -260,7 +268,14 @@ export default function Header() {
                 hamState()
               }}
             />
-            <Link href="/" className={isSearching ? 'hidden' : ''}>
+            <Link
+              href="/"
+              className={
+                isSearching
+                  ? 'hidden'
+                  : 'absolute left-[50%] translate-x-[-50%] z-10'
+              }
+            >
               <h2 className="text-xl max-w-[150px] md:max-w-[170px]">
                 <Image
                   src="/logo.png"
@@ -271,6 +286,7 @@ export default function Header() {
                 />
               </h2>
             </Link>
+
             <div
               className={`${
                 isSearching ? 'left-1/2 translate-x-[-50%] opacity-100' : null
@@ -297,12 +313,37 @@ export default function Header() {
                 }}
               />
             ) : (
-              <BsSearch
-                className="text-2xl z-10"
-                onClick={() => {
-                  searchingState()
-                }}
-              />
+              <div className="flex space-x-4 relative items-center">
+                <BsSearch
+                  className="text-2xl z-10"
+                  onClick={() => {
+                    searchingState()
+                  }}
+                />{' '}
+                {token ? (
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      dispatch(setIsShow(!isShow))
+                    }}
+                  >
+                    {isShow ? (
+                      <div className="relative top-[-50px]">
+                        <HeaderNotifiBlock />
+                      </div>
+                    ) : null}
+                    {/* icon */}
+                    <IoMdNotificationsOutline className="text-3xl  group-hover:text-highlight duration-150" />
+                    {/* 紅色圓點 */}
+                    {data.Status ? ( //發api後控制toggle state，或根據data內的isNew
+                      <div className="absolute bg-highlight  top-0 right-0 translate-y-[-40%] translate-x-[40%] rounded-full px-1  h-[14px] flex justify-center items-center text-white text-xs">
+                        {data.Counts > 99 ? '99+' : data.Counts}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+              </div>
             )}
           </div>
         </div>

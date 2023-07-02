@@ -1,11 +1,9 @@
-// ! 目的印出 根據type的不同文字 , JSX請至相關區域處理,這裏僅處理字串
-// ! 目的2 連結至相關區域
-// ! 目的3 component只要拿textAry就好 => 這邊會是pure function
+import { NotificationType } from '@/util/NotificationDataType'
 
 const translNotifiObj = {
   // 回傳通知所需的 JSX陣列
-  translTextAry: function (arg) {
-    const textAry = arg.map((item) => {
+  translTextAry: function (arg: NotificationType[]) {
+    const textAry = arg.map((item: NotificationType) => {
       return translText(item)
     })
     return textAry
@@ -13,7 +11,7 @@ const translNotifiObj = {
 }
 
 // 根據type,回傳轉換 JSX
-function translText(arg) {
+function translText(arg: NotificationType) {
   const item = {
     isNew: arg.IsNew,
     isRead: arg.IsRead,

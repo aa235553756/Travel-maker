@@ -11,7 +11,12 @@ import wrapper from '@/redux/wrapper'
 import { useEffect } from 'react'
 import { getCookie } from 'cookies-next'
 import { useDispatch } from 'react-redux'
-import { addNotifiData, setNotifiData } from '@/redux/notifiSlice'
+import {
+  getNewNotifiData,
+  resetNotifiData,
+  resetPage,
+  setNotifiData,
+} from '@/redux/notifiSlice'
 
 function App({ Component, pageProps }: AppProps) {
   const token = getCookie('auth')
@@ -33,22 +38,14 @@ function App({ Component, pageProps }: AppProps) {
       method: 'Get',
       headers: myHeaders,
     }
-    console.log('user frist Enter Website')
+    // console.log('第一次使用者進入網站,以及每次重登token被改變時')
 
-    // 第一次撈通知,或重新登入
+    // 第一次撈通知,或重新登入,設置沒有token時return防止繼續撈資料
     if (token !== undefined) {
+      dispatch(resetPage())
       getNotifications()
-      // setTimeout(async () => {
-      //   console.log(5000)
-
-      //   const res = await fetch(
-      //     'https://travelmaker.rocket-coding.com/api/users/notifications/1',
-      //     requestOptions
-      //   )
-      //   const resJSON = await res.json()
-
-      //   dispatch(addNotifiData(resJSON)) //要一個新的dispatch
-      // }, 5000)
+    } else {
+      return
     }
 
     async function getNotifications() {
@@ -57,6 +54,10 @@ function App({ Component, pageProps }: AppProps) {
           'https://travelmaker.rocket-coding.com/api/users/notifications/1',
           requestOptions
         )
+        if (res.status === 400) {
+          dispatch(resetNotifiData()) //防止舊帳號與第一次新帳號的通知重疊
+          return
+        }
         const resJSON = await res.json()
 
         console.log('resJSON', resJSON)
@@ -66,13 +67,30 @@ function App({ Component, pageProps }: AppProps) {
         // finally
       }
     }
-    // const intervalId = setInterval(() => {
-    //   console.log(5000)
-    // }, 5000)
+    const second = 10000
+    const intervalId = setInterval(async () => {
+      try {
+        const res = await fetch(
+          'https://travelmaker.rocket-coding.com/api/users/notifications/1',
+          requestOptions
+        )
+        if (res.status === 400) {
+          dispatch(resetNotifiData()) //防止舊帳號與第一次新帳號的通知重疊
+          return
+        }
+        const resJSON = await res.json()
 
-    // return () => {
-    //   clearInterval(intervalId)
-    // }
+        console.log(second, '每10秒重新取得通知資料')
+
+        dispatch(getNewNotifiData(resJSON))
+      } finally {
+        // finally
+      }
+    }, second)
+
+    return () => {
+      clearInterval(intervalId)
+    }
   }, [dispatch, token])
 
   return (

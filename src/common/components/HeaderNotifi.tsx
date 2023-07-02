@@ -1,16 +1,20 @@
-import { useRouter } from 'next/router'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { IoMdNotifications } from 'react-icons/io'
-import { getData, getIsShow, setIsShow } from '@/redux/notifiSlice'
-import translTextAry from '@/constant/notifiData'
-import Skeleton from 'react-loading-skeleton'
+import {
+  changeStatus,
+  getData,
+  getIsShow,
+  setIsShow,
+} from '@/redux/notifiSlice'
+
 import 'react-loading-skeleton/dist/skeleton.css'
-import HeaderNotifiList from './HeaderNotifiList'
-import { debounce } from 'lodash'
+
+import { getCookie } from 'cookies-next'
+import { HeaderNotifiBlock } from './HeaderNotifiBlock'
 
 export default function HeaderNotifi() {
-  const router = useRouter()
+  // const router = useRouter()
 
   const isShow = useSelector(getIsShow)
   const data = useSelector(getData)
@@ -42,21 +46,36 @@ export default function HeaderNotifi() {
   //   dispatch(setIsShow(false))
   // }, [dispatch, router])
 
-  const newestData = translTextAry(
-    data.NotificationData.filter((item) => item.IsNew)
-  )
-
-  const oldestData = translTextAry(
-    data.NotificationData.filter((item) => !item.IsNew)
-  )
-
   return (
     <li className="relative" ref={panelRef}>
       {/* {String(isShow)} //測試用 */}
       <button
         type="button"
-        onClick={() => {
+        onClick={async () => {
           dispatch(setIsShow(!isShow)) //redux setState
+          if (isShow) {
+            return
+          }
+          try {
+            const token = getCookie('auth')
+            const myHeaders = new Headers()
+            if (token !== undefined) {
+              myHeaders.append('Authorization', String(token))
+            }
+            const requestOptions = {
+              method: 'PUT',
+              headers: myHeaders,
+            }
+            const res = await fetch(
+              `https://travelmaker.rocket-coding.com/api/users/notifications/reset`,
+              requestOptions
+            )
+            if (res.status === 200) {
+              dispatch(changeStatus())
+            }
+          } finally {
+            //
+          }
         }}
         className="flex space-x-2 items-center py-10 group hover:animate-navbar-hover relative "
       >
@@ -65,85 +84,24 @@ export default function HeaderNotifi() {
           <div className="relative">
             {/* icon */}
             <IoMdNotifications className="text-2xl text-primary group-hover:text-highlight duration-150" />
+            {/* {data.Status ? ( //發api後控制toggle state，或根據data內的isNew
+              <div className="absolute bg-highlight top-full left-full translate-x-[100%] translate-y-[-200%] rounded-full w-[32px] h-[18px] text-white text-sm flex items-center justify-center">
+                99+
+              </div>
+            ) : null} */}
             {/* 紅色圓點 */}
-            {true ? ( //發api後控制toggle state，或根據data內的isNew
-              <div className="absolute bg-highlight top-0 right-0 rounded-full w-[10px] h-[10px]"></div>
+            {data.Status ? ( //發api後控制toggle state，或根據data內的isNew
+              <div className="absolute bg-highlight  top-0 right-0 translate-y-[-40%] translate-x-[40%] rounded-full px-1  h-[14px] flex justify-center items-center text-white text-xs">
+                {data.Counts > 99 ? '99+' : data.Counts}
+              </div>
             ) : null}
           </div>
           <span className="text-xl group-hover:text-highlight/80">通知</span>
         </div>
       </button>
       {isShow ? ( //reduex state
-        <div className="pt-3 overflow-scroll w-[356px] h-[520px] border ml-auto absolute right-0 top-[78px] z-10 rounded-lg shadow-lg bg-white focus:text-blue-600">
-          {newestData.length !== 0 ? ( //有新的才顯示
-            <div>
-              <h3 className="border-b border-[#DCDCDC]">
-                <p className="font-bold px-5 pt-2 pb-2">最新通知</p>
-              </h3>
-              <ul>
-                {newestData.map((item, i) => {
-                  return <HeaderNotifiList item={item} key={i} />
-                })}
-              </ul>
-            </div>
-          ) : null}
-          <div>
-            <h3 className="border-b border-[#DCDCDC]">
-              <p className="font-bold px-5 pt-2 pb-2">先前通知</p>
-            </h3>
-            <ul>
-              {oldestData.length === 0 ? <NotifiNone /> : null}
-              {oldestData.map((item, i) => {
-                return <HeaderNotifiList item={item} key={i} />
-              })}
-              <li>
-                <CustomSkeleton />
-              </li>
-            </ul>
-          </div>
-        </div>
+        <HeaderNotifiBlock />
       ) : null}
-    </li>
-  )
-}
-
-function CustomSkeleton() {
-  return (
-    <>
-      <li className=" min-h-[66px] border-b border-[#F5F5F5] px-5 py-2 flex justify-between items-center">
-        {/* 用戶圖片及通知文字 */}
-        <div className="flex items-center w-full">
-          <Skeleton circle className="!w-[40px] h-[40px] mr-2" />
-          {/* <div className="flex flex-col justify-center"> */}
-          <div className="w-full">
-            <Skeleton />
-            <Skeleton className="!w-14" />
-          </div>
-          {/* 佔位 */}
-          <div className="pl-2 min-w-[16px]"></div>
-        </div>
-      </li>
-      <li className=" min-h-[66px] border-b border-[#F5F5F5] px-5 py-2 flex justify-between items-center">
-        {/* 用戶圖片及通知文字 */}
-        <div className="flex items-center w-full">
-          <Skeleton circle className="!w-[40px] h-[40px] mr-2" />
-          {/* <div className="flex flex-col justify-center"> */}
-          <div className="w-full">
-            <Skeleton />
-            <Skeleton className="!w-14" />
-          </div>
-          {/* 佔位 */}
-          <div className="pl-2 min-w-[16px]"></div>
-        </div>
-      </li>
-    </>
-  )
-}
-
-function NotifiNone() {
-  return (
-    <li className="flex flex-col justify-center min-h-[66px] px-5 py-2 border-b border border-[#F5F5F5]">
-      <p className="text-primary">暫無通知</p>
     </li>
   )
 }

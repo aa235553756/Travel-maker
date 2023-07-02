@@ -1,21 +1,23 @@
+import { NotificationResponseType } from '@/util/NotificationDataType'
 import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 // 這裡有顯示state
 const initialState = {
-  page: 1,
-  isShow: true,
+  page: 2,
+  isShow: true, //控制block state
   data: {
-    Status: true,
-    Counts: 12,
+    Status: false,
+    Counts: 0,
     NotificationData: [
-      {
-        text: '預設',
-        isNew: true,
-        isRead: false,
-        initDate: '1天前',
-        profilePicture: '',
-        link: 'http',
-      },
+      // {
+      //   text: '預設slice',
+      //   isNew: true,
+      //   isRead: false,
+      //   initDate: '1天前',
+      //   profilePicture: '',
+      //   link: 'http',
+      //   NotificationId: 20000,
+      // },
     ],
   },
 }
@@ -27,30 +29,22 @@ export const notifiSlice = createSlice({
     setIsShow: (state, action: PayloadAction<boolean>) => {
       state.isShow = action.payload
     },
-    setNotifiData: (state, action: PayloadAction<[]>) => {
+    setNotifiData: (state, action) => {
       state.data = action.payload
     },
-    addNotifiData: (state, action: PayloadAction<[]>) => {
-      // const a = [{ id: 1, state: "new" }];
-      // const b = [{ id: 1 }, { id: 3 }];
+    addNotifiData: (state, action) => {
       const prev = state.data.NotificationData
       const payloadAry = action.payload.NotificationData
 
-      const newAry = [...prev, ...payloadAry]
-      console.log('newAry', newAry)
-
-      payloadAry.push({ NotificationId: 20000 })
-      const newPrevAry = prev.filter(
-        (itemB) =>
+      const plus = prev.filter(
+        (itemB: { NotificationId: number }) =>
           !payloadAry.some(
-            (itemA) => itemA.NotificationId === itemB.NotificationId
+            (itemA: { NotificationId: number }) =>
+              itemA.NotificationId === itemB.NotificationId
           )
       )
 
-      console.log('newPrevAry', newPrevAry)
-
-      const merged = [...newPrevAry, ...payloadAry]
-      console.log('merged', merged)
+      const merged = [...plus, ...payloadAry]
 
       state.data = {
         ...action.payload,
@@ -60,6 +54,40 @@ export const notifiSlice = createSlice({
     setPage: (state) => {
       state.page += 1
     },
+    resetPage: (state) => {
+      state.page = 2
+    },
+    resetNotifiData: (state) => {
+      state.data = initialState.data
+    },
+    clearIsNew: (state, action) => {
+      state.data.NotificationData = state.data.NotificationData.filter(
+        (item: { NotificationId: number }) => {
+          return item.NotificationId !== action.payload
+        }
+      )
+    },
+    getNewNotifiData: (state, action) => {
+      const a = state.data.NotificationData
+      const b = action.payload.NotificationData
+
+      const newA = a.filter(
+        (itemA: { NotificationId: number }) =>
+          !b.some(
+            (itemB: { NotificationId: number }) =>
+              itemB.NotificationId === itemA.NotificationId
+          )
+      )
+      const merged = [...b, ...newA]
+
+      state.data = {
+        ...action.payload,
+        NotificationData: merged,
+      }
+    },
+    changeStatus: (state) => {
+      state.data.Status = false
+    },
   },
 })
 
@@ -67,7 +95,9 @@ export const getNotifi = (state: { notifi: { isShow: boolean } }) =>
   state.notifi
 export const getIsShow = (state: { notifi: { isShow: boolean } }) =>
   state.notifi.isShow
-export const getData = (state: { notifi: { data: [] } }) => state.notifi.data
+export const getData = (state: {
+  notifi: { data: NotificationResponseType }
+}) => state.notifi.data
 export const getPage = (state: { notifi: { page: number } }) =>
   state.notifi.page
 
@@ -75,11 +105,10 @@ export const { setIsShow } = notifiSlice.actions
 export const { setNotifiData } = notifiSlice.actions
 export const { addNotifiData } = notifiSlice.actions
 export const { setPage } = notifiSlice.actions
+export const { resetPage } = notifiSlice.actions
+export const { resetNotifiData } = notifiSlice.actions
+export const { clearIsNew } = notifiSlice.actions
+export const { getNewNotifiData } = notifiSlice.actions
+export const { changeStatus } = notifiSlice.actions
 
 export default notifiSlice.reducer
-
-// 需要在getServerSideProp時就改變state值，然後要去找 extraReducer怎麼寫
-// export const getServerSideProps = wrapper.getServerSideProps((store) => () => {
-// ...
-// return {props:{}}
-// })
