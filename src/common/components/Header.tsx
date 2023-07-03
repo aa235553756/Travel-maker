@@ -232,7 +232,7 @@ export default function Header() {
                             showMemberState()
                           }}
                         >
-                          <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
+                          <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer rounded-t-lg">
                             <div className="flex space-x-6 items-center">
                               <Image
                                 width="52"
@@ -259,7 +259,7 @@ export default function Header() {
                         </Link>
                         <hr />
                         <button
-                          className="block w-full text-left px-5 py-4 hover:bg-gray-100"
+                          className="block w-full text-left px-5 py-4 hover:bg-gray-100 rounded-b-lg"
                           role="menuitem"
                           onClick={() => {
                             deleteCookie('auth')
