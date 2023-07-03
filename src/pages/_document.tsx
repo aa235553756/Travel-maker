@@ -1,10 +1,12 @@
-import { Html, Head, Main, NextScript } from 'next/document'
+import CustomHead from '@/common/components/CustomHead'
+import { Html, Main, NextScript } from 'next/document'
 
 // Server在跑
 export default function Document() {
   return (
     <Html lang="en" className="scroll-smooth">
-      <Head />
+      <CustomHead />
+      {/* <Head /> */}
       <body>
         <Main />
         <NextScript />
