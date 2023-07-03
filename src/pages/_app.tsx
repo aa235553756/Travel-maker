@@ -12,16 +12,15 @@ import { useEffect } from 'react'
 import { getCookie } from 'cookies-next'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  getIsLoading,
   getNewNotifiData,
   resetNotifiData,
   resetPage,
-  setIsLoading,
   setIsMoreDataEnd,
   setNotifiData,
 } from '@/redux/notifiSlice'
 import LoadingAnimate from '@/common/components/LoadingAnimate'
 import { useRouter } from 'next/router'
+import { getIsLoading, setIsLoading } from '@/redux/loadingSlice'
 
 function App({ Component, pageProps }: AppProps) {
   const isLoading = useSelector(getIsLoading)
@@ -67,8 +66,7 @@ function App({ Component, pageProps }: AppProps) {
           return
         }
         const resJSON = await res.json()
-
-        console.log('resJSON', resJSON)
+        // console.log('resJSON', resJSON)
 
         dispatch(setNotifiData(resJSON))
       } finally {

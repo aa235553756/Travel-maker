@@ -3,10 +3,9 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit'
 
 // 這裡有顯示state
 const initialState = {
-  isLoading: false,
   page: 2,
-  isShow: true, //控制block state
-  isShowMobile: true,
+  isShow: false, //控制block state
+  isShowMobile: false,
   isMoreDataEnd: false,
   data: {
     Status: false,
@@ -87,14 +86,9 @@ export const notifiSlice = createSlice({
     setIsMoreDataEnd: (state, action) => {
       state.isMoreDataEnd = action.payload
     },
-    setIsLoading: (state, action) => {
-      state.isLoading = action.payload
-    },
   },
 })
 
-export const getIsLoading = (state: { notifi: { isLoading: boolean } }) =>
-  state.notifi.isLoading
 export const getNotifi = (state: { notifi: { isShow: boolean } }) =>
   state.notifi
 export const getIsShow = (state: { notifi: { isShow: boolean } }) =>
@@ -121,6 +115,5 @@ export const { clearIsNew } = notifiSlice.actions
 export const { getNewNotifiData } = notifiSlice.actions
 export const { changeStatus } = notifiSlice.actions
 export const { setIsMoreDataEnd } = notifiSlice.actions
-export const { setIsLoading } = notifiSlice.actions
 
 export default notifiSlice.reducer

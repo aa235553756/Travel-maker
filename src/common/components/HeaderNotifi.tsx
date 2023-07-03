@@ -6,15 +6,17 @@ import {
   getData,
   getIsShow,
   setIsShow,
+  setIsShowMobile,
 } from '@/redux/notifiSlice'
 
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import { getCookie } from 'cookies-next'
 import { HeaderNotifiBlock } from './HeaderNotifiBlock'
+import { useRouter } from 'next/router'
 
 export default function HeaderNotifi() {
-  // const router = useRouter()
+  const router = useRouter()
 
   const isShow = useSelector(getIsShow)
   const data = useSelector(getData)
@@ -42,9 +44,10 @@ export default function HeaderNotifi() {
   }, [dispatch])
 
   // 換頁時要被關閉
-  // useEffect(() => {
-  //   dispatch(setIsShow(false))
-  // }, [dispatch, router])
+  useEffect(() => {
+    dispatch(setIsShow(false))
+    dispatch(setIsShowMobile(false))
+  }, [dispatch, router.asPath]) //asPatch當href為原址時不會觸發
 
   return (
     <li className="relative" ref={panelRef}>

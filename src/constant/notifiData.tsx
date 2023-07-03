@@ -1,4 +1,5 @@
 import { NotificationType } from '@/util/NotificationDataType'
+import { getCookie } from 'cookies-next'
 
 const translNotifiObj = {
   // 回傳通知所需的 JSX陣列
@@ -12,6 +13,10 @@ const translNotifiObj = {
 
 // 根據type,回傳轉換 JSX
 function translText(arg: NotificationType) {
+  const user = getCookie('user')
+    ? JSON.parse(String(getCookie('user')))
+    : undefined
+
   const item = {
     isNew: arg.IsNew,
     isRead: arg.IsRead,
@@ -20,7 +25,11 @@ function translText(arg: NotificationType) {
     RoomName: arg.RoomName,
     notificationId: arg.NotificationId,
   }
-  const userName = <span className="font-bold">{arg.UserName}</span>
+  const userName = (
+    <span className="font-bold">
+      {arg.UserName === user.UserName ? '你' : arg.UserName}
+    </span>
+  )
   const roomName = (
     <>
       <span className="font-bold">{arg.RoomName}</span>
@@ -34,7 +43,7 @@ function translText(arg: NotificationType) {
         text: (
           <p>
             {userName}
-            編輯了{roomName}
+            編輯了{roomName}。
           </p>
         ),
         link: `/planning-tour/${arg.RoomGuid}`,
@@ -45,7 +54,7 @@ function translText(arg: NotificationType) {
         text: (
           <p>
             你已經被{userName}
-            邀請至{roomName}中
+            邀請至{roomName}中。
           </p>
         ),
         link: `/planning-tour/${arg.RoomGuid}`,
@@ -58,19 +67,19 @@ function translText(arg: NotificationType) {
             {userName}
             將你從
             {roomName}
-            的名單中刪除
+            的名單中刪除。
           </p>
         ),
         link: '',
         ...item,
       }
-    case '房間名稱': //這個不見了，記得跟後端講
+    case '房間名稱':
       return {
         text: (
           <p>
             {userName}將<span className="font-bold">{arg.OldRoomName}</span>
-            -共同編輯行程的名字修改為
-            <span className="font-bold">{arg.NewRoomName}</span>
+            -共同編輯行程的名稱修改為
+            <span className="font-bold">{arg.NewRoomName}</span>。
           </p>
         ),
         link: `/planning-tour/${arg.RoomGuid}`,
@@ -82,10 +91,76 @@ function translText(arg: NotificationType) {
           <p>
             {userName}對{roomName}新增了
             <span className="font-bold">{arg.AddVoteDate}</span>
-            的日期選項
+            的日期選項。
           </p>
         ),
         link: `/planning-tour/${arg.RoomGuid}`,
+        ...item,
+      }
+    case '遊記新增':
+      return {
+        text: (
+          <p>
+            你追蹤的{userName}新增了一篇遊記-
+            <span className="font-bold">{arg.Title}</span>。
+          </p>
+        ),
+        link: `/blog/view-blog/${arg.BlogGuid}`,
+        ...item,
+      }
+    case '遊記喜歡':
+      return {
+        text: (
+          <p>
+            {userName}
+            喜歡你的遊記-
+            <span className="font-bold">{arg.Title}</span>。
+          </p>
+        ),
+        link: `/blog/view-blog/${arg.BlogGuid}`,
+        ...item,
+      }
+    case '遊記留言':
+      return {
+        text: (
+          <p>
+            {userName}
+            對你的遊記-
+            <span className="font-bold">{arg.Title}</span>
+            做了回覆。
+          </p>
+        ),
+        link: `/blog/view-blog/${arg.BlogGuid}`,
+        ...item,
+      }
+    case '留言回覆':
+      return {
+        text: (
+          <p>
+            {userName}
+            對你在遊記-
+            <span className="font-bold">{arg.Title}</span>
+            的留言做了回覆。
+          </p>
+        ),
+        link: `/blog/view-blog/${arg.BlogGuid}`,
+        ...item,
+      }
+    case '社群追蹤':
+      return {
+        text: <p>{userName}追蹤了你。</p>,
+        link: `/social-media`,
+        ...item,
+      }
+    case '行程喜歡':
+      return {
+        text: (
+          <p>
+            {userName}喜歡你的行程-
+            <span className="font-bold">{arg.TourName}</span>
+          </p>
+        ),
+        link: `/random-tour/${arg.TourId}`,
         ...item,
       }
 

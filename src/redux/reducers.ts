@@ -5,6 +5,7 @@ import toursFormReducer from './toursFormSlice'
 import isQueryReducer from './isQuerySlice'
 import geoLocationReducer from './geoLocationSlice'
 import notifiReducer from './notifiSlice'
+import loadingReducer from './loadingSlice'
 
 const rootReducer = combineReducers({
   counter: counterReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   toursForm: toursFormReducer,
   isQuery: isQueryReducer,
   geoLocation: geoLocationReducer,
-  notifi: notifiReducer
+  notifi: notifiReducer,
+  loading: loadingReducer
 });
 
 export default rootReducer;
