@@ -25,6 +25,7 @@ export interface NotificationResponseType {
 }
 
 export interface NotificationRenderType {
+  link: string;
   isNew: boolean;
   isRead: boolean;
   initDate: string;

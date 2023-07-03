@@ -29,7 +29,7 @@ function translText(arg: NotificationType) {
   )
 
   switch (arg.Type) {
-    case '房間編輯': //少
+    case '房間編輯':
       return {
         text: (
           <p>
@@ -37,10 +37,10 @@ function translText(arg: NotificationType) {
             編輯了{roomName}
           </p>
         ),
-        link: 'http',
+        link: `/planning-tour/${arg.RoomGuid}`,
         ...item,
       }
-    case '房間邀請': //少
+    case '房間邀請':
       return {
         text: (
           <p>
@@ -48,10 +48,10 @@ function translText(arg: NotificationType) {
             邀請至{roomName}中
           </p>
         ),
-        link: 'http',
+        link: `/planning-tour/${arg.RoomGuid}`,
         ...item,
       }
-    case '房間退出': //少
+    case '房間退出':
       return {
         text: (
           <p>
@@ -61,9 +61,34 @@ function translText(arg: NotificationType) {
             的名單中刪除
           </p>
         ),
-        link: 'http',
+        link: '',
         ...item,
       }
+    case '房間名稱': //這個不見了，記得跟後端講
+      return {
+        text: (
+          <p>
+            {userName}將<span className="font-bold">{arg.OldRoomName}</span>
+            -共同編輯行程的名字修改為
+            <span className="font-bold">{arg.NewRoomName}</span>
+          </p>
+        ),
+        link: `/planning-tour/${arg.RoomGuid}`,
+        ...item,
+      }
+    case '日期新增':
+      return {
+        text: (
+          <p>
+            {userName}對{roomName}新增了
+            <span className="font-bold">{arg.AddVoteDate}</span>
+            的日期選項
+          </p>
+        ),
+        link: `/planning-tour/${arg.RoomGuid}`,
+        ...item,
+      }
+
     default:
       return {
         text: <p>預設</p>,

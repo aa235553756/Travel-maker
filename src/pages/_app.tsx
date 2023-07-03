@@ -10,18 +10,24 @@ import Footer from './../common/components/Footer'
 import wrapper from '@/redux/wrapper'
 import { useEffect } from 'react'
 import { getCookie } from 'cookies-next'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
+  getIsLoading,
   getNewNotifiData,
   resetNotifiData,
   resetPage,
+  setIsLoading,
   setIsMoreDataEnd,
   setNotifiData,
 } from '@/redux/notifiSlice'
+import LoadingAnimate from '@/common/components/LoadingAnimate'
+import { useRouter } from 'next/router'
 
 function App({ Component, pageProps }: AppProps) {
+  const isLoading = useSelector(getIsLoading)
   const token = getCookie('auth')
   const dispatch = useDispatch()
+  const router = useRouter()
 
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(() => {
@@ -95,8 +101,13 @@ function App({ Component, pageProps }: AppProps) {
     }
   }, [dispatch, token])
 
+  useEffect(() => {
+    dispatch(setIsLoading(false))
+  }, [dispatch, router])
+
   return (
     <div>
+      <LoadingAnimate isLoading={isLoading} />
       <Header />
       <Component {...pageProps} />
       <Footer />

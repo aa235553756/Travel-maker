@@ -3,7 +3,12 @@ import userDefault from 'public/userDefault.png'
 import Image from 'next/image'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
-import { clearIsNew, getPage, setNotifiData } from '@/redux/notifiSlice'
+import {
+  clearIsNew,
+  getPage,
+  setIsLoading,
+  setNotifiData,
+} from '@/redux/notifiSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   NotificationRenderType,
@@ -15,14 +20,15 @@ export default function HeaderNotifiList({
 }: {
   item: NotificationRenderType
 }) {
-  const { text, initDate, isRead, profilePicture, notificationId } = item
+  const { text, initDate, isRead, profilePicture, notificationId, link } = item
+
   const dispatch = useDispatch()
   const page = useSelector(getPage)
 
   return (
     <li className="min-h-[66px] border-b border-[#F5F5F5] hover:bg-[#DCDCDC]">
       <Link
-        href={''}
+        href={link}
         className="min-h-[66px] flex justify-between items-center px-5 py-2"
         onClick={handelIsRead()}
       >
@@ -55,6 +61,8 @@ export default function HeaderNotifiList({
     | undefined {
     return async () => {
       try {
+        dispatch(setIsLoading(true))
+
         const token = getCookie('auth')
         const myHeaders = new Headers()
         if (token !== undefined) {
@@ -110,6 +118,8 @@ export default function HeaderNotifiList({
         dispatch(setNotifiData(newObj))
       } catch (err) {
         alert(err)
+      } finally {
+        //
       }
     }
   }
