@@ -111,7 +111,7 @@ export default function Home({
 
   return (
     <>
-      <CustomHead />
+      <CustomHead title={'Travel Maker | 聚會行程安排'} />
       <div>
         <Banner />
         <WhereIGO
