@@ -2,9 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { getCookie } from 'cookies-next'
 import MemberLayout from '@/modules/MemberCenterPage/MemberLayout'
 import FollowUserCard from '@/modules/MemberCenterPage/components/FollowUserCard'
-import SeeMore from '@/common/components/SeeMore'
 import { MemberCountProps } from '@/util/memberTypes'
 import Head from 'next/head'
+import { MdKeyboardArrowUp } from 'react-icons/md'
+import Image from 'next/image'
+
+interface FollowProps {
+  UserGuid: string
+  UserName: string
+  ProfilePicture: string
+  Blogs: number
+  Follows: number
+  Fans: number
+}
+
+interface FollowDataProps {
+  Message: string
+  FollowCounts: number
+  FollowData: FollowProps[]
+}
 
 export async function getServerSideProps({
   req,
@@ -14,6 +30,18 @@ export async function getServerSideProps({
   res: undefined
 }) {
   const token = getCookie('auth', { req, res })
+
+  // 【API】取得我的追蹤
+  const resFollowData = await fetch(
+    `https://travelmaker.rocket-coding.com/api/users/followers/1`,
+    {
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    }
+  )
+  const followData = await resFollowData.json()
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
@@ -30,21 +58,110 @@ export async function getServerSideProps({
 
   return {
     props: {
+      followData,
       memberCountData,
     },
   }
 }
 
 export default function Track({
+  followData,
   memberCountData,
 }: {
+  followData: FollowDataProps
   memberCountData: MemberCountProps
 }) {
+  // 無資料時
+  const [noData, setNoData] = useState(false)
+  useEffect(() => {
+    if (followData.Message === '已無我的追蹤') {
+      setNoData(true)
+    }
+  }, [])
+
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
   useEffect(() => {
     setCountData(countData)
   }, [countData])
+
+  // 獲取更多資料
+  const user = getCookie('user') ? JSON.parse(String(getCookie('user'))) : null
+  const token = getCookie('auth')
+  const [moreFollowData, setMoreFollowData] = useState(followData.FollowData)
+  const [page, setPage] = useState(2)
+  const [isLoading, setIsLoading] = useState(false)
+  const [toTop, setToTop] = useState(false)
+
+  // 節流 : 每隔設定的秒數才執行函數
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const throttle = <T extends any[]>(
+    callback: (...args: T) => void,
+    time = 1000
+  ) => {
+    let timer: NodeJS.Timeout | null = null
+    return (...args: T) => {
+      if (timer) {
+        return
+      }
+
+      timer = setTimeout(() => {
+        timer = null
+        callback(...args)
+      }, time)
+    }
+  }
+
+  useEffect(() => {
+    const handleScroll = async () => {
+      const clientHeight = document.documentElement.clientHeight
+      const scrollTop = document.documentElement.scrollTop
+      const scrollHeight = document.documentElement.scrollHeight
+
+      if (scrollTop + clientHeight + 100 >= scrollHeight) {
+        const data = await fetch(
+          `https://travelmaker.rocket-coding.com/api/users/followers/${page}`,
+          {
+            headers: {
+              Authorization: `${token}`,
+              'Content-Type': 'application/json',
+            },
+          }
+        )
+
+        const moreData = await data.json()
+
+        if (data.ok) {
+          setMoreFollowData((prevData) => [...prevData, ...moreData.FollowData])
+          setPage((prevPage) => prevPage + 1)
+          setIsLoading(true)
+        }
+
+        if (moreData.Message === '已無我的追蹤') {
+          setIsLoading(false)
+          return
+        }
+      }
+
+      if (window.pageYOffset > 1000) {
+        setToTop(true)
+      } else {
+        setToTop(false)
+      }
+    }
+
+    const throttledScrollHandler = throttle(handleScroll)
+
+    const scrollEventListener = () => {
+      throttledScrollHandler()
+    }
+
+    window.addEventListener('scroll', scrollEventListener)
+
+    return () => {
+      window.removeEventListener('scroll', scrollEventListener)
+    }
+  }, [user, token, page, setMoreFollowData, setPage])
 
   return (
     <>
@@ -64,20 +181,33 @@ export default function Track({
             {/* 詳細資訊區 */}
             <div className="flex flex-col">
               <div className="flex flex-col space-y-6">
-                {Array(20)
-                  .fill('')
-                  .map((item, index) => {
+                {noData ? (
+                  <Image
+                    width={394}
+                    height={437}
+                    alt="圖片"
+                    src={'/no-data.png'}
+                    className="mx-auto pt-[80px]"
+                  />
+                ) : (
+                  moreFollowData?.map((item) => {
                     return (
-                      <div key={index}>
+                      <div key={item.UserGuid}>
                         <FollowUserCard
-                          poster="DesignLab"
-                          posts={2}
-                          fans={10}
-                          followers={1}
+                          poster={item.UserName}
+                          posts={item.Blogs}
+                          fans={item.Fans}
+                          followers={item.Follows}
+                          image={
+                            item.ProfilePicture
+                              ? item.ProfilePicture
+                              : '/userLarge.png'
+                          }
                         />
                       </div>
                     )
-                  })}
+                  })
+                )}
               </div>
             </div>
           </div>
@@ -100,22 +230,53 @@ export default function Track({
             {/* 詳細資訊區 */}
             <div className="md:flex md:flex-col">
               <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
-                {Array(20)
-                  .fill('')
-                  .map((item, index) => {
+                {noData ? (
+                  <Image
+                    width={394}
+                    height={437}
+                    alt="圖片"
+                    src={'/no-data.png'}
+                    className="mx-auto pt-[80px]"
+                  />
+                ) : (
+                  moreFollowData?.map((item) => {
                     return (
-                      <div key={index} className="w-full py-3 lg:w-1/2 lg:px-3">
+                      <div
+                        key={item.UserGuid}
+                        className="w-full py-3 lg:w-1/2 lg:px-3"
+                      >
                         <FollowUserCard
-                          poster="DesignLab"
-                          posts={2}
-                          fans={10}
-                          followers={1}
+                          poster={item.UserName}
+                          posts={item.Blogs}
+                          fans={item.Fans}
+                          followers={item.Follows}
+                          image={
+                            item.ProfilePicture
+                              ? item.ProfilePicture
+                              : '/userLarge.png'
+                          }
                         />
                       </div>
                     )
-                  })}
+                  })
+                )}
+                {/* GoToTop */}
+                {toTop && (
+                  <button
+                    type="button"
+                    className="fixed bottom-5 right-5 text-primary-dark w-[60px] h-[60px] rounded-full shadow-[1px_1px_15px_1px_rgba(0,0,0,0.16)] hover:bg-primary-dark hover:duration-500 hover:text-white hover:-translate-y-2"
+                    onClick={() => {
+                      window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth',
+                      })
+                    }}
+                  >
+                    <MdKeyboardArrowUp className="text-3xl mx-auto" />
+                  </button>
+                )}
               </div>
-              <SeeMore />
+              {isLoading && <p className="text-lg text-center">loading...</p>}
             </div>
           </div>
         </MemberLayout>

@@ -6,6 +6,8 @@ import { CommentDataProps, MemberCountProps } from '@/util/memberTypes'
 import { BsExclamationCircle } from 'react-icons/bs'
 import { CustomModal } from '@/common/components/CustomModal'
 import Head from 'next/head'
+import Image from 'next/image'
+
 
 export async function getServerSideProps({
   req,
@@ -114,7 +116,13 @@ export default function Comment({
             <div className="flex flex-col">
               <div className="flex flex-col space-y-6 md:space-y-10">
                 {noData ? (
-                  <p className="text-lg text-center text-gray-B8">無資料</p>
+                  <Image
+                  width={394}
+                  height={437}
+                  alt="圖片"
+                  src={'/no-data.png'}
+                  className="mx-auto pt-[80px]"
+                />
                 ) : (
                   commentData?.CommentData?.map((item) => {
                     return (
@@ -177,7 +185,13 @@ export default function Comment({
             {/* 詳細資訊區 */}
             <div className="justify-center md:items-center md:flex md:flex-col md:space-y-10  md:mb-[60px] lg:flex-row lg:flex-wrap">
               {noData ? (
-                <p className="text-lg text-gray-B8">無資料</p>
+                <Image
+                width={394}
+                height={437}
+                alt="圖片"
+                src={'/no-data.png'}
+                className="mx-auto pt-[80px]"
+              />
               ) : (
                 commentData?.CommentData?.map((item) => {
                   return (
