@@ -7,11 +7,13 @@ export default function FollowUserCard({
   posts,
   fans,
   followers,
+  image
 }: {
   poster: string
   posts: number
   fans: number
   followers: number
+  image:string
 }) {
   return (
     <div className="shadow-[1px_1px_15px_1px_rgba(1,1,15,0.08)] rounded-md">
@@ -20,7 +22,7 @@ export default function FollowUserCard({
           <div className="flex flex-col items-center space-y-9">
             <div className="flex justify-center items-center space-x-7">
               <Image
-                src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80"
+                src={image}
                 alt="圖片"
                 width={58}
                 height={58}

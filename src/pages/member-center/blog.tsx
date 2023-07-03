@@ -8,6 +8,7 @@ import { BlogDataProps, MemberCountProps } from '@/util/memberTypes'
 // import { BsXCircle } from 'react-icons/bs'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
+import Image from 'next/image'
 import { CustomModal } from '@/common/components/CustomModal'
 import { useRouter } from 'next/router'
 import { postNewDraftBlogApi } from '../../util/blogApi'
@@ -115,10 +116,14 @@ export default function Blog({
   const [activeTab, setActiveTab] = useState(1)
 
   // 無資料時
-  const [noData, setNoData] = useState(false)
+  const [noBlogData, setNoBlogData] = useState(false)
+  
+  // 這邊記得幫我 set 一下草稿遊記無資料時換成圖片
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [noDraftData, setNoDraftData] = useState(false)
   useEffect(() => {
     if (blogData.Message === '已無我的收藏遊記') {
-      setNoData(true)
+      setNoBlogData(true)
     }
   }, [])
 
@@ -168,7 +173,7 @@ export default function Blog({
 
     if (newBlogs.Message === '已無我的行程') {
       setIsLoading(false)
-      setNoData(true)
+      setNoBlogData(true)
     }
 
     if (!newBlogs) {
@@ -361,8 +366,14 @@ export default function Blog({
               {/* tab 內容 */}
               {activeTab === 1 && (
                 <div className="flex flex-col space-y-6">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8">無資料</p>
+                  {noBlogData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     blogData?.BlogData?.map((item) => {
                       console.log(item.Cover)
@@ -415,7 +426,7 @@ export default function Blog({
         </div>
         {/* 電腦版 */}
         {/* 無行程提醒 */}
-        {/* <CustomModal modal={noData} setModal={setNoData} wrapper>
+        {/* <CustomModal modal={noBlogData} setModal={setNoBlogData} wrapper>
           <div className="w-[300px] p-7 bg-white rounded-xl">
             <div className="flex flex-col items-center space-y-4">
               <BsXCircle className="text-5xl text-highlight" />
@@ -481,9 +492,15 @@ export default function Blog({
               </div>
               {/* tab 內容 */}
               {activeTab === 1 && (
-                <div className="flex flex-wrap -my-3 mb-16 lg:-mx-3">
-                  {noData ? (
-                    <p className="text-lg text-gray-B8">無資料</p>
+                <div className="flex flex-wrap justify-center -my-3 mb-16 lg:-mx-3">
+                  {noBlogData ? (
+                    <Image
+                      width={394}
+                      height={437}
+                      alt="圖片"
+                      src={'/no-data.png'}
+                      className="mx-auto pt-[80px]"
+                    />
                   ) : (
                     moreBlogData?.map((item) => {
                       return (
