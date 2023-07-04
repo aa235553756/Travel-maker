@@ -23,8 +23,24 @@ import {
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
+import HeaderNotifi from './HeaderNotifi'
+import { IoMdNotificationsOutline } from 'react-icons/io'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  changeStatus,
+  getData,
+  getIsShowMobile,
+  setIsShowMobile,
+} from '@/redux/notifiSlice'
+import { HeaderNotifiBlock } from './HeaderNotifiBlock'
 
 export default function Header() {
+  const data = useSelector(getData)
+  const isShowMobile = useSelector(getIsShowMobile)
+  const dispatch = useDispatch()
+  const panelRef = useRef<HTMLDivElement>(null)
+  const memberRef = useRef<HTMLLIElement>(null)
+
   const router = useRouter()
   // 漢堡條
 
@@ -73,8 +89,46 @@ export default function Header() {
   // 關鍵字搜尋
   const refKeyWord = useRef<HTMLInputElement | null>(null)
 
+  useEffect(() => {
+    setShowMember(false)
+  }, [router.query])
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutsideMobile)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutsideMobile)
+    }
+
+    function handleClickOutsideMobile(event: MouseEvent) {
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(event.target as HTMLDivElement)
+      ) {
+        dispatch(setIsShowMobile(false))
+      }
+    }
+  }, [dispatch])
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutsideMobile)
+
+    return () => {
+      document.removeEventListener('click', handleClickOutsideMobile)
+    }
+
+    function handleClickOutsideMobile(event: MouseEvent) {
+      if (
+        memberRef.current &&
+        !memberRef.current.contains(event.target as HTMLDivElement)
+      ) {
+        setShowMember(false)
+      }
+    }
+  }, [dispatch])
+
   return (
-    <div className="z-30 relative overflow-hidden lg:overflow-visible">
+    <div className="z-50 relative /overflow-hidden lg:overflow-visible">
       {/* 電腦版 */}
       <div className="z-10 top-0 w-full hidden shadow border-b-[1px] border-gray-E7 md:h-[120px] md:bg-glass-45 md:items-center md:justify-between lg:flex">
         <div className="container">
@@ -152,8 +206,9 @@ export default function Header() {
                     </div>
                   </Link>
                 </li>
+                {token ? <HeaderNotifi /> : null}
                 {token ? (
-                  <li className="relative">
+                  <li className="relative" ref={memberRef}>
                     <button
                       type="button"
                       onClick={() => {
@@ -177,7 +232,7 @@ export default function Header() {
                             showMemberState()
                           }}
                         >
-                          <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer">
+                          <div className="flex justify-between items-center px-5 py-4 hover:bg-gray-100 cursor-pointer rounded-t-lg">
                             <div className="flex space-x-6 items-center">
                               <Image
                                 width="52"
@@ -204,7 +259,7 @@ export default function Header() {
                         </Link>
                         <hr />
                         <button
-                          className="block w-full text-left px-5 py-4 hover:bg-gray-100"
+                          className="block w-full text-left px-5 py-4 hover:bg-gray-100 rounded-b-lg"
                           role="menuitem"
                           onClick={() => {
                             deleteCookie('auth')
@@ -254,7 +309,14 @@ export default function Header() {
                 hamState()
               }}
             />
-            <Link href="/" className={isSearching ? 'hidden' : ''}>
+            <Link
+              href="/"
+              className={
+                isSearching
+                  ? 'hidden'
+                  : 'absolute left-[50%] translate-x-[-50%] z-10'
+              }
+            >
               <h2 className="text-xl max-w-[150px] md:max-w-[170px]">
                 <Image
                   src="/logo.png"
@@ -265,6 +327,7 @@ export default function Header() {
                 />
               </h2>
             </Link>
+
             <div
               className={`${
                 isSearching ? 'left-1/2 translate-x-[-50%] opacity-100' : null
@@ -291,12 +354,60 @@ export default function Header() {
                 }}
               />
             ) : (
-              <BsSearch
-                className="text-2xl z-10"
-                onClick={() => {
-                  searchingState()
-                }}
-              />
+              <div className="flex space-x-4 relative items-center">
+                <BsSearch
+                  className="text-2xl z-10"
+                  onClick={() => {
+                    searchingState()
+                  }}
+                />{' '}
+                {token ? (
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={async (e) => {
+                      e.stopPropagation()
+                      dispatch(setIsShowMobile(!isShowMobile))
+                      if (isShowMobile) {
+                        return
+                      }
+                      try {
+                        const token = getCookie('auth')
+                        const myHeaders = new Headers()
+                        if (token !== undefined) {
+                          myHeaders.append('Authorization', String(token))
+                        }
+                        const requestOptions = {
+                          method: 'PUT',
+                          headers: myHeaders,
+                        }
+                        const res = await fetch(
+                          `https://travelmaker.rocket-coding.com/api/users/notifications/reset`,
+                          requestOptions
+                        )
+                        if (res.status === 200) {
+                          dispatch(changeStatus())
+                        }
+                      } finally {
+                        //
+                      }
+                    }}
+                  >
+                    {/* icon */}
+                    <IoMdNotificationsOutline className="text-3xl  group-hover:text-highlight duration-150" />
+                    {/* 紅色圓點 */}
+                    {data.Status ? ( //發api後控制toggle state，或根據data內的isNew
+                      <div className="absolute bg-highlight  top-0 right-0 translate-y-[-40%] translate-x-[40%] rounded-full px-1  h-[14px] flex justify-center items-center text-white text-xs">
+                        {data.Counts > 99 ? '99+' : data.Counts}
+                      </div>
+                    ) : null}
+                  </div>
+                ) : null}
+                {isShowMobile ? (
+                  <div ref={panelRef} className="absolute right-0 top-[-50px]">
+                    <HeaderNotifiBlock />
+                  </div>
+                ) : null}
+              </div>
             )}
           </div>
         </div>
