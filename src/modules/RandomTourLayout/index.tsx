@@ -502,20 +502,72 @@ export default function RandamTourLayout({
               )}
             </div>
           ) : (
-            <button
-              onClick={() => {
-                handleLink()
-                setLinkEffect(true)
-              }}
-              className="flex items-center group"
-            >
-              <div className="flex-shrink-0 w-[28px] h-[28px] mr-2  border border-black rounded-md flex justify-center items-center  group-hover:border-primary">
-                <BsLink45Deg className="text-lg text-black group-active:text-primary-tint" />
-              </div>
-              <div className="flex-shrink-0 font-bold group-active:text-primary-tint">
-                您的行程
-              </div>
-            </button>
+            <div className="flex items-center">
+              <button
+                onClick={() => {
+                  handleLink()
+                  setLinkEffect(true)
+                }}
+                className="flex items-center group"
+              >
+                <div className="flex-shrink-0 w-[28px] h-[28px] mr-2  border border-black rounded-md flex justify-center items-center  group-hover:border-primary">
+                  <BsLink45Deg className="text-lg text-black group-active:text-primary-tint" />
+                </div>
+                <div className="flex-shrink-0 font-bold group-active:text-primary-tint">
+                  您的行程
+                </div>
+              </button>
+              {isChangeTourName ? (
+                <div className="flex items-center max-h-[28px] cursor-pointer">
+                  <input
+                    type="text"
+                    placeholder="請輸入新的行程名稱"
+                    ref={TourNameInputRef}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleChangeName()
+                        if (TourNameInputRef.current) {
+                          TourNameInputRef.current.blur()
+                        }
+                      }
+                    }}
+                    onBlur={() => {
+                      setTimeout(() => {
+                        setIsChangeTourName(!isChangeTourName)
+                      }, 100)
+                    }}
+                    className="lg:w-[160px] w-[120px] max-h-[28px] px-1 py-1 border border-[#f5f5f5] bg-gary-[#fafafa] mr-2 focus-visible:outline-secondary"
+                  />
+                  <button
+                    className="flex-shrink-0 py-1 px-8 text-white bg-primary rounded-md"
+                    onClick={handleChangeName}
+                  >
+                    儲存
+                  </button>
+                </div>
+              ) : (
+                <div
+                  className="font-bold relative"
+                  onClick={() => {
+                    if (userGuid === UserGuid) {
+                      setIsChangeTourName(!isChangeTourName)
+                    }
+                  }}
+                >
+                  &nbsp;
+                  <div
+                    onAnimationEnd={() => {
+                      setLinkEffect(false)
+                    }}
+                    className={`${
+                      linkEffect && 'animate-fade-in-out'
+                    } z-[-1] absolute text-normal !text-primary opacity-0 top-0 left-[calc(100%+8px)]`}
+                  >
+                    copied！
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
         <div className="mb-5">
