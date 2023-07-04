@@ -69,7 +69,7 @@ export default function Feature() {
 
 function FeatureBlock({ children }: { children: ReactNode }) {
   return (
-    <li className="flex mr-4 mb-4 even:mr-0 lg:mr-6 lg:mb-6 border-2 w-[calc(50%-8px)] lg:w-[calc(50%-12px)] pt-5 px-3 lg:py-12 aspect-square lg:px-12 border-primary text-primary rounded-[20px] lg:rounded-xl">
+    <li className="flex align-baseline mr-4 mb-4 even:mr-0 lg:mr-6 lg:mb-6 border-2 w-[calc(50%-8px)] lg:w-[calc(50%-12px)] pt-5 px-3 lg:py-12 aspect-square lg:px-12 border-primary text-primary rounded-[20px] lg:rounded-xl">
       <div>{children}</div>
     </li>
   )

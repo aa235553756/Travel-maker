@@ -37,8 +37,8 @@ export default function WhereIGO({
 
         <div className="group w-[316px] relative mx-auto md:w-auto lg:mr-0">
           {isLoading && (
-            <div className="bg-black/50 backdrop-blur text-lg text-white flex justify-center items-center w-full h-[148px] absolute top-0 left-0 z-10">
-              安排行程中，請您稍等 ... 
+            <div className="bg-black/50 backdrop-blur text-lg text-white flex justify-center items-center w-full h-[calc(100%-20px)] md:h-[148px]  absolute top-0 left-0 z-10">
+              安排行程中，請您稍等 ...
             </div>
           )}
           <div className="flex flex-wrap justify-center md:justify-start md:flex-nowrap mb-8 lg:-mb-5 relative">
