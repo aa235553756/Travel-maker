@@ -444,9 +444,9 @@ export default function RandamTourLayout({
                 className="flex items-center group"
               >
                 <div className="flex-shrink-0 w-[28px] h-[28px] mr-2  border border-black rounded-md flex justify-center items-center  group-hover:border-primary">
-                  <BsLink45Deg className="text-lg text-black group-hover:text-primary group-active:text-primary-tint" />
+                  <BsLink45Deg className="text-lg text-black group-active:text-primary-tint" />
                 </div>
-                <div className="flex-shrink-0 font-bold group-hover:text-primary group-active:text-primary-tint">
+                <div className="flex-shrink-0 font-bold group-active:text-primary-tint">
                   行程名稱：
                 </div>
               </button>
@@ -502,29 +502,20 @@ export default function RandamTourLayout({
               )}
             </div>
           ) : (
-            // 尚未進入id規劃頁
-            <div className="flex-grow ">
-              <button
-                className="group relative flex px-2 items-center text-gray-73 text-xl border border-black rounded-md"
-                onClick={() => {
-                  handleLink()
-                  setLinkEffect(true)
-                }}
-              >
-                <BsLink45Deg className="mr-2 text-2xl text-black duration-100 group-active:text-primary group-active:border-black" />
-                複製連結
-                <div
-                  onAnimationEnd={() => {
-                    setLinkEffect(false)
-                  }}
-                  className={`${
-                    linkEffect && 'animate-fade-in-out'
-                  } z-[-1] absolute text-normal !text-primary opacity-0 left-[calc(100%+8px)]`}
-                >
-                  copied！
-                </div>
-              </button>
-            </div>
+            <button
+              onClick={() => {
+                handleLink()
+                setLinkEffect(true)
+              }}
+              className="flex items-center group"
+            >
+              <div className="flex-shrink-0 w-[28px] h-[28px] mr-2  border border-black rounded-md flex justify-center items-center  group-hover:border-primary">
+                <BsLink45Deg className="text-lg text-black group-active:text-primary-tint" />
+              </div>
+              <div className="flex-shrink-0 font-bold group-active:text-primary-tint">
+                您的行程
+              </div>
+            </button>
           )}
         </div>
         <div className="mb-5">
