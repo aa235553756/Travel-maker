@@ -11,4 +11,4 @@ export default function DeleteBtn({ onClick }: { onClick?: () => void }) {
       <BsTrash className='text-xl' />
     </button>
   )
-}
+} 

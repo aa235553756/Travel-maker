@@ -16,8 +16,8 @@ export default function UploadCover() {
           setFiles
         }}
         allowMultiple={true}
-        maxFiles={1}
-        server="/api"
+        maxFiles={2}
+        // server="/api"
         name="files"
         labelIdle='<div class="uploadBtn"><div class="uploadIcon"></div><span class="filepond--label-action">上傳封面</span></div>'
       />

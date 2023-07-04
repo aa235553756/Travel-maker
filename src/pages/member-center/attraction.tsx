@@ -12,6 +12,8 @@ import { BsBookmarkX } from 'react-icons/bs'
 // import { BsXCircle } from 'react-icons/bs'
 import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
+import Image from 'next/image'
+
 
 export async function getServerSideProps({
   req,
@@ -185,7 +187,13 @@ export default function Attract({
             <div className="flex flex-col">
               <div className="flex flex-col space-y-6">
                 {noData ? (
-                  <p className="text-lg mx-auto text-gray-B8">無資料</p>
+                  <Image
+                  width={394}
+                  height={437}
+                  alt="圖片"
+                  src={'/no-data.png'}
+                  className="mx-auto pt-[80px]"
+                />
                 ) : (
                   moreAttrData?.map((item) => {
                     return (
@@ -289,7 +297,13 @@ export default function Attract({
             <div>
               <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
                 {noData ? (
-                  <p className="text-lg mx-auto text-gray-B8">無資料</p>
+                 <Image
+                 width={394}
+                 height={437}
+                 alt="圖片"
+                 src={'/no-data.png'}
+                 className="mx-auto pt-[80px]"
+               />
                 ) : (
                   moreAttrData?.map((item) => {
                     return (

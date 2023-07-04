@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { getCookie } from 'cookies-next'
-import { BsPencil, BsBookmarkHeart, BsFillCameraFill } from 'react-icons/bs'
+import { BsPencil, BsBookmarkHeart } from 'react-icons/bs'
 import { FaRegCommentDots } from 'react-icons/fa'
 import { SlSettings } from 'react-icons/sl'
 import { AiOutlineHeart } from 'react-icons/ai'
 import { IoLocationOutline } from 'react-icons/io5'
 import { MemberLayoutProps } from '@/util/memberTypes'
+import Image from 'next/image'
 
 export default function MemberLayout({
   children,
@@ -18,8 +19,15 @@ export default function MemberLayout({
 
   // 這邊避免使用三元運算會報出伺服器與本地 HTML 渲染不一致的問題
   // 可參考 https://nextjs.org/docs/messages/react-hydration-error
-  const [userName, setUserName] = useState()
-  useEffect(() => setUserName(user.UserName), [user])
+  const [userName, setUserName] = useState('')
+  const [picture, setPicture] = useState('')
+
+  useEffect(() => {
+    setUserName(user?.UserName)
+    setPicture(user?.ProfilePicture)
+  }, [user])
+
+
 
   return (
     <div>
@@ -29,12 +37,14 @@ export default function MemberLayout({
           <div className="md:w-1/3 md:flex md:flex-col md:space-y-7">
             {/* 個人資訊區 */}
             <div className="md:member-shadow md:rounded-md md:px-7 md:py-12 md:flex md:flex-col md:space-y-4">
-              <div className="md:bg-gray-D9 rounded-full md:w-[164px] md:h-[164px] md:flex md:flex-col md:items-center md:justify-center md:space-y-2 md:mb-0 md:mx-auto">
-                <p className="md:text-gray-73 md:text-2xl">頭貼</p>
-                <div className="md:border md:border-[#fff] md:rounded-full md:bg-[#fff] md:p-2">
-                  <BsFillCameraFill className="md:text-gray-73" />
-                </div>
-              </div>
+            <Image
+                  width="164"
+                  height="164"
+                  src={picture ? picture : '/userLarge.png'}
+                  alt="圖片"
+                  className="h-[164px] rounded-full mx-auto"
+                ></Image>
+
               <div className="md:flex md:flex-col md:space-y-4 md:text-center">
                 <h3 className="md:text-lg md:font-bold">會員中心-我的帳戶</h3>
                 <p className="md:text-lg">暱稱:{userName}</p>
@@ -125,6 +135,7 @@ export default function MemberLayout({
           {children}
         </div>
       </div>
+    
     </div>
   )
 }

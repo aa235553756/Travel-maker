@@ -169,8 +169,30 @@ export default function VoteDate({
   }
 
   // 刪除聚會日期
-  const handleDelDate = (index: number) => {
-    setSelectedDates((prev) => prev.filter((_, i) => i !== index))
+  const handleDelDate = async (index: number, voteDateId: number) => {
+    try {
+      // 【API】主揪.被揪刪除日期選項
+      const resDelDateData = await fetch(
+        `https://travelmaker.rocket-coding.com/api/rooms/dates/${voteDateId}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      if (resDelDateData.ok) {
+        setSelectedDates((prev) => prev.filter((_, i) => i !== index))
+      }
+
+      if (resDelDateData.ok) {
+        return
+      }
+    } catch (err) {
+      alert(err)
+    }
   }
 
   // 日期確認彈窗
@@ -253,13 +275,13 @@ export default function VoteDate({
                         item.UserGuid === userGuid ? (
                           <MdOutlineCancel
                             onClick={() => {
-                              handleDelDate(index)
+                              handleDelDate(index, item.VoteDateId)
                             }}
                           />
                         ) : (
                           <MdOutlineCancel
                             onClick={() => {
-                              handleDelDate(index)
+                              handleDelDate(index, item.VoteDateId)
                             }}
                           />
                         )
@@ -267,7 +289,7 @@ export default function VoteDate({
                         //  若是被揪，顯示登入者自己的 Icon
                         <MdOutlineCancel
                           onClick={() => {
-                            handleDelDate(index)
+                            handleDelDate(index, item.VoteDateId)
                           }}
                         />
                       ) : (
