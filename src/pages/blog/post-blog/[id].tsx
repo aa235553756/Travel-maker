@@ -608,7 +608,7 @@ export default function PostBlog({ data }: { data: BlogData }) {
       }
 
       const res = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/release/${id}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/release/${id}`,
         requestOptions
       )
 
@@ -650,7 +650,7 @@ export async function getServerSideProps({
   token ? (headers.Authorization = String(token)) : null
 
   const response = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/draft/${id}`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/draft/${id}`,
     {
       method: 'GET',
       headers,

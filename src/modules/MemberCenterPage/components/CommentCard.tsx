@@ -36,7 +36,7 @@ export default function CommentCard({
   const token = getCookie('auth')
 
   // 【API】取得我的景點評論
-  fetch(`https://travelmaker.rocket-coding.com/api/users/comments/${id}`, {
+  fetch(`${process.env.NEXT_PUBLIC_baseUrl}/users/comments/${id}`, {
     method: 'GET',
     headers: {
       Authorization: `${token}`,
@@ -47,7 +47,7 @@ export default function CommentCard({
   // 【API】編輯評論
   const resEditCommentData = async () => {
     const response = await fetch(
-      `https://travelmaker.rocket-coding.com/api/attractions/comments/edit`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/attractions/comments/edit`,
       {
         method: 'PUT',
         headers: {

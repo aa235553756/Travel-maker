@@ -779,7 +779,7 @@ export async function getServerSideProps({
 
     // ======新增被揪======
     token
-      ? await fetch('https://travelmaker.rocket-coding.com/api/rooms/members', {
+      ? await fetch(`${process.env.NEXT_PUBLIC_baseUrl}/rooms/members`, {
           method: 'POST',
           headers,
           body: JSON.stringify({
@@ -791,7 +791,7 @@ export async function getServerSideProps({
 
     // ======取得房間(確定上面先執行)======
     const response = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/${id}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/rooms/${id}`,
       token
         ? {
             headers: {
@@ -805,7 +805,7 @@ export async function getServerSideProps({
 
     //==景點get
     const resHotAttrData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/attractions/search?Page=1`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/attractions/search?Page=1`,
       {
         method: 'GET',
         headers,
@@ -814,7 +814,7 @@ export async function getServerSideProps({
     const hotAttrData = await resHotAttrData.json()
 
     const resMore = await fetch(
-      'https://travelmaker.rocket-coding.com/api/tours/hot/0'
+      `${process.env.NEXT_PUBLIC_baseUrl}/tours/hot/0`
     )
 
     const resMoreJSON = await resMore.json()

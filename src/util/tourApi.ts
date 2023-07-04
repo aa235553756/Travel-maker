@@ -2,7 +2,7 @@ import { geoDefaultValueProp } from "@/util/types"
 
 export function getRandomTours(data: geoDefaultValueProp | undefined) {
   return fetch(
-    'https://travelmaker.rocket-coding.com/api/tours/make',
+    `${process.env.NEXT_PUBLIC_baseUrl}/tours/make`,
     {
       method: 'POST',
       headers: {
@@ -15,13 +15,13 @@ export function getRandomTours(data: geoDefaultValueProp | undefined) {
 
 export function getShareTours(data: string) {
   return fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/share?${data}`
+    `${process.env.NEXT_PUBLIC_baseUrl}/tours/share?${data}`
   )
 }
 
 export function postTours(token: string, TourName: string, AttractionId: number[]) {
   return fetch(
-    'https://travelmaker.rocket-coding.com/api/tours',
+    `${process.env.NEXT_PUBLIC_baseUrl}/tours`,
     {
       method: 'POST',
       headers: {
@@ -43,7 +43,7 @@ export function postModifyTour(
   AttractionId: number[]
 ) {
   return fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/${TourId}/modify`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/tours/${TourId}/modify`,
     {
       method: 'POST',
       headers: {
@@ -60,7 +60,7 @@ export function postModifyTour(
 
 export function postRoomApi(token: string, RoomName: string, Attractions: number[]) {
   return fetch(
-    'https://travelmaker.rocket-coding.com/api/rooms',
+    `${process.env.NEXT_PUBLIC_baseUrl}/rooms`,
     {
       method: 'POST',
       headers: {

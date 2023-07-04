@@ -33,7 +33,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的追蹤
   const resFollowData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/followers/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/followers/1`,
     {
       headers: {
         Authorization: `${token}`,
@@ -45,7 +45,7 @@ export async function getServerSideProps({
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/dataCounts`,
     {
       method: 'GET',
       headers: {
@@ -120,7 +120,7 @@ export default function Track({
 
       if (scrollTop + clientHeight + 100 >= scrollHeight) {
         const data = await fetch(
-          `https://travelmaker.rocket-coding.com/api/users/followers/${page}`,
+          `${process.env.NEXT_PUBLIC_baseUrl}/users/followers/${page}`,
           {
             headers: {
               Authorization: `${token}`,

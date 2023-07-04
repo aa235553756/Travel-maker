@@ -69,7 +69,7 @@ export default function VoteDate({
       if (startDate) {
         // 【API】主揪.被揪新增日期選項
         const resAddDateData = await fetch(
-          `https://travelmaker.rocket-coding.com/api/rooms/dates
+          `${process.env.NEXT_PUBLIC_baseUrl}/rooms/dates
         `,
           {
             method: 'POST',
@@ -121,7 +121,7 @@ export default function VoteDate({
       if (!IsVoted) {
         // 【API】主揪.被揪投票
         const resVoteDateData = await fetch(
-          `https://travelmaker.rocket-coding.com/api/rooms/votes/${VoteDateId}
+          `${process.env.NEXT_PUBLIC_baseUrl}/rooms/votes/${VoteDateId}
       `,
           {
             method: 'POST',
@@ -143,7 +143,7 @@ export default function VoteDate({
       } else if (IsVoted) {
         // 【API】主揪.被揪取消投票
         const resDelVoteDateData = await fetch(
-          `https://travelmaker.rocket-coding.com/api/rooms/votes/${VoteDateId}
+          `${process.env.NEXT_PUBLIC_baseUrl}/rooms/votes/${VoteDateId}
       `,
           {
             method: 'DELETE',
@@ -173,7 +173,7 @@ export default function VoteDate({
     try {
       // 【API】主揪.被揪刪除日期選項
       const resDelDateData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/rooms/dates/${voteDateId}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/rooms/dates/${voteDateId}`,
         {
           method: 'DELETE',
           headers: {

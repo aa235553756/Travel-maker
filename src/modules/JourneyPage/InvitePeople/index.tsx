@@ -121,7 +121,7 @@ export default function InvitePeople({
 
       // 【API】主揪新增被揪
       const resRoomMemberData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/rooms/members`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/rooms/members`,
         {
           method: 'POST',
           headers: {
@@ -162,7 +162,7 @@ export default function InvitePeople({
     try {
       // 【API】主揪刪除被揪.被揪刪除自己
       const resDelAccountData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/rooms/members`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/rooms/members`,
         {
           method: 'DELETE',
           headers: {

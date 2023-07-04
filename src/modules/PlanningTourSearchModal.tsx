@@ -323,9 +323,9 @@ export default function PlanningTourSearchModal({
 
       //【API】給參數搜尋景點
       const resSearchAttrData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/attractions/search${queryParams}&Page=${
-          data.selected + 1
-        }`,
+        `${
+          process.env.NEXT_PUBLIC_baseUrl
+        }/attractions/search${queryParams}&Page=${data.selected + 1}`,
         {
           method: 'GET',
           headers,

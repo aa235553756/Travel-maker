@@ -51,14 +51,12 @@ interface HotDataProps {
 
 export async function getStaticProps() {
   // 【API】試玩行程
-  const resTryData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/try`
-  )
+  const resTryData = await fetch(`${process.env.NEXT_PUBLIC_baseUrl}/tours/try`)
   const tryData = await resTryData.json()
 
   // 【API】首頁 - 取得熱門行程及熱門景點
   const resHotData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/tours/homepage`
+    `${process.env.NEXT_PUBLIC_baseUrl}/tours/homepage`
   )
   const hotData = await resHotData.json()
 
@@ -91,7 +89,7 @@ export default function Home({
     setIsLoading(true)
 
     const resTryData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/try`
+      `${process.env.NEXT_PUBLIC_baseUrl}/tours/try`
     )
     const newData = await resTryData.json()
 

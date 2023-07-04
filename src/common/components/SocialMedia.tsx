@@ -37,7 +37,7 @@ export default function SocialMedia({
     try {
       //【API】按遊記愛心
       const resLikeBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/${blogGuid}/like`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${blogGuid}/like`,
         {
           method: 'POST',
           headers: {
@@ -73,7 +73,7 @@ export default function SocialMedia({
     try {
       //【API】取消遊記愛心
       const resCancelLikeBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/${blogGuid}/like`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${blogGuid}/like`,
         {
           method: 'DELETE',
           headers: {

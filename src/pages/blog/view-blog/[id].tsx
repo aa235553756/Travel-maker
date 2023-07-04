@@ -92,7 +92,7 @@ export async function getServerSideProps({
 
   // 【API】取得單一遊記資訊
   const resViewBlogData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/${id}`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${id}`,
     {
       headers,
     }
@@ -101,7 +101,7 @@ export async function getServerSideProps({
 
   // 【API】取得更多遊記評論
   const resBlogCommentData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/${id}/comments/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${id}/comments/1`,
     {
       headers,
     }
@@ -149,7 +149,7 @@ export default function PostBlog({
     if (!viewBlogData.IsCollect) {
       //【API】收藏遊記
       const resCollectBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/${BlogGuid}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${BlogGuid}/collect`,
         {
           method: 'POST',
           headers: {
@@ -170,7 +170,7 @@ export default function PostBlog({
     } else if (viewBlogData.IsCollect) {
       //【API】取消收藏遊記
       const resCancelCollectBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/${BlogGuid}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${BlogGuid}/collect`,
         {
           method: 'DELETE',
           headers: {
@@ -208,7 +208,7 @@ export default function PostBlog({
     try {
       //【API】新增留言
       const resAddCommentData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/comments/add`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/comments/add`,
         {
           method: 'POST',
           headers: {
@@ -259,7 +259,7 @@ export default function PostBlog({
     try {
       //【API】刪除留言
       const resDelCommentData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/comments/${blogCommentId}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/comments/${blogCommentId}`,
         {
           method: 'PUT',
           headers: {

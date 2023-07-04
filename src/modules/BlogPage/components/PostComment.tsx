@@ -53,7 +53,7 @@ export default function PostComment({
     try {
       //【API】新增回覆
       const resAddReplyData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/replies/add`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/replies/add`,
         {
           method: 'POST',
           headers: {
@@ -96,7 +96,7 @@ export default function PostComment({
     try {
       //【API】刪除回覆
       const resDelReplyData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/replies/${replyId}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/replies/${replyId}`,
         {
           method: 'PUT',
           headers: {
@@ -241,7 +241,7 @@ export default function PostComment({
                   setIsEditComment(false)
                   // 【API】編輯留言
                   fetch(
-                    `https://travelmaker.rocket-coding.com/api/blogs/comments/edit`,
+                    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/comments/edit`,
                     {
                       method: 'PUT',
                       headers: {
@@ -383,7 +383,7 @@ export default function PostComment({
                             })
 
                             const res = await fetch(
-                              `https://travelmaker.rocket-coding.com/api/blogs/replies/edit`,
+                              `${process.env.NEXT_PUBLIC_baseUrl}/blogs/replies/edit`,
                               {
                                 method: 'PUT',
                                 headers: {

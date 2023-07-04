@@ -126,7 +126,7 @@ export default function PlanningTourTitle({
       if (newName !== '' && newName !== undefined) {
         const token = getCookie('auth')
         const res = await fetch(
-          'https://travelmaker.rocket-coding.com/api/rooms/rename',
+          `${process.env.NEXT_PUBLIC_baseUrl}/rooms/rename`,
           {
             method: 'PUT',
             headers: {

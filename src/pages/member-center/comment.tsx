@@ -8,7 +8,6 @@ import { CustomModal } from '@/common/components/CustomModal'
 import Head from 'next/head'
 import Image from 'next/image'
 
-
 export async function getServerSideProps({
   req,
   res,
@@ -20,7 +19,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的景點評論
   const resCommentData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/comments/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/comments/1`,
     {
       method: 'GET',
       headers: {
@@ -33,7 +32,7 @@ export async function getServerSideProps({
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/dataCounts`,
     {
       method: 'GET',
       headers: {
@@ -64,12 +63,9 @@ export default function Comment({
   useEffect(() => {
     if (commentData.Message === '已無我的景點評論') {
       setNoData(true)
-      console.log(commentData);
-      
+      console.log(commentData)
     }
   }, [])
-
-
 
   // 將行程及房間數量往 MemberLayout 傳
   const [countData, setCountData] = useState(memberCountData)
@@ -117,12 +113,12 @@ export default function Comment({
               <div className="flex flex-col space-y-6 md:space-y-10">
                 {noData ? (
                   <Image
-                  width={394}
-                  height={437}
-                  alt="圖片"
-                  src={'/no-data.png'}
-                  className="mx-auto pt-[80px]"
-                />
+                    width={394}
+                    height={437}
+                    alt="圖片"
+                    src={'/no-data.png'}
+                    className="mx-auto pt-[80px]"
+                  />
                 ) : (
                   commentData?.CommentData?.map((item) => {
                     return (
@@ -186,12 +182,12 @@ export default function Comment({
             <div className="justify-center md:items-center md:flex md:flex-col md:space-y-10  md:mb-[60px] lg:flex-row lg:flex-wrap">
               {noData ? (
                 <Image
-                width={394}
-                height={437}
-                alt="圖片"
-                src={'/no-data.png'}
-                className="mx-auto pt-[80px]"
-              />
+                  width={394}
+                  height={437}
+                  alt="圖片"
+                  src={'/no-data.png'}
+                  className="mx-auto pt-[80px]"
+                />
               ) : (
                 commentData?.CommentData?.map((item) => {
                   return (

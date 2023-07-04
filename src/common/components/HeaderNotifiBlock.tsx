@@ -50,7 +50,7 @@ export function HeaderNotifiBlock() {
       }
 
       const res = await fetch(
-        `https://travelmaker.rocket-coding.com/api/users/notifications/${page}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/users/notifications/${page}`,
         requestOptions
       )
       const resJSON = await res.json()

@@ -49,11 +49,9 @@ export default function randomTourId({
 export async function getServerSideProps(context: { query: { id: number } }) {
   try {
     const { id } = context.query
-    const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/${id}`
-    )
+    const res = await fetch(`${process.env.NEXT_PUBLIC_baseUrl}/tours/${id}`)
     const resMore = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/hot/${id}`
+      `${process.env.NEXT_PUBLIC_baseUrl}/tours/hot/${id}`
     )
 
     const resJSON = await res.json()

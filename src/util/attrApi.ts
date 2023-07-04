@@ -9,7 +9,7 @@ export function getAttractions(id: number, token?: string | boolean | null | und
   }
 
   return fetch(
-    `https://travelmaker.rocket-coding.com/api/attractions/${id}`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/attractions/${id}`,
     {
       headers
     }
@@ -18,7 +18,7 @@ export function getAttractions(id: number, token?: string | boolean | null | und
 
 export function changeCollectApi(AttractionId: number, method: string, token: string | boolean | null | undefined, isCollect: boolean) {
   return fetch(
-    `https://travelmaker.rocket-coding.com/api/attractions/${AttractionId}/collect`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/attractions/${AttractionId}/collect`,
     {
       method,
       headers: {
@@ -35,7 +35,7 @@ export function changeCollectApi(AttractionId: number, method: string, token: st
 
 export function postAttrComment(token: string, AttractionId: number, commetInputRef: React.RefObject<HTMLTextAreaElement>, commentStar: number) {
   return fetch(
-    'https://travelmaker.rocket-coding.com/api/attractions/comments/add',
+    `${process.env.NEXT_PUBLIC_baseUrl}/attractions/comments/add`,
     {
       method: 'POST',
       headers: {

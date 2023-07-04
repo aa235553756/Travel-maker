@@ -72,7 +72,7 @@ export default function HeaderNotifiList({
           headers: myHeaders,
         }
         const res = await fetch(
-          `https://travelmaker.rocket-coding.com/api/users/notifications/${notificationId}`,
+          `${process.env.NEXT_PUBLIC_baseUrl}/users/notifications/${notificationId}`,
           requestOptions
         )
         if (res.status === 400) {
@@ -88,8 +88,11 @@ export default function HeaderNotifiList({
         for (let i = 1; i < page; i++) {
           promiseAry.push(() =>
             fetch(
-              `https://travelmaker.rocket-coding.com/api/users/notifications/${i}`,
-              { method: 'GET', headers: myHeaders }
+              `${process.env.NEXT_PUBLIC_baseUrl}/users/notifications/${i}`,
+              {
+                method: 'GET',
+                headers: myHeaders,
+              }
             )
           )
         }

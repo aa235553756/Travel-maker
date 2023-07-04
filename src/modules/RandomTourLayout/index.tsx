@@ -1170,7 +1170,7 @@ export default function RandamTourLayout({
     try {
       if (newName !== '' && newName !== undefined) {
         const res = await fetch(
-          `https://travelmaker.rocket-coding.com/api/tours/${query.id}/rename`,
+          `${process.env.NEXT_PUBLIC_baseUrl}/tours/${query.id}/rename`,
           {
             method: 'PUT',
             headers: {

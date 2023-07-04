@@ -25,7 +25,7 @@ export default function ForgotPwd() {
     setIsLoading(true)
     try {
       const res = await fetch(
-        'https://travelmaker.rocket-coding.com/api/users/forgotPassword',
+        `${process.env.NEXT_PUBLIC_baseUrl}/users/forgotPassword`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

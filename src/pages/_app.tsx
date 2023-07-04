@@ -58,7 +58,7 @@ function App({ Component, pageProps }: AppProps) {
     async function getNotifications() {
       try {
         const res = await fetch(
-          'https://travelmaker.rocket-coding.com/api/users/notifications/1',
+          `${process.env.NEXT_PUBLIC_baseUrl}/users/notifications/1`,
           requestOptions
         )
         if (res.status === 400) {
@@ -77,7 +77,7 @@ function App({ Component, pageProps }: AppProps) {
     const intervalId = setInterval(async () => {
       try {
         const res = await fetch(
-          'https://travelmaker.rocket-coding.com/api/users/notifications/1',
+          `${process.env.NEXT_PUBLIC_baseUrl}/users/notifications/1`,
           requestOptions
         )
         if (res.status === 400) {

@@ -25,7 +25,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏行程
   const resTourData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/tours/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/tours/1`,
     {
       method: 'GET',
       headers: {
@@ -38,7 +38,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏房間
   const resRoomData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/rooms/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/rooms/1`,
     {
       method: 'GET',
       headers: {
@@ -51,7 +51,7 @@ export async function getServerSideProps({
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/dataCounts`,
     {
       method: 'GET',
       headers: {
@@ -125,7 +125,7 @@ export default function Tour({
 
   const getMoreTourData = async (page: number) => {
     const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/users/tours/${page}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/users/tours/${page}`,
       {
         method: 'GET',
         headers: {
@@ -151,7 +151,7 @@ export default function Tour({
 
   const getMoreRoomData = async (page: number) => {
     const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/users/rooms/${page}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/users/rooms/${page}`,
       {
         method: 'GET',
         headers: {
@@ -211,7 +211,7 @@ export default function Tour({
     try {
       // 【API】刪除自己的行程
       const resDelTourData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/tours/${tourId}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/tours/${tourId}`,
         {
           method: 'DELETE',
           headers: {
@@ -244,7 +244,7 @@ export default function Tour({
     try {
       // 【API】主揪刪除房間
       const resDelRoomData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/rooms/${roomGuid}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/rooms/${roomGuid}`,
         {
           method: 'PUT',
           headers: {
