@@ -5,7 +5,7 @@ export function postRoomTours(
   RoomGuid: string,
   AttrationsData: RoomAttractionsProp[]
 ) {
-  return fetch('https://travelmaker.rocket-coding.com/api/rooms/modify', {
+  return fetch(`${process.env.NEXT_PUBLIC_baseUrl}/rooms/modify`, {
     method: 'POST',
     headers: {
       Authorization: String(token),

@@ -423,7 +423,7 @@ export default function Login() {
 
       // travel_maker login
       const res = await fetch(
-        'https://travelmaker.rocket-coding.com/api/users/register',
+        `${process.env.NEXT_PUBLIC_baseUrl}/users/register`,
         {
           method: 'POST',
           headers: {

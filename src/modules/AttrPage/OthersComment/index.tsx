@@ -110,7 +110,7 @@ export default function OtherComment({
         onClick={async () => {
           try {
             const res = await fetch(
-              'https://travelmaker.rocket-coding.com/api/attractions/comments',
+              `${process.env.NEXT_PUBLIC_baseUrl}/attractions/comments`,
               {
                 method: 'POST',
                 headers: {

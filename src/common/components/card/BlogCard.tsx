@@ -77,7 +77,7 @@ export default function BlogCard({
     try {
       // 【 API 】刪除遊記
       const resDelBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/remove/${id}`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/remove/${id}`,
         {
           method: 'PUT',
           headers: {
@@ -112,8 +112,7 @@ export default function BlogCard({
           onClick={(e) => {
             e.preventDefault()
             router.push(`/blog/view-blog/${id}`)
-            console.log(id);
-            
+            console.log(id)
           }}
           className="absolute w-full h-full z-10 cursor-pointer"
         ></a>

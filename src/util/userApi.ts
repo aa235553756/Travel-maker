@@ -3,7 +3,7 @@ import { LoginFormProp } from "@/pages/login"
 
 export function loginApi(data: LoginFormProp) {
   return fetch(
-    'https://travelmaker.rocket-coding.com/api/users/login',
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/login`,
     {
       method: 'POST',
       headers: {

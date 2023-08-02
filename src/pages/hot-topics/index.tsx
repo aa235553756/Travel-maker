@@ -99,7 +99,7 @@ export async function getServerSideProps({
 
     // 【API】給參數搜尋行程
     const resHotTourData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/search?&Keyword=${
+      `${process.env.NEXT_PUBLIC_baseUrl}/tours/search?&Keyword=${
         query.Keyword ? query.Keyword : ''
       }&Page=1`,
       {
@@ -110,7 +110,7 @@ export async function getServerSideProps({
 
     // 【API】給參數搜尋景點
     const resHotAttrData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/attractions/search?&Keyword=${
+      `${process.env.NEXT_PUBLIC_baseUrl}/attractions/search?&Keyword=${
         query.Keyword ? query.Keyword : ''
       }&Page=1`,
       {
@@ -121,7 +121,7 @@ export async function getServerSideProps({
 
     // 【API】給參數搜尋遊記
     const resHotBlogData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/blogs/search?&Keyword=${
+      `${process.env.NEXT_PUBLIC_baseUrl}/blogs/search?&Keyword=${
         query.Keyword ? query.Keyword : ''
       }&Page=1`,
       {
@@ -223,7 +223,7 @@ export default function HotTopics({
   )
   const [tourNoData, setTourNoData] = useState(false)
   const [tourPage, setTourPage] = useState(hotTourData?.TotalPages)
-  const baseTourUrl = 'https://travelmaker.rocket-coding.com/api/tours/search'
+  const baseTourUrl = `${process.env.NEXT_PUBLIC_baseUrl}/tours/search`
 
   // 控制換頁 & 點擊搜尋查詢行程
   const handleTourPageClick = async (data: { selected: number }) => {
@@ -276,7 +276,7 @@ export default function HotTopics({
   const handleClickLiked = async (IsLike: boolean, TourId: number) => {
     if (!IsLike) {
       //【API】用戶把行程按愛心
-      fetch(`https://travelmaker.rocket-coding.com/api/tours/${TourId}/like`, {
+      fetch(`${process.env.NEXT_PUBLIC_baseUrl}/tours/${TourId}/like`, {
         method: 'POST',
         headers: {
           Authorization: `${token}`,
@@ -293,7 +293,7 @@ export default function HotTopics({
       setTourData(newTours)
     } else if (IsLike) {
       //【API】用戶取消行程愛心
-      fetch(`https://travelmaker.rocket-coding.com/api/tours/${TourId}/like`, {
+      fetch(`${process.env.NEXT_PUBLIC_baseUrl}/tours/${TourId}/like`, {
         method: 'DELETE',
         headers: {
           Authorization: `${token}`,
@@ -315,7 +315,7 @@ export default function HotTopics({
   const handleCopyTour = async (TourId: number) => {
     //【API】用戶複製行程
     const resCopyTourData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/tours/${TourId}/duplicate`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/tours/${TourId}/duplicate`,
       {
         method: 'POST',
         headers: {
@@ -340,8 +340,7 @@ export default function HotTopics({
   const [attrNoData, setAttrNoData] = useState(false)
   const [attrPage, setAttrPage] = useState(hotAttrData?.TotalPages)
 
-  const baseAttrUrl =
-    'https://travelmaker.rocket-coding.com/api/attractions/search'
+  const baseAttrUrl = `${process.env.NEXT_PUBLIC_baseUrl}/attractions/search`
 
   // 控制換頁 & 點擊搜尋查詢景點
   const handleAttrPageClick = async (data: { selected: number }) => {
@@ -422,7 +421,7 @@ export default function HotTopics({
     if (!IsCollect) {
       //【API】收藏景點
       const resCollectAttrData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/attractions/${AttractionId}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/attractions/${AttractionId}/collect`,
         {
           method: 'POST',
           headers: {
@@ -448,7 +447,7 @@ export default function HotTopics({
     } else if (IsCollect) {
       //【API】取消收藏景點
       const resCancelCollectAttrData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/attractions/${AttractionId}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/attractions/${AttractionId}/collect`,
         {
           method: 'DELETE',
           headers: {
@@ -486,7 +485,7 @@ export default function HotTopics({
 
     // 【API】主揪.被揪加景點進房間前需要get所在的房間
     const resGetRoomData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/getRooms/${AttractionId}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/rooms/getRooms/${AttractionId}`,
       {
         method: 'GET',
         headers: {
@@ -504,7 +503,7 @@ export default function HotTopics({
   const handleAddAttr = async (RoomGuid: string, addAttrId: number) => {
     //【API】主揪.被揪加景點進房間
     const resAddAttrData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/addAttractions`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/rooms/addAttractions`,
       {
         method: 'POST',
         headers: {
@@ -540,7 +539,7 @@ export default function HotTopics({
   )
   const [blogNoData, setBlogNoData] = useState(false)
   const [blogPage, setBlogPage] = useState(hotBlogData?.TotalPages)
-  const baseBlogUrl = 'https://travelmaker.rocket-coding.com/api/blogs/search'
+  const baseBlogUrl = `${process.env.NEXT_PUBLIC_baseUrl}/blogs/search`
 
   // 控制換頁& 點擊搜尋查詢遊記
   const handleBlogPageClick = async (data: { selected: number }) => {
@@ -599,7 +598,7 @@ export default function HotTopics({
     if (!IsCollect) {
       //【API】收藏遊記
       const resCollectBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/${BlogGuid}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${BlogGuid}/collect`,
         {
           method: 'POST',
           headers: {
@@ -625,7 +624,7 @@ export default function HotTopics({
     } else if (IsCollect) {
       //【API】取消收藏遊記
       const resCancelCollectBlogData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/blogs/${BlogGuid}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${BlogGuid}/collect`,
         {
           method: 'DELETE',
           headers: {

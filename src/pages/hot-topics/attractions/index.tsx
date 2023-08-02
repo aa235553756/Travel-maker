@@ -15,7 +15,6 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 
-
 interface Attractions {
   IsCollect: boolean
   AttractionId: number
@@ -57,7 +56,7 @@ export async function getServerSideProps({
 
     // 【API】給參數搜尋景點
     const resHotAttrData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/attractions/search?Page=1`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/attractions/search?Page=1`,
       {
         headers: {
           Authorization: `${token ?? undefined}`,
@@ -133,8 +132,7 @@ export default function HotTopics({
   const [selectedDistrict, setSelectedDistrict] = useState<string[]>([])
   const [keyWordValue, setKeyWordValue] = useState('')
 
-  const baseAttrUrl =
-    'https://travelmaker.rocket-coding.com/api/attractions/search'
+  const baseAttrUrl = `${process.env.NEXT_PUBLIC_baseUrl}/attractions/search`
 
   // 将 type 和 district 的值轉為 &=
   const typeParams = selectedType
@@ -200,7 +198,7 @@ export default function HotTopics({
     if (!IsCollect) {
       //【API】收藏景點
       const resCollectAttrData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/attractions/${AttractionId}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/attractions/${AttractionId}/collect`,
         {
           method: 'POST',
           headers: {
@@ -226,7 +224,7 @@ export default function HotTopics({
     } else if (IsCollect) {
       //【API】取消收藏景點
       const resCancelCollectAttrData = await fetch(
-        `https://travelmaker.rocket-coding.com/api/attractions/${AttractionId}/collect`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/attractions/${AttractionId}/collect`,
         {
           method: 'DELETE',
           headers: {
@@ -262,7 +260,7 @@ export default function HotTopics({
     }
     // 【API】主揪.被揪加景點進房間前需要get所在的房間
     const resGetRoomData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/getRooms/${AttractionId}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/rooms/getRooms/${AttractionId}`,
       {
         method: 'GET',
         headers: {
@@ -284,7 +282,7 @@ export default function HotTopics({
     }
     //【API】主揪.被揪加景點進房間
     const resAddAttrData = await fetch(
-      `https://travelmaker.rocket-coding.com/api/rooms/addAttractions`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/rooms/addAttractions`,
       {
         method: 'POST',
         headers: {

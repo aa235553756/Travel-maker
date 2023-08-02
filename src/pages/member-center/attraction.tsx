@@ -14,7 +14,6 @@ import { MdKeyboardArrowUp } from 'react-icons/md'
 import Head from 'next/head'
 import Image from 'next/image'
 
-
 export async function getServerSideProps({
   req,
   res,
@@ -26,7 +25,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏景點
   const resAttrData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/attractions/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/attractions/1`,
     {
       method: 'GET',
       headers: {
@@ -39,7 +38,7 @@ export async function getServerSideProps({
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/dataCounts`,
     {
       method: 'GET',
       headers: {
@@ -52,7 +51,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏房間
   const resRoomData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/rooms/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/rooms/1`,
     {
       method: 'GET',
       headers: {
@@ -116,7 +115,7 @@ export default function Attract({
 
   const getMoreAttrData = async (page: number) => {
     const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/users/rooms/${page}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/users/rooms/${page}`,
       {
         method: 'GET',
         headers: {
@@ -188,12 +187,12 @@ export default function Attract({
               <div className="flex flex-col space-y-6">
                 {noData ? (
                   <Image
-                  width={394}
-                  height={437}
-                  alt="圖片"
-                  src={'/no-data.png'}
-                  className="mx-auto pt-[80px]"
-                />
+                    width={394}
+                    height={437}
+                    alt="圖片"
+                    src={'/no-data.png'}
+                    className="mx-auto pt-[80px]"
+                  />
                 ) : (
                   moreAttrData?.map((item) => {
                     return (
@@ -297,13 +296,13 @@ export default function Attract({
             <div>
               <div className="flex flex-wrap -my-3 mb-[60px] lg:-mx-3">
                 {noData ? (
-                 <Image
-                 width={394}
-                 height={437}
-                 alt="圖片"
-                 src={'/no-data.png'}
-                 className="mx-auto pt-[80px]"
-               />
+                  <Image
+                    width={394}
+                    height={437}
+                    alt="圖片"
+                    src={'/no-data.png'}
+                    className="mx-auto pt-[80px]"
+                  />
                 ) : (
                   moreAttrData?.map((item) => {
                     return (

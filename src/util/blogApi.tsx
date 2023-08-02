@@ -3,7 +3,7 @@ export function postNewDraftBlogApi(
   TourId: number,
   token: string | boolean | null | undefined
 ) {
-  return fetch(`https://travelmaker.rocket-coding.com/api/blogs/${TourId}`, {
+  return fetch(`${process.env.NEXT_PUBLIC_baseUrl}/blogs/${TourId}`, {
     method: 'POST',
     headers: {
       Authorization: `${token}`,
@@ -18,8 +18,5 @@ export function saveBlogApi(requestOptions: {
   headers: Headers
   body: FormData
 }) {
-  return fetch(
-    'https://travelmaker.rocket-coding.com/api/blogs/edit',
-    requestOptions
-  )
+  return fetch(`${process.env.NEXT_PUBLIC_baseUrl}/blogs/edit`, requestOptions)
 }

@@ -70,7 +70,7 @@ export default function HeaderNotifi() {
               headers: myHeaders,
             }
             const res = await fetch(
-              `https://travelmaker.rocket-coding.com/api/users/notifications/reset`,
+              `${process.env.NEXT_PUBLIC_baseUrl}/users/notifications/reset`,
               requestOptions
             )
             if (res.status === 200) {

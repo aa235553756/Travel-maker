@@ -30,7 +30,7 @@ export async function getServerSideProps({
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/dataCounts`,
     {
       method: 'GET',
       headers: {
@@ -102,7 +102,7 @@ export default function MemberCenter({
 
     // 【API】修改密碼(會員中心)
     const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/users/changePassword`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/users/changePassword`,
       {
         method: 'PUT',
         headers: {
@@ -153,7 +153,7 @@ export default function MemberCenter({
 
     try {
       const res = await fetch(
-        `https://travelmaker.rocket-coding.com/api/users/profile`,
+        `${process.env.NEXT_PUBLIC_baseUrl}/users/profile`,
         {
           method: 'POST',
           headers: {
@@ -179,17 +179,14 @@ export default function MemberCenter({
 
   // 修改暱稱
   const handleNickname = async () => {
-    const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/users/name`,
-      {
-        method: 'PUT',
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(nicknameValue),
-      }
-    )
+    const res = await fetch(`${process.env.NEXT_PUBLIC_baseUrl}/users/name`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(nicknameValue),
+    })
 
     if (res.ok) {
       const resJson = await res.json()

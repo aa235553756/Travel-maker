@@ -14,36 +14,30 @@ export default function FollowBtn({
 
   const handleFollow = async () => {
     // 【API】新增追蹤
-    await fetch(
-      `https://travelmaker.rocket-coding.com/api/blogs/follow/${id}`,
-      {
-        method: 'POST',
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    await fetch(`${process.env.NEXT_PUBLIC_baseUrl}/blogs/follow/${id}`, {
+      method: 'POST',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
   }
 
   const handleCancelFollow = async () => {
     // 【API】取消追蹤
-    await fetch(
-      `https://travelmaker.rocket-coding.com/api/blogs/follow/${id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Authorization: `${token}`,
-          'Content-Type': 'application/json',
-        },
-      }
-    )
+    await fetch(`${process.env.NEXT_PUBLIC_baseUrl}/blogs/follow/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
   }
 
   const handleGetFollow = async () => {
     // 【API】顯示粉絲
     await fetch(
-      `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/fans/1`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${user.UserGuid}/fans/1`,
       {
         headers: {
           Authorization: `${token}`,

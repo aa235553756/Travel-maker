@@ -75,7 +75,7 @@ export async function getServerSideProps({
 
   // 【API】取得單一用戶社群頁面(遊記)
   const resBlogsData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/profile/${user.UserGuid}`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/profile/${user.UserGuid}`,
     {
       headers: {
         Authorization: `${token}`,
@@ -87,7 +87,7 @@ export async function getServerSideProps({
 
   // 【API】顯示粉絲
   const resFansData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/fans/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${user.UserGuid}/fans/1`,
     {
       headers: {
         Authorization: `${token}`,
@@ -99,7 +99,7 @@ export async function getServerSideProps({
 
   // 【API】顯示追蹤
   const resFollowsData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/follows/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${user.UserGuid}/follows/1`,
     {
       headers: {
         Authorization: `${token}`,
@@ -168,7 +168,7 @@ export default function MyBlog({
       if (scrollTop + clientHeight + 100 >= scrollHeight) {
         setLoading(true)
         const data = await fetch(
-          `https://travelmaker.rocket-coding.com/api/blogs/profile/${user.UserGuid}/${page}`,
+          `${process.env.NEXT_PUBLIC_baseUrl}/blogs/profile/${user.UserGuid}/${page}`,
           {
             headers: {
               Authorization: `${token}`,
@@ -245,7 +245,7 @@ export default function MyBlog({
               onClick={async () => {
                 setActiveTab(2)
                 const resFansData = await fetch(
-                  `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/fans/1`,
+                  `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${user.UserGuid}/fans/1`,
                   {
                     headers: {
                       Authorization: `${token}`,
@@ -270,7 +270,7 @@ export default function MyBlog({
               onClick={async () => {
                 setActiveTab(3)
                 const resFollowsData = await fetch(
-                  `https://travelmaker.rocket-coding.com/api/blogs/${user.UserGuid}/follows/1`,
+                  `${process.env.NEXT_PUBLIC_baseUrl}/blogs/${user.UserGuid}/follows/1`,
                   {
                     headers: {
                       Authorization: `${token}`,

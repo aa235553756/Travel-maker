@@ -25,7 +25,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏遊記
   const resBlogData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/blogCollections/1`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/blogCollections/1`,
     {
       method: 'GET',
       headers: {
@@ -38,7 +38,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏遊記
   const resDraftBlogData = await fetch(
-    ' https://travelmaker.rocket-coding.com/api/users/blogDrafts/1',
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/blogDrafts/1`,
     {
       method: 'GET',
       headers: {
@@ -50,7 +50,7 @@ export async function getServerSideProps({
 
   // 【API】會員中心左邊選單各項數量
   const resMemberCountData = await fetch(
-    `https://travelmaker.rocket-coding.com/api/users/dataCounts`,
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/dataCounts`,
     {
       method: 'GET',
       headers: {
@@ -62,7 +62,7 @@ export async function getServerSideProps({
   const memberCountData = await resMemberCountData.json()
 
   const resGetToursName = await fetch(
-    'https://travelmaker.rocket-coding.com/api/blogs/tours',
+    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/tours`,
     {
       method: 'GET',
       headers: {
@@ -117,7 +117,7 @@ export default function Blog({
 
   // 無資料時
   const [noBlogData, setNoBlogData] = useState(false)
-  
+
   // 這邊記得幫我 set 一下草稿遊記無資料時換成圖片
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [noDraftData, setNoDraftData] = useState(false)
@@ -153,7 +153,7 @@ export default function Blog({
 
   const getMoreBlogData = async (page: number) => {
     const res = await fetch(
-      `https://travelmaker.rocket-coding.com/api/users/tours/${page}`,
+      `${process.env.NEXT_PUBLIC_baseUrl}/users/tours/${page}`,
       {
         method: 'GET',
         headers: {
@@ -210,8 +210,6 @@ export default function Blog({
     }
   }, [moreBlogData])
 
-  console.log(moreBlogData)
-
   return (
     <>
       <Head>
@@ -252,7 +250,7 @@ export default function Blog({
                   }
 
                   const res = await fetch(
-                    `https://travelmaker.rocket-coding.com/api/blogs/remove/${deleteBlogGuid}`,
+                    `${process.env.NEXT_PUBLIC_baseUrl}/blogs/remove/${deleteBlogGuid}`,
                     requestOptions
                   )
 
