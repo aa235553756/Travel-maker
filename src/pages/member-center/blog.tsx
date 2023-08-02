@@ -38,7 +38,7 @@ export async function getServerSideProps({
 
   // 【API】取得我的收藏遊記
   const resDraftBlogData = await fetch(
-    ' ${process.env.NEXT_PUBLIC_baseUrl}/users/blogDrafts/1',
+    `${process.env.NEXT_PUBLIC_baseUrl}/users/blogDrafts/1`,
     {
       method: 'GET',
       headers: {
@@ -209,8 +209,6 @@ export default function Blog({
       window.removeEventListener('scroll', handleScroll)
     }
   }, [moreBlogData])
-
-  console.log(moreBlogData)
 
   return (
     <>
